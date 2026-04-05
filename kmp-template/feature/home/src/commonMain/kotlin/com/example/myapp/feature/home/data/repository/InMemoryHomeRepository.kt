@@ -18,8 +18,10 @@ class InMemoryHomeRepository : HomeRepository {
     override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
         items.map { Result.Success(it) }
 
+    override suspend fun syncHomeItems(): Result<Unit> = Result.Success(Unit)
+
     override suspend fun addHomeItem(item: HomeItem) {
-        items.value = items.value + item
+        items.value += item
     }
 
     override suspend fun removeHomeItem(id: String) {
