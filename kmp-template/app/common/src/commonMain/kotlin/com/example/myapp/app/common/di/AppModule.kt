@@ -1,0 +1,9 @@
+package com.example.myapp.app.common.di
+
+import com.example.myapp.core.network.di.networkModule
+import com.example.myapp.feature.home.di.homeModule
+import org.koin.dsl.module
+
+val appModule = module {
+    includes(networkModule, homeModule)
+}

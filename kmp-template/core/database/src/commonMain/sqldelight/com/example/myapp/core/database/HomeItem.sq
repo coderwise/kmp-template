@@ -1,0 +1,15 @@
+CREATE TABLE HomeItemEntity (
+    id TEXT NOT NULL PRIMARY KEY,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM HomeItemEntity;
+
+insert:
+INSERT OR REPLACE INTO HomeItemEntity(id, title, description)
+VALUES (?, ?, ?);
+
+deleteAll:
+DELETE FROM HomeItemEntity;
