@@ -1,5 +1,6 @@
 package com.example.myapp.feature.home.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,8 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.AlertDialog
@@ -26,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -37,6 +41,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.common.Result
@@ -45,7 +50,10 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
+fun HomeScreen(
+    onWeatherClick: () -> Unit,
+    viewModel: HomeViewModel = koinViewModel()
+) {
     val state by viewModel.state.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
@@ -54,7 +62,8 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
         state = state,
         onAddClick = { showAddDialog = true },
         onDeleteClick = { viewModel.removeItem(it.id) },
-        onEditClick = { itemToEdit = it }
+        onEditClick = { itemToEdit = it },
+        onWeatherClick = onWeatherClick
     )
 
     if (showAddDialog) {
@@ -86,10 +95,18 @@ fun HomeScreenContent(
     state: Result<List<HomeItem>>,
     onAddClick: () -> Unit = {},
     onDeleteClick: (HomeItem) -> Unit = {},
-    onEditClick: (HomeItem) -> Unit = {}
+    onEditClick: (HomeItem) -> Unit = {},
+    onWeatherClick: () -> Unit = {}
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Home") }) },
+        topBar = {
+            TopAppBar(
+                title = { Text("Home") },
+                actions = {
+                    WeatherPill(onClick = onWeatherClick)
+                }
+            )
+        },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddClick) {
                 Icon(Icons.Default.Add, contentDescription = "Add Item")
@@ -209,7 +226,33 @@ fun HomeItemDialog(
     )
 }
 
-@Preview
+@Composable
+fun WeatherPill(onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier
+            .padding(end = 16.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .clickable(onClick = onClick),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Cloud,
+                contentDescription = null,
+                modifier = Modifier.height(18.dp)
+            )
+            Text(
+                text = "72°F",
+                style = MaterialTheme.typography.labelLarge
+            )
+        }
+    }
+}
 @Composable
 private fun HomeScreenPreview() {
     HomeScreenContent(

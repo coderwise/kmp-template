@@ -33,3 +33,4 @@ include(":core:database")
 
 // Feature modules
 include(":feature:home")
+include(":feature:weather")

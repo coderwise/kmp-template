@@ -72,3 +72,4 @@ dist/
 .env
 .env.local
 .env.*.local
+/kotlin-js-store/yarn.lock

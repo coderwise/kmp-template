@@ -11,8 +11,12 @@ interface AppDestination : NavKey
 @Serializable
 data object HomeDestination : AppDestination
 
+@Serializable
+data object WeatherDestination : AppDestination
+
 val appNavSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
         subclass(HomeDestination::class)
+        subclass(WeatherDestination::class)
     }
 }
