@@ -6,4 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {
     fun getHomeItems(): Flow<Result<List<HomeItem>>>
+    suspend fun addHomeItem(item: HomeItem)
+    suspend fun removeHomeItem(id: String)
+    suspend fun updateHomeItem(item: HomeItem)
 }

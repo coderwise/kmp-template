@@ -24,6 +24,8 @@ kotlin {
             implementation(project(":core:database"))
 
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.sqldelight.coroutines)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -33,6 +35,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
+            implementation(libs.compose.icons.extended)
             implementation(libs.navigation3.runtime)
             implementation(libs.compose.preview)
         }

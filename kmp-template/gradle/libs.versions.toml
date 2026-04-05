@@ -5,22 +5,22 @@ compileSdk = "36"
 minSdk = "26"
 targetSdk = "35"
 compose-multiplatform = "1.10.3"
+compose-icons = "1.7.3"
 compose-material3 = "1.9.0"
 ktor = "3.4.2"
 koin = "4.2.0"
 koin-compose = "4.2.0"
-navigation3 = "1.1.0-alpha04"
-navigation3-ui = "1.1.0-alpha04"
+navigation3 = "1.1.0-rc01"
+navigation3-ui = "1.1.0-beta01"
 sqldelight = "2.3.2"
 coroutines = "1.10.2"
 serialization = "1.10.0"
 datetime = "0.7.1"
-androidx-activity = "1.12.0"
-androidx-compose = "1.7.5"
+androidx-activity = "1.13.0"
+androidx-compose = "1.10.6"
 lifecycle = "2.10.0"
 
 [libraries]
-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
@@ -33,6 +33,7 @@ lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifec
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
 compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "compose-multiplatform" }
 compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "compose-material3" }
+compose-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "compose-icons" }
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
 compose-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }

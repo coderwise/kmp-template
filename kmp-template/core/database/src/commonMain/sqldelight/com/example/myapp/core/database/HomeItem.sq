@@ -13,3 +13,10 @@ VALUES (?, ?, ?);
 
 deleteAll:
 DELETE FROM HomeItemEntity;
+
+delete:
+DELETE FROM HomeItemEntity WHERE id = ?;
+
+update:
+INSERT OR REPLACE INTO HomeItemEntity(id, title, description)
+VALUES (?, ?, ?);

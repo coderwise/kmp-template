@@ -17,4 +17,16 @@ class InMemoryHomeRepository : HomeRepository {
 
     override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
         items.map { Result.Success(it) }
+
+    override suspend fun addHomeItem(item: HomeItem) {
+        items.value = items.value + item
+    }
+
+    override suspend fun removeHomeItem(id: String) {
+        items.value = items.value.filter { it.id != id }
+    }
+
+    override suspend fun updateHomeItem(item: HomeItem) {
+        items.value = items.value.map { if (it.id == item.id) item else it }
+    }
 }
