@@ -1,4 +1,4 @@
-package com.example.myapp.core.common
+package com.example.myapp.core.domain
 
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable

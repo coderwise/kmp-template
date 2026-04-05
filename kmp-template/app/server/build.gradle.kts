@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":core:common"))
+    implementation(project(":core:domain"))
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.server.cio)
     implementation(libs.ktor.server.content.negotiation)

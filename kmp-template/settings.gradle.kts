@@ -20,19 +20,17 @@ dependencyResolutionManagement {
     }
 }
 
-// App entry points
-include(":app:android")
-include(":app:desktop")
-include(":app:web")
-include(":app:server")
-include(":app:common")
+// Automatically include core modules
+file("core").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
+    include(":core:${it.name}")
+}
 
-// Core modules
-include(":core:common")
-include(":core:network")
-include(":core:ui")
-include(":core:database")
+// Automatically include feature modules
+file("feature").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
+    include(":feature:${it.name}")
+}
 
-// Feature modules
-include(":feature:home")
-include(":feature:weather")
+// Automatically include app modules
+file("app").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
+    include(":app:${it.name}")
+}

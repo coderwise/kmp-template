@@ -2,7 +2,7 @@ package com.example.myapp.feature.weather.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.common.Result
+import com.example.myapp.core.domain.Result
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

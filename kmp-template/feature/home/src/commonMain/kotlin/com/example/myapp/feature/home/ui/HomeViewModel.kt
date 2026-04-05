@@ -2,7 +2,7 @@ package com.example.myapp.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.common.Result
+import com.example.myapp.core.domain.Result
 import com.example.myapp.feature.home.domain.model.HomeItem
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase

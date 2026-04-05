@@ -23,7 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapp.core.common.Result
+import com.example.myapp.core.domain.Result
 import com.example.myapp.core.ui.MyAppTheme
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import org.koin.compose.viewmodel.koinViewModel

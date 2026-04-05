@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.domain.usecase
 
-import com.example.myapp.core.common.Result
+import com.example.myapp.core.domain.Result
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 

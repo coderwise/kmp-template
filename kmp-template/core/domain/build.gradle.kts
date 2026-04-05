@@ -6,7 +6,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.example.myapp.core.common"
+        namespace = "com.example.myapp.core.domain"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
     }
