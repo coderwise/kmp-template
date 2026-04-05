@@ -1,9 +1,9 @@
-package com.example.myapp.feature.home.domain.model
+package com.example.myapp.core.api.model
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class HomeItem(
+data class HomeItemApi(
     val id: String,
     val title: String,
     val description: String

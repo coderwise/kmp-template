@@ -19,9 +19,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
+            implementation(project(":core:api"))
             implementation(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.resources)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)

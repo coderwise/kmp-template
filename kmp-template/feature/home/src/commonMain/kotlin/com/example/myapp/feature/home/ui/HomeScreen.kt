@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -55,11 +56,14 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
 
     HomeScreenContent(
         state = state,
+        isRefreshing = isRefreshing,
+        onRefresh = { viewModel.refresh() },
         onAddClick = { showAddDialog = true },
         onDeleteClick = { viewModel.removeItem(it.id) },
         onEditClick = { itemToEdit = it },
@@ -93,6 +97,8 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     state: Result<List<HomeItem>>,
+    isRefreshing: Boolean = false,
+    onRefresh: () -> Unit = {},
     onAddClick: () -> Unit = {},
     onDeleteClick: (HomeItem) -> Unit = {},
     onEditClick: (HomeItem) -> Unit = {},
@@ -103,6 +109,13 @@ fun HomeScreenContent(
             TopAppBar(
                 title = { Text("Home") },
                 actions = {
+                    IconButton(onClick = onRefresh, enabled = !isRefreshing) {
+                        if (isRefreshing) {
+                            CircularProgressIndicator(modifier = Modifier.padding(8.dp), strokeWidth = 2.dp)
+                        } else {
+                            Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                        }
+                    }
                     WeatherPill(onClick = onWeatherClick)
                 }
             )
