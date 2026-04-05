@@ -21,7 +21,10 @@ kotlin {
             implementation(libs.sqldelight.coroutines)
             implementation(libs.koin.core)
         }
-        androidMain.dependencies { implementation(libs.sqldelight.android) }
+        androidMain.dependencies {
+            implementation(libs.sqldelight.android)
+            implementation(libs.koin.android)
+        }
         iosMain.dependencies { implementation(libs.sqldelight.native) }
         jsMain.dependencies { implementation(libs.sqldelight.web) }
         val desktopMain by getting { dependencies { implementation(libs.sqldelight.sqlite) } }

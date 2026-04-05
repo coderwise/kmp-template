@@ -22,6 +22,7 @@ kotlin {
             implementation(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
+
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -33,8 +34,8 @@ kotlin {
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.navigation3.runtime)
+            implementation(libs.compose.preview)
         }
-        androidMain.dependencies { implementation(libs.navigation3.ui) }
     }
 }
 
