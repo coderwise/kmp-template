@@ -12,7 +12,6 @@ android {
     defaultConfig {
         applicationId = "com.example.myapp.android"
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0.0"
     }
@@ -28,7 +27,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    kotlin { jvmToolchain(21) }
 }
 
 dependencies {

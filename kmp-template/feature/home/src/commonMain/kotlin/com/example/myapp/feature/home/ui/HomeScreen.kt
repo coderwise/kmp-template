@@ -47,6 +47,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.Result
 import com.example.myapp.feature.home.domain.model.HomeItem
+import myapp.feature.home.generated.resources.Res
+import myapp.feature.home.generated.resources.home_add_item_content_description
+import myapp.feature.home.generated.resources.home_delete_content_description
+import myapp.feature.home.generated.resources.home_dialog_add_title
+import myapp.feature.home.generated.resources.home_dialog_cancel
+import myapp.feature.home.generated.resources.home_dialog_confirm
+import myapp.feature.home.generated.resources.home_dialog_description_label
+import myapp.feature.home.generated.resources.home_dialog_edit_title
+import myapp.feature.home.generated.resources.home_dialog_title_label
+import myapp.feature.home.generated.resources.home_edit_content_description
+import myapp.feature.home.generated.resources.home_error
+import myapp.feature.home.generated.resources.home_refresh_content_description
+import myapp.feature.home.generated.resources.home_title
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -107,13 +121,13 @@ fun HomeScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Home") },
+                title = { Text(stringResource(Res.string.home_title)) },
                 actions = {
                     IconButton(onClick = onRefresh, enabled = !isRefreshing) {
                         if (isRefreshing) {
                             CircularProgressIndicator(modifier = Modifier.padding(8.dp), strokeWidth = 2.dp)
                         } else {
-                            Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                            Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.home_refresh_content_description))
                         }
                     }
                     WeatherPill(onClick = onWeatherClick)
@@ -122,7 +136,7 @@ fun HomeScreenContent(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add Item")
+                Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.home_add_item_content_description))
             }
         }
     ) { padding ->
@@ -134,7 +148,7 @@ fun HomeScreenContent(
             when (state) {
                 is Result.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 is Result.Error -> Text(
-                    text = "Error: ${state.message ?: state.exception.message}",
+                    text = stringResource(Res.string.home_error, state.message ?: state.exception.message.orEmpty()),
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .align(Alignment.Center)
@@ -178,10 +192,10 @@ fun HomeItemCard(
                 )
                 Row {
                     IconButton(onClick = onEditClick) {
-                        Icon(Icons.Default.Edit, contentDescription = "Edit")
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(Res.string.home_edit_content_description))
                     }
                     IconButton(onClick = onDeleteClick) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete")
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.home_delete_content_description))
                     }
                 }
             }
@@ -205,20 +219,20 @@ fun HomeItemDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (initialTitle.isEmpty()) "Add Item" else "Edit Item") },
+        title = { Text(if (initialTitle.isEmpty()) stringResource(Res.string.home_dialog_add_title) else stringResource(Res.string.home_dialog_edit_title)) },
         text = {
             Column {
                 OutlinedTextField(
                     value = title,
                     onValueChange = { title = it },
-                    label = { Text("Title") },
+                    label = { Text(stringResource(Res.string.home_dialog_title_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text("Description") },
+                    label = { Text(stringResource(Res.string.home_dialog_description_label)) },
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -228,12 +242,12 @@ fun HomeItemDialog(
                 onClick = { onConfirm(title, description) },
                 enabled = title.isNotBlank()
             ) {
-                Text("Confirm")
+                Text(stringResource(Res.string.home_dialog_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(stringResource(Res.string.home_dialog_cancel))
             }
         }
     )

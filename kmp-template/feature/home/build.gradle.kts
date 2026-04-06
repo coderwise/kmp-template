@@ -11,6 +11,7 @@ kotlin {
         namespace = "com.example.myapp.feature.home"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
+        androidResources.enable = true
     }
     iosArm64(); iosSimulatorArm64()
     js(IR) { browser() }
@@ -42,6 +43,7 @@ kotlin {
             implementation(libs.compose.icons.extended)
             implementation(libs.navigation3.runtime)
             implementation(libs.compose.preview)
+            implementation(compose.components.resources)
         }
     }
 }
