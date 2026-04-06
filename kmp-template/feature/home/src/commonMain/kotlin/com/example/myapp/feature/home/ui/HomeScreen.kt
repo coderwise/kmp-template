@@ -266,6 +266,8 @@ fun WeatherPill(onClick: () -> Unit) {
         }
     }
 }
+
+@Preview
 @Composable
 private fun HomeScreenPreview() {
     HomeScreenContent(
