@@ -10,6 +10,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
+    implementation(libs.logback.classic)
 }
 
 compose.desktop {
