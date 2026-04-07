@@ -45,7 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.appVersion
 import com.example.myapp.feature.home.domain.model.HomeItem
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
@@ -79,6 +79,7 @@ fun HomeScreen(
         isError = uiState.isError,
         errorMessage = uiState.errorMessage,
         isRefreshing = uiState.isRefreshing,
+        appVersion = appVersion,
         onRefresh = { viewModel.refresh() },
         onAddClick = { showAddDialog = true },
         onDeleteClick = { viewModel.removeItem(it.id) },
@@ -117,6 +118,7 @@ fun HomeScreenContent(
     isError: Boolean = false,
     errorMessage: String? = null,
     isRefreshing: Boolean = false,
+    appVersion: String = "",
     onRefresh: () -> Unit = {},
     onAddClick: () -> Unit = {},
     onDeleteClick: (HomeItem) -> Unit = {},
@@ -145,31 +147,48 @@ fun HomeScreenContent(
             }
         }
     ) { padding ->
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            if (isLoading && items.isEmpty()) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else if (isError && items.isEmpty()) {
-                Text(
-                    text = stringResource(Res.string.home_error, errorMessage ?: ""),
-                    color = MaterialTheme.colorScheme.error,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(16.dp)
-                )
-            } else {
-                LazyColumn {
-                    items(items) { item ->
-                        HomeItemCard(
-                            item = item,
-                            onDeleteClick = { onDeleteClick(item) },
-                            onEditClick = { onEditClick(item) }
-                        )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
+                if (isLoading && items.isEmpty()) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (isError && items.isEmpty()) {
+                    Text(
+                        text = stringResource(Res.string.home_error, errorMessage ?: ""),
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(16.dp)
+                    )
+                } else {
+                    LazyColumn {
+                        items(items) { item ->
+                            HomeItemCard(
+                                item = item,
+                                onDeleteClick = { onDeleteClick(item) },
+                                onEditClick = { onEditClick(item) }
+                            )
+                        }
                     }
                 }
+            }
+
+            if (appVersion.isNotBlank()) {
+                Text(
+                    text = "v$appVersion",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(bottom = 8.dp)
+                )
             }
         }
     }

@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.example.myapp.android"
         minSdk = libs.versions.minSdk.get().toInt()
-        versionCode = 1
+        versionCode = getGitCommitCount()
         versionName = "1.0.0"
     }
 
@@ -27,6 +27,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -35,4 +38,16 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+}
+
+fun getGitCommitCount(): Int {
+    return try {
+        val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
+            .start()
+        val count = process.inputStream.bufferedReader().readText().trim().toInt()
+        process.waitFor()
+        count
+    } catch (e: Exception) {
+        1
+    }
 }
