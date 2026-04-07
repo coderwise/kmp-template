@@ -74,11 +74,7 @@ fun HomeScreen(
     var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
 
     HomeScreenContent(
-        items = uiState.items,
-        isLoading = uiState.isLoading,
-        isError = uiState.isError,
-        errorMessage = uiState.errorMessage,
-        isRefreshing = uiState.isRefreshing,
+        uiState = uiState,
         appVersion = appVersion,
         onRefresh = { viewModel.refresh() },
         onAddClick = { showAddDialog = true },
@@ -113,11 +109,7 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    items: List<HomeItem>,
-    isLoading: Boolean = false,
-    isError: Boolean = false,
-    errorMessage: String? = null,
-    isRefreshing: Boolean = false,
+    uiState: HomeUiState,
     appVersion: String = "",
     onRefresh: () -> Unit = {},
     onAddClick: () -> Unit = {},
@@ -130,8 +122,8 @@ fun HomeScreenContent(
             TopAppBar(
                 title = { Text(stringResource(Res.string.home_title)) },
                 actions = {
-                    IconButton(onClick = onRefresh, enabled = !isRefreshing) {
-                        if (isRefreshing) {
+                    IconButton(onClick = onRefresh, enabled = !uiState.isRefreshing) {
+                        if (uiState.isRefreshing) {
                             CircularProgressIndicator(modifier = Modifier.padding(8.dp), strokeWidth = 2.dp)
                         } else {
                             Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.home_refresh_content_description))
@@ -157,11 +149,11 @@ fun HomeScreenContent(
                     .weight(1f)
                     .fillMaxWidth()
             ) {
-                if (isLoading && items.isEmpty()) {
+                if (uiState.isLoading && uiState.items.isEmpty()) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                } else if (isError && items.isEmpty()) {
+                } else if (uiState.isError && uiState.items.isEmpty()) {
                     Text(
-                        text = stringResource(Res.string.home_error, errorMessage ?: ""),
+                        text = stringResource(Res.string.home_error, uiState.errorMessage ?: ""),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -169,7 +161,7 @@ fun HomeScreenContent(
                     )
                 } else {
                     LazyColumn {
-                        items(items) { item ->
+                        items(uiState.items) { item ->
                             HomeItemCard(
                                 item = item,
                                 onDeleteClick = { onDeleteClick(item) },
@@ -311,9 +303,11 @@ fun WeatherPill(onClick: () -> Unit) {
 @Composable
 private fun HomeScreenPreview() {
     HomeScreenContent(
-        items = listOf(
-            HomeItem("1", "Preview Item", "This is a preview description"),
-            HomeItem("2", "Another Item", "Another preview description")
+        uiState = HomeUiState(
+            items = listOf(
+                HomeItem("1", "Preview Item", "This is a preview description"),
+                HomeItem("2", "Another Item", "Another preview description")
+            )
         )
     )
 }
