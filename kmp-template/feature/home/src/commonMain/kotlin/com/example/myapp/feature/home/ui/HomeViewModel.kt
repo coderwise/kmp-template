@@ -12,8 +12,17 @@ import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
+
+data class HomeUiState(
+    val items: List<HomeItem> = emptyList(),
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: String? = null,
+    val isRefreshing: Boolean = false
+)
 
 class HomeViewModel(
     private val getHomeItemsUseCase: GetHomeItemsUseCase,
@@ -23,11 +32,8 @@ class HomeViewModel(
     private val syncHomeItemsUseCase: SyncHomeItemsUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<Result<List<HomeItem>>>(Result.Loading)
-    val state: StateFlow<Result<List<HomeItem>>> = _state.asStateFlow()
-
-    private val _isRefreshing = MutableStateFlow(false)
-    val isRefreshing: StateFlow<Boolean> = _isRefreshing.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
         loadItems()
@@ -36,15 +42,27 @@ class HomeViewModel(
 
     fun refresh() {
         viewModelScope.launch {
-            _isRefreshing.value = true
+            _uiState.update { it.copy(isRefreshing = true) }
             syncHomeItemsUseCase()
-            _isRefreshing.value = false
+            _uiState.update { it.copy(isRefreshing = false) }
         }
     }
 
     private fun loadItems() {
         viewModelScope.launch {
-            getHomeItemsUseCase().collect { _state.value = it }
+            getHomeItemsUseCase().collect { result ->
+                _uiState.update { state ->
+                    when (result) {
+                        is Result.Loading -> state.copy(isLoading = true, isError = false)
+                        is Result.Success -> state.copy(isLoading = false, items = result.data, isError = false)
+                        is Result.Error -> state.copy(
+                            isLoading = false,
+                            isError = true,
+                            errorMessage = result.message ?: result.exception.message
+                        )
+                    }
+                }
+            }
         }
     }
 

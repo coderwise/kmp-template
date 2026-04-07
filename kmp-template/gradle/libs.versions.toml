@@ -3,7 +3,6 @@ kotlin = "2.3.20"
 agp = "9.1.0"
 compileSdk = "36"
 minSdk = "26"
-targetSdk = "35"
 compose-multiplatform = "1.10.3"
 compose-icons = "1.7.3"
 compose-material3 = "1.9.0"
@@ -36,6 +35,7 @@ compose-icons-extended = { module = "org.jetbrains.compose.material:material-ico
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "compose-multiplatform" }
 compose-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-multiplatform" }
 compose-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
+compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
 navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
 navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3-ui" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

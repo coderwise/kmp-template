@@ -43,7 +43,7 @@ kotlin {
             implementation(libs.compose.icons.extended)
             implementation(libs.navigation3.runtime)
             implementation(libs.compose.preview)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.resources)
         }
     }
 }

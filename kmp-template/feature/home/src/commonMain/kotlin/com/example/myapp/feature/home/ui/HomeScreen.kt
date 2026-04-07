@@ -69,14 +69,16 @@ fun HomeScreen(
     onWeatherClick: () -> Unit,
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
-    val isRefreshing by viewModel.isRefreshing.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
 
     HomeScreenContent(
-        state = state,
-        isRefreshing = isRefreshing,
+        items = uiState.items,
+        isLoading = uiState.isLoading,
+        isError = uiState.isError,
+        errorMessage = uiState.errorMessage,
+        isRefreshing = uiState.isRefreshing,
         onRefresh = { viewModel.refresh() },
         onAddClick = { showAddDialog = true },
         onDeleteClick = { viewModel.removeItem(it.id) },
@@ -110,7 +112,10 @@ fun HomeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    state: Result<List<HomeItem>>,
+    items: List<HomeItem>,
+    isLoading: Boolean = false,
+    isError: Boolean = false,
+    errorMessage: String? = null,
     isRefreshing: Boolean = false,
     onRefresh: () -> Unit = {},
     onAddClick: () -> Unit = {},
@@ -145,17 +150,19 @@ fun HomeScreenContent(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            when (state) {
-                is Result.Loading -> CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                is Result.Error -> Text(
-                    text = stringResource(Res.string.home_error, state.message ?: state.exception.message.orEmpty()),
+            if (isLoading && items.isEmpty()) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else if (isError && items.isEmpty()) {
+                Text(
+                    text = stringResource(Res.string.home_error, errorMessage ?: ""),
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier
                         .align(Alignment.Center)
                         .padding(16.dp)
                 )
-                is Result.Success -> LazyColumn {
-                    items(state.data) { item ->
+            } else {
+                LazyColumn {
+                    items(items) { item ->
                         HomeItemCard(
                             item = item,
                             onDeleteClick = { onDeleteClick(item) },
@@ -285,11 +292,9 @@ fun WeatherPill(onClick: () -> Unit) {
 @Composable
 private fun HomeScreenPreview() {
     HomeScreenContent(
-        state = Result.Success(
-            listOf(
-                HomeItem("1", "Preview Item", "This is a preview description"),
-                HomeItem("2", "Another Item", "Another preview description")
-            )
+        items = listOf(
+            HomeItem("1", "Preview Item", "This is a preview description"),
+            HomeItem("2", "Another Item", "Another preview description")
         )
     )
 }

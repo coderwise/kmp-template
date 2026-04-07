@@ -34,10 +34,13 @@ fun WeatherScreen(
     onBackClick: () -> Unit,
     viewModel: WeatherViewModel = koinViewModel()
 ) {
-    val state by viewModel.state.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     WeatherScreenContent(
-        state = state,
+        weatherInfo = uiState.weatherInfo,
+        isLoading = uiState.isLoading,
+        isError = uiState.isError,
+        errorMessage = uiState.errorMessage,
         onBackClick = onBackClick
     )
 }
@@ -45,7 +48,10 @@ fun WeatherScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreenContent(
-    state: Result<WeatherInfo>,
+    weatherInfo: WeatherInfo?,
+    isLoading: Boolean = false,
+    isError: Boolean = false,
+    errorMessage: String? = null,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -66,28 +72,28 @@ fun WeatherScreenContent(
                 .padding(padding),
             contentAlignment = Alignment.Center
         ) {
-            when (state) {
-                is Result.Loading -> CircularProgressIndicator()
-                is Result.Error -> Text(
-                    text = "Error: ${state.message ?: state.exception.message}",
+            if (isLoading && weatherInfo == null) {
+                CircularProgressIndicator()
+            } else if (isError && weatherInfo == null) {
+                Text(
+                    text = "Error: ${errorMessage ?: "Unknown error"}",
                     color = MaterialTheme.colorScheme.error
                 )
-                is Result.Success -> {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text(
-                            text = state.data.city,
-                            style = MaterialTheme.typography.headlineLarge
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "${state.data.temperature}°C",
-                            style = MaterialTheme.typography.displayLarge
-                        )
-                        Text(
-                            text = state.data.condition,
-                            style = MaterialTheme.typography.titleMedium
-                        )
-                    }
+            } else if (weatherInfo != null) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = weatherInfo.city,
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "${weatherInfo.temperature}°C",
+                        style = MaterialTheme.typography.displayLarge
+                    )
+                    Text(
+                        text = weatherInfo.condition,
+                        style = MaterialTheme.typography.titleMedium
+                    )
                 }
             }
         }
@@ -99,12 +105,10 @@ fun WeatherScreenContent(
 private fun WeatherScreenPreview() {
     MyAppTheme {
         WeatherScreenContent(
-            state = Result.Success(
-                WeatherInfo(
-                    temperature = 22.0,
-                    condition = "Sunny",
-                    city = "London"
-                )
+            weatherInfo = WeatherInfo(
+                temperature = 22.0,
+                condition = "Sunny",
+                city = "London"
             ),
             onBackClick = {}
         )
