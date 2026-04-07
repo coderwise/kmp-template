@@ -13,7 +13,7 @@ android {
         applicationId = "com.example.myapp.android"
         minSdk = libs.versions.minSdk.get().toInt()
         versionCode = getGitCommitCount()
-        versionName = "1.0.0"
+        versionName = property("app.versionName") as String
     }
 
     buildTypes {
