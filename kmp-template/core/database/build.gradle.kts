@@ -11,7 +11,10 @@ kotlin {
         minSdk = libs.versions.minSdk.get().toInt()
     }
     iosArm64(); iosSimulatorArm64()
-    js(IR) { browser() }
+    js(IR) {
+        browser()
+        nodejs()
+    }
     jvm("desktop")
 
     sourceSets {

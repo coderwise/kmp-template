@@ -24,6 +24,7 @@ kotlin {
             implementation(project(":core:ui"))
             implementation(project(":core:network"))
             implementation(project(":core:database"))
+            implementation(project(":core:version"))
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.resources)
