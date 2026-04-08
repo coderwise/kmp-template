@@ -72,3 +72,6 @@ dist/
 .env.local
 .env.*.local
 /kotlin-js-store/
+
+# Distribution / Packaging
+/keystore.properties

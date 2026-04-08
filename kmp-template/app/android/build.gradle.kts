@@ -1,8 +1,19 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     // NO kotlin.android here — AGP 9+ has built-in Kotlin support
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+}
+
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+try {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+} catch (e: Exception) {
+    println("Warning: Could not load keystore properties. Error: ${e.message}")
 }
 
 android {
@@ -16,8 +27,21 @@ android {
         versionName = property("app.versionName") as String
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("SIGNING_STORE_FILE") ?: "upload.keystore")
+            storePassword = System.getenv("SIGNING_STORE_PASSWORD")
+                ?: keystoreProperties.getProperty("storePassword")
+            keyPassword = System.getenv("SIGNING_STORE_PASSWORD")
+                ?: keystoreProperties.getProperty("storePassword")
+            keyAlias = System.getenv("SIGNING_KEY_ALIAS")
+                ?: keystoreProperties.getProperty("keyAlias")
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
         }
