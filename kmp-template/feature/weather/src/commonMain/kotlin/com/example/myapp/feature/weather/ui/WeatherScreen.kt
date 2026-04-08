@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.ui.MyAppTheme
-import com.example.myapp.feature.weather.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -51,10 +50,13 @@ fun WeatherScreen(
 
     WeatherScreenContent(
         uiState = uiState,
-        onSearchQueryChange = viewModel::onSearchQueryChange,
-        onLocationSelected = viewModel::onLocationSelected,
-        onSearchClick = viewModel::onSearchClick,
-        onBackClick = onBackClick
+        onEvent = { event ->
+            if (event is WeatherUiEvent.OnBackClick) {
+                onBackClick()
+            } else {
+                viewModel.onEvent(event)
+            }
+        }
     )
 }
 
@@ -62,10 +64,7 @@ fun WeatherScreen(
 @Composable
 fun WeatherScreenContent(
     uiState: WeatherUiState,
-    onSearchQueryChange: (String) -> Unit,
-    onLocationSelected: (Location) -> Unit,
-    onSearchClick: () -> Unit,
-    onBackClick: () -> Unit
+    onEvent: (WeatherUiEvent) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     Scaffold(
@@ -73,7 +72,7 @@ fun WeatherScreenContent(
             TopAppBar(
                 title = { Text("Weather Details") },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = { onEvent(WeatherUiEvent.OnBackClick) }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -90,7 +89,7 @@ fun WeatherScreenContent(
             Box {
                 OutlinedTextField(
                     value = uiState.searchQuery,
-                    onValueChange = onSearchQueryChange,
+                    onValueChange = { onEvent(WeatherUiEvent.OnSearchQueryChange(it)) },
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text("Search city...") },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
@@ -98,7 +97,7 @@ fun WeatherScreenContent(
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(
                         onSearch = {
-                            onSearchClick()
+                            onEvent(WeatherUiEvent.OnSearchClick)
                             keyboardController?.hide()
                         }
                     )
@@ -121,7 +120,7 @@ fun WeatherScreenContent(
                                 Icon(Icons.Default.LocationOn, contentDescription = null)
                             },
                             modifier = Modifier.clickable {
-                                onLocationSelected(location)
+                                onEvent(WeatherUiEvent.OnLocationSelected(location))
                                 keyboardController?.hide()
                             }
                         )
@@ -177,10 +176,7 @@ private fun WeatherScreenPreview() {
                     city = "London"
                 )
             ),
-            onSearchQueryChange = {},
-            onLocationSelected = {},
-            onSearchClick = {},
-            onBackClick = {}
+            onEvent = {}
         )
     }
 }

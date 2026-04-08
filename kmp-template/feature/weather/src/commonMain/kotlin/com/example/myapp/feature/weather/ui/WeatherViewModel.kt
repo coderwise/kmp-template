@@ -22,6 +22,13 @@ data class WeatherUiState(
     val errorMessage: String? = null
 )
 
+sealed interface WeatherUiEvent {
+    data class OnSearchQueryChange(val query: String) : WeatherUiEvent
+    data class OnLocationSelected(val location: Location) : WeatherUiEvent
+    data object OnSearchClick : WeatherUiEvent
+    data object OnBackClick : WeatherUiEvent
+}
+
 class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase
@@ -35,7 +42,16 @@ class WeatherViewModel(
         fetchWeather(51.5074, -0.1278, "London")
     }
 
-    fun onSearchQueryChange(query: String) {
+    fun onEvent(event: WeatherUiEvent) {
+        when (event) {
+            is WeatherUiEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
+            is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
+            WeatherUiEvent.OnSearchClick -> onSearchClick()
+            WeatherUiEvent.OnBackClick -> { /* Handled in Screen */ }
+        }
+    }
+
+    private fun onSearchQueryChange(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
         if (query.length >= 2) {
             searchLocations(query)
@@ -53,19 +69,19 @@ class WeatherViewModel(
         }
     }
 
-    fun onLocationSelected(location: Location) {
+    private fun onLocationSelected(location: Location) {
         _uiState.update { it.copy(searchQuery = location.name, searchResults = emptyList()) }
         fetchWeather(location.latitude, location.longitude, location.name)
     }
 
-    fun onSearchClick() {
+    private fun onSearchClick() {
         val firstResult = _uiState.value.searchResults.firstOrNull()
         if (firstResult != null) {
             onLocationSelected(firstResult)
         }
     }
 
-    fun fetchWeather(latitude: Double, longitude: Double, city: String) {
+    private fun fetchWeather(latitude: Double, longitude: Double, city: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, isError = false) }
             val result = getWeatherUseCase(latitude, longitude, city)
