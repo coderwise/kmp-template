@@ -7,7 +7,7 @@ import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 class GetWeatherUseCase(
     private val repository: WeatherRepository
 ) {
-    suspend operator fun invoke(city: String): Result<WeatherInfo> {
-        return repository.getWeather(city)
+    suspend operator fun invoke(latitude: Double, longitude: Double, city: String): Result<WeatherInfo> {
+        return repository.getWeather(latitude, longitude, city)
     }
 }

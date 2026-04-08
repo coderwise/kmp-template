@@ -1,6 +1,7 @@
 package com.example.myapp.feature.weather.data.repository
 
 import com.example.myapp.core.domain.Result
+import com.example.myapp.feature.weather.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 import io.ktor.client.HttpClient
@@ -12,13 +13,11 @@ import kotlinx.serialization.Serializable
 class WeatherRepositoryImpl(
     private val httpClient: HttpClient
 ) : WeatherRepository {
-    override suspend fun getWeather(city: String): Result<WeatherInfo> {
+    override suspend fun getWeather(latitude: Double, longitude: Double, city: String): Result<WeatherInfo> {
         return try {
-            // Using Open-Meteo API (example: coordinates for London)
-            // In a real app, you'd geocode the city name first.
             val response: OpenMeteoResponse = httpClient.get("https://api.open-meteo.com/v1/forecast") {
-                parameter("latitude", 51.5074)
-                parameter("longitude", -0.1278)
+                parameter("latitude", latitude)
+                parameter("longitude", longitude)
                 parameter("current_weather", true)
             }.body()
 
@@ -28,6 +27,31 @@ class WeatherRepositoryImpl(
                     condition = "Clear", // Simplified for this example
                     city = city
                 )
+            )
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+
+    override suspend fun searchLocations(query: String): Result<List<Location>> {
+        return try {
+            val response: GeocodingResponse = httpClient.get("https://geocoding-api.open-meteo.com/v1/search") {
+                parameter("name", query)
+                parameter("count", 10)
+                parameter("language", "en")
+                parameter("format", "json")
+            }.body()
+
+            Result.Success(
+                response.results?.map {
+                    Location(
+                        name = it.name,
+                        latitude = it.latitude,
+                        longitude = it.longitude,
+                        country = it.country,
+                        admin1 = it.admin1
+                    )
+                } ?: emptyList()
             )
         } catch (e: Exception) {
             Result.Error(e)
@@ -44,4 +68,18 @@ data class OpenMeteoResponse(
 data class CurrentWeather(
     val temperature: Double,
     val weathercode: Int
+)
+
+@Serializable
+data class GeocodingResponse(
+    val results: List<GeocodingResult>? = null
+)
+
+@Serializable
+data class GeocodingResult(
+    val name: String,
+    val latitude: Double,
+    val longitude: Double,
+    val country: String? = null,
+    val admin1: String? = null
 )

@@ -23,7 +23,6 @@ kotlin {
             implementation(libs.ktor.client.resources)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.koin.core)
-//            implementation(libs.logback.classic)
         }
         androidMain.dependencies { implementation(libs.ktor.client.android) }
         iosMain.dependencies { implementation(libs.ktor.client.darwin) }
