@@ -3,8 +3,6 @@ package com.example.myapp.core.domain
 import kotlinx.coroutines.flow.Flow
 
 interface PreferencesRepository {
-    fun getString(key: String): Flow<String?>
-    suspend fun setString(key: String, value: String)
-    fun getBoolean(key: String): Flow<Boolean?>
-    suspend fun setBoolean(key: String, value: Boolean)
+    fun getPrefs(): Flow<String?>
+    suspend fun setPrefs(value: String)
 }

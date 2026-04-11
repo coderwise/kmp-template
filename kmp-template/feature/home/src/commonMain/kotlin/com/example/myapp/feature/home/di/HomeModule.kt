@@ -1,7 +1,6 @@
 package com.example.myapp.feature.home.di
 
-import com.example.myapp.feature.home.data.repository.HomeRepositoryImpl
-import com.example.myapp.feature.home.domain.repository.HomeRepository
+import com.example.myapp.core.domain.repository.HomeRepository
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
@@ -12,7 +11,6 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val homeModule = module {
-    single<HomeRepository> { HomeRepositoryImpl(get(), get()) }
     factory { GetHomeItemsUseCase(get()) }
     factory { AddHomeItemUseCase(get()) }
     factory { RemoveHomeItemUseCase(get()) }

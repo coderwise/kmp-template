@@ -19,9 +19,16 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
-            implementation(project(":core:datastore"))
+            implementation(project(":core:api"))
+            implementation(project(":core:network"))
+            implementation(project(":core:database"))
+
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
-            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.sqldelight.coroutines)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.resources)
         }
     }
 }

@@ -45,8 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.version.appVersion
-import com.example.myapp.feature.home.domain.model.HomeItem
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
 import myapp.feature.home.generated.resources.home_delete_content_description

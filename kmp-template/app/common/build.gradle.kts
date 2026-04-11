@@ -25,13 +25,14 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:ui"))
-            implementation(project(":core:network"))
-            implementation(project(":core:database"))
+            implementation(project(":core:data"))
             implementation(project(":feature:home"))
             implementation(project(":feature:weather"))
+
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            
             implementation(libs.koin.compose)
             implementation(libs.navigation3.runtime)
             implementation(libs.navigation3.ui)

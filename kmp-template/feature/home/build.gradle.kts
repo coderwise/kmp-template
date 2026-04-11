@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -26,12 +27,8 @@ kotlin {
             implementation(project(":core:database"))
             implementation(project(":core:version"))
 
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.resources)
-
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.sqldelight.coroutines)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
@@ -45,6 +42,11 @@ kotlin {
             implementation(libs.navigation3.runtime)
             implementation(libs.compose.preview)
             implementation(libs.compose.components.resources)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

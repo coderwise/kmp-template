@@ -1,8 +1,8 @@
 package com.example.myapp.feature.home.data.repository
 
 import com.example.myapp.core.domain.Result
-import com.example.myapp.feature.home.domain.model.HomeItem
-import com.example.myapp.feature.home.domain.repository.HomeRepository
+import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
