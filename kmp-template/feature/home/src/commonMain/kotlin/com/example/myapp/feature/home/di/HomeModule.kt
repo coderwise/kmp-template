@@ -1,6 +1,5 @@
 package com.example.myapp.feature.home.di
 
-import com.example.myapp.core.domain.repository.HomeRepository
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase

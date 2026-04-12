@@ -1,7 +1,7 @@
 package com.example.myapp.app.common.di
 
+import com.example.myapp.core.domain.repository.HomeRepository
 import com.example.myapp.feature.home.data.repository.InMemoryHomeRepository
-import com.example.myapp.feature.home.domain.repository.HomeRepository
 import org.koin.dsl.module
 
 // SQLDelight's web worker driver requires complex WASM/webpack setup.

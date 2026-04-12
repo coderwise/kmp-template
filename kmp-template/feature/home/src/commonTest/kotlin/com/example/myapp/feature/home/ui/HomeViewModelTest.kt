@@ -1,7 +1,7 @@
 package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.Result
-import com.example.myapp.feature.home.domain.model.HomeItem
+import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.feature.home.domain.usecase.*
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -9,10 +9,10 @@ import dev.mokkery.everySuspend
 import dev.mokkery.matcher.any
 import dev.mokkery.mock
 import dev.mokkery.verify
+import dev.mokkery.verify.VerifyMode
 import dev.mokkery.verifySuspend
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.*
 import kotlin.test.*
@@ -163,6 +163,6 @@ class HomeViewModelTest {
         // but we can verify it finishes as false.
         advanceUntilIdle()
         assertFalse(viewModel.uiState.value.isRefreshing)
-        verifySuspend(atLeast = 2) { syncHomeItemsUseCase() }
+        verifySuspend(VerifyMode.atLeast(2)) { syncHomeItemsUseCase() }
     }
 }
