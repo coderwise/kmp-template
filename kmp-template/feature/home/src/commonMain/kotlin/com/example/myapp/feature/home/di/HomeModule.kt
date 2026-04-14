@@ -6,6 +6,7 @@ import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import com.example.myapp.feature.home.ui.HomeViewModel
+import com.example.myapp.libs.version.appVersion
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -15,5 +16,5 @@ val homeModule = module {
     factory { RemoveHomeItemUseCase(get()) }
     factory { UpdateHomeItemUseCase(get()) }
     factory { SyncHomeItemsUseCase(get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get(), appVersion) }
 }

@@ -21,26 +21,44 @@ data class HomeUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String? = null,
-    val isRefreshing: Boolean = false
+    val isRefreshing: Boolean = false,
+    val appVersion: String = ""
 )
+
+sealed interface HomeUiEvent {
+    data object Refresh : HomeUiEvent
+    data class AddItem(val title: String, val description: String) : HomeUiEvent
+    data class DeleteItem(val id: String) : HomeUiEvent
+    data class UpdateItem(val item: HomeItem) : HomeUiEvent
+}
 
 class HomeViewModel(
     private val getHomeItemsUseCase: GetHomeItemsUseCase,
     private val addHomeItemUseCase: AddHomeItemUseCase,
     private val removeHomeItemUseCase: RemoveHomeItemUseCase,
     private val updateHomeItemUseCase: UpdateHomeItemUseCase,
-    private val syncHomeItemsUseCase: SyncHomeItemsUseCase
+    private val syncHomeItemsUseCase: SyncHomeItemsUseCase,
+    appVersion: String
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(HomeUiState(appVersion = appVersion))
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
         loadItems()
-        refresh()
+        onEvent(HomeUiEvent.Refresh)
     }
 
-    fun refresh() {
+    fun onEvent(event: HomeUiEvent) {
+        when (event) {
+            HomeUiEvent.Refresh -> refresh()
+            is HomeUiEvent.AddItem -> addItem(event.title, event.description)
+            is HomeUiEvent.DeleteItem -> removeItem(event.id)
+            is HomeUiEvent.UpdateItem -> updateItem(event.item)
+        }
+    }
+
+    private fun refresh() {
         viewModelScope.launch {
             _uiState.update { it.copy(isRefreshing = true) }
             syncHomeItemsUseCase()
@@ -66,7 +84,7 @@ class HomeViewModel(
         }
     }
 
-    fun addItem(title: String, description: String) {
+    private fun addItem(title: String, description: String) {
         viewModelScope.launch {
             val newItem = HomeItem(
                 id = Clock.System.now().toEpochMilliseconds().toString(),
@@ -77,13 +95,13 @@ class HomeViewModel(
         }
     }
 
-    fun removeItem(id: String) {
+    private fun removeItem(id: String) {
         viewModelScope.launch {
             removeHomeItemUseCase(id)
         }
     }
 
-    fun updateItem(item: HomeItem) {
+    private fun updateItem(item: HomeItem) {
         viewModelScope.launch {
             updateHomeItemUseCase(item)
         }

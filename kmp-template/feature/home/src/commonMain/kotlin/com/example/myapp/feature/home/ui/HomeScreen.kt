@@ -46,7 +46,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.libs.version.appVersion
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
 import myapp.feature.home.generated.resources.home_delete_content_description
@@ -70,59 +69,35 @@ fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showAddDialog by remember { mutableStateOf(false) }
-    var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
 
     HomeScreenContent(
         uiState = uiState,
-        appVersion = appVersion,
-        onRefresh = { viewModel.refresh() },
-        onAddClick = { showAddDialog = true },
-        onDeleteClick = { viewModel.removeItem(it.id) },
-        onEditClick = { itemToEdit = it },
+        onEvent = viewModel::onEvent,
         onWeatherClick = onWeatherClick
     )
-
-    if (showAddDialog) {
-        HomeItemDialog(
-            onDismiss = { showAddDialog = false },
-            onConfirm = { title, description ->
-                viewModel.addItem(title, description)
-                showAddDialog = false
-            }
-        )
-    }
-
-    itemToEdit?.let { item ->
-        HomeItemDialog(
-            initialTitle = item.title,
-            initialDescription = item.description,
-            onDismiss = { itemToEdit = null },
-            onConfirm = { title, description ->
-                viewModel.updateItem(item.copy(title = title, description = description))
-                itemToEdit = null
-            }
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     uiState: HomeUiState,
-    appVersion: String = "",
-    onRefresh: () -> Unit = {},
+    onEvent: (HomeUiEvent) -> Unit,
     onAddClick: () -> Unit = {},
-    onDeleteClick: (HomeItem) -> Unit = {},
     onEditClick: (HomeItem) -> Unit = {},
     onWeatherClick: () -> Unit = {}
 ) {
+    var showAddDialog by remember { mutableStateOf(false) }
+    var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.home_title)) },
                 actions = {
-                    IconButton(onClick = onRefresh, enabled = !uiState.isRefreshing) {
+                    IconButton(
+                        onClick = { onEvent(HomeUiEvent.Refresh) },
+                        enabled = !uiState.isRefreshing
+                    ) {
                         if (uiState.isRefreshing) {
                             CircularProgressIndicator(modifier = Modifier.padding(8.dp), strokeWidth = 2.dp)
                         } else {
@@ -164,7 +139,7 @@ fun HomeScreenContent(
                         items(uiState.items) { item ->
                             HomeItemCard(
                                 item = item,
-                                onDeleteClick = { onDeleteClick(item) },
+                                onDeleteClick = { onEvent(HomeUiEvent.DeleteItem(item.id)) },
                                 onEditClick = { onEditClick(item) }
                             )
                         }
@@ -172,9 +147,9 @@ fun HomeScreenContent(
                 }
             }
 
-            if (appVersion.isNotBlank()) {
+            if (uiState.appVersion.isNotBlank()) {
                 Text(
-                    text = "v$appVersion",
+                    text = "v${uiState.appVersion}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
@@ -183,6 +158,28 @@ fun HomeScreenContent(
                 )
             }
         }
+    }
+
+    if (showAddDialog) {
+        HomeItemDialog(
+            onDismiss = { showAddDialog = false },
+            onConfirm = { title, description ->
+                onEvent(HomeUiEvent.AddItem(title, description))
+                showAddDialog = false
+            }
+        )
+    }
+
+    itemToEdit?.let { item ->
+        HomeItemDialog(
+            initialTitle = item.title,
+            initialDescription = item.description,
+            onDismiss = { itemToEdit = null },
+            onConfirm = { title, description ->
+                onEvent(HomeUiEvent.UpdateItem(item.copy(title = title, description = description)))
+                itemToEdit = null
+            }
+        )
     }
 }
 
@@ -308,6 +305,7 @@ private fun HomeScreenPreview() {
                 HomeItem("1", "Preview Item", "This is a preview description"),
                 HomeItem("2", "Another Item", "Another preview description")
             )
-        )
+        ),
+        onEvent = {}
     )
 }

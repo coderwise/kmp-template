@@ -14,5 +14,13 @@ dependencies {
 }
 
 compose.desktop {
-    application { mainClass = "com.example.myapp.desktop.MainKt" }
+    application {
+        mainClass = "com.example.myapp.desktop.MainKt"
+
+        nativeDistributions {
+            jvmArgs(
+                "-Dapple.awt.application.appearance=system"
+            )
+        }
+    }
 }
