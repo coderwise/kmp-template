@@ -20,8 +20,8 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:api"))
-            implementation(project(":core:network"))
-            implementation(project(":core:database"))
+            implementation(project(":libs:network"))
+            implementation(project(":libs:database"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)

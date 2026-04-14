@@ -23,9 +23,9 @@ kotlin {
             implementation(project(":core:domain"))
             implementation(project(":core:api"))
             implementation(project(":core:ui"))
-            implementation(project(":core:network"))
-            implementation(project(":core:database"))
-            implementation(project(":core:version"))
+            implementation(project(":libs:network"))
+            implementation(project(":libs:database"))
+            implementation(project(":libs:version"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)

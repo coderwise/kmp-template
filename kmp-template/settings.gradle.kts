@@ -25,6 +25,11 @@ file("core").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts"
     include(":core:${it.name}")
 }
 
+// Automatically include libs modules
+file("libs").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
+    include(":libs:${it.name}")
+}
+
 // Automatically include feature modules
 file("feature").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
     include(":feature:${it.name}")
