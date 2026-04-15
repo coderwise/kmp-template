@@ -38,6 +38,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.ui.MyAppTheme
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
+import myapp.feature.weather.generated.resources.Res
+import myapp.feature.weather.generated.resources.weather_back_content_description
+import myapp.feature.weather.generated.resources.weather_error
+import myapp.feature.weather.generated.resources.weather_search_placeholder
+import myapp.feature.weather.generated.resources.weather_temperature
+import myapp.feature.weather.generated.resources.weather_title
+import myapp.feature.weather.generated.resources.weather_unknown_error
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,10 +78,10 @@ fun WeatherScreenContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Weather Details") },
+                title = { Text(stringResource(Res.string.weather_title)) },
                 navigationIcon = {
                     IconButton(onClick = { onEvent(WeatherUiEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.weather_back_content_description))
                     }
                 }
             )
@@ -91,7 +99,7 @@ fun WeatherScreenContent(
                     value = uiState.searchQuery,
                     onValueChange = { onEvent(WeatherUiEvent.OnSearchQueryChange(it)) },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Search city...") },
+                    placeholder = { Text(stringResource(Res.string.weather_search_placeholder)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
@@ -137,7 +145,7 @@ fun WeatherScreenContent(
                         CircularProgressIndicator()
                     } else if (uiState.isError && uiState.weatherInfo == null) {
                         Text(
-                            text = "Error: ${uiState.errorMessage ?: "Unknown error"}",
+                            text = stringResource(Res.string.weather_error, uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error)),
                             color = MaterialTheme.colorScheme.error
                         )
                     } else if (uiState.weatherInfo != null) {
@@ -148,7 +156,7 @@ fun WeatherScreenContent(
                             )
                             Spacer(modifier = Modifier.height(16.dp))
                             Text(
-                                text = "${uiState.weatherInfo.temperature}°C",
+                                text = stringResource(Res.string.weather_temperature, uiState.weatherInfo.temperature),
                                 style = MaterialTheme.typography.displayLarge
                             )
                             Text(

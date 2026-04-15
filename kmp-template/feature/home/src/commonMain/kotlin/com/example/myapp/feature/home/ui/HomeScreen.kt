@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
+import myapp.feature.home.generated.resources.home_app_version
 import myapp.feature.home.generated.resources.home_delete_content_description
 import myapp.feature.home.generated.resources.home_dialog_add_title
 import myapp.feature.home.generated.resources.home_dialog_cancel
@@ -59,6 +60,7 @@ import myapp.feature.home.generated.resources.home_edit_content_description
 import myapp.feature.home.generated.resources.home_error
 import myapp.feature.home.generated.resources.home_refresh_content_description
 import myapp.feature.home.generated.resources.home_title
+import myapp.feature.home.generated.resources.home_weather_temp
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -149,7 +151,7 @@ fun HomeScreenContent(
 
             if (uiState.appVersion.isNotBlank()) {
                 Text(
-                    text = "v${uiState.appVersion}",
+                    text = stringResource(Res.string.home_app_version, uiState.appVersion),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
@@ -289,7 +291,7 @@ fun WeatherPill(onClick: () -> Unit) {
                 modifier = Modifier.height(18.dp)
             )
             Text(
-                text = "72°F",
+                text = stringResource(Res.string.home_weather_temp),
                 style = MaterialTheme.typography.labelLarge
             )
         }

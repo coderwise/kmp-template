@@ -21,10 +21,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(project(":core:domain"))
-            implementation(project(":core:api"))
             implementation(project(":core:ui"))
-            implementation(project(":libs:network"))
-            implementation(project(":libs:database"))
             implementation(project(":libs:version"))
 
             implementation(libs.kotlinx.coroutines.core)

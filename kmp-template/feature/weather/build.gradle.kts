@@ -35,6 +35,7 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.icons.extended)
             implementation(libs.compose.preview)
+            implementation(libs.compose.components.resources)
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
