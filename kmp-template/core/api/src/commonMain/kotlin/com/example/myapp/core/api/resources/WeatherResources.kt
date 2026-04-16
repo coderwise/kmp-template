@@ -1,4 +1,4 @@
-package com.example.myapp.core.api
+package com.example.myapp.core.api.resources
 
 import io.ktor.resources.Resource
 import kotlinx.serialization.Serializable

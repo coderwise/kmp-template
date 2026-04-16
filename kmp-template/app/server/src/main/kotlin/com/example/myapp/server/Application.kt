@@ -1,7 +1,7 @@
 package com.example.myapp.server
 
-import com.example.myapp.core.api.Home
-import com.example.myapp.core.api.Weather
+import com.example.myapp.core.api.resources.Home
+import com.example.myapp.core.api.resources.Weather
 import com.example.myapp.core.api.model.HomeItemApi
 import io.ktor.server.application.Application
 import io.ktor.server.application.install

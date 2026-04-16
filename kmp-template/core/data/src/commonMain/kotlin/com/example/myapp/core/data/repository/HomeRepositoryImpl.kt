@@ -2,7 +2,7 @@ package com.example.myapp.core.data.repository
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.example.myapp.core.api.Home
+import com.example.myapp.core.api.resources.Home
 import com.example.myapp.core.api.model.HomeItemApi
 import com.example.myapp.libs.database.AppDatabase
 import com.example.myapp.libs.database.HomeItemEntity
