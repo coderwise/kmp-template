@@ -1,0 +1,4 @@
+<resources>
+    <string name="home_edit_content_description">Edit</string>
+    <string name="home_delete_content_description">Delete</string>
+</resources>

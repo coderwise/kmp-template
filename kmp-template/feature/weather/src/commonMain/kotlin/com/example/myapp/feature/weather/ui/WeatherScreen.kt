@@ -36,7 +36,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.myapp.core.ui.MyAppTheme
+import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_back_content_description

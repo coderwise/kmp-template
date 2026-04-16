@@ -1,0 +1,109 @@
+package com.example.myapp.core.ui.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.theme.MyAppTheme
+import myapp.core.ui.generated.resources.Res
+import myapp.core.ui.generated.resources.home_delete_content_description
+import myapp.core.ui.generated.resources.home_edit_content_description
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun HomeItemCard(
+    item: HomeItem,
+    onDeleteClick: () -> Unit,
+    onEditClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                Row {
+                    IconButton(onClick = onEditClick) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(Res.string.home_edit_content_description)
+                        )
+                    }
+                    IconButton(onClick = onDeleteClick) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(Res.string.home_delete_content_description)
+                        )
+                    }
+                }
+            }
+            Text(
+                text = item.description,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemCardPreview() {
+    MyAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeItemCard(
+                item = HomeItem(
+                    id = "1",
+                    title = "Example Item",
+                    description = "This is a sample description for the HomeItemCard preview."
+                ),
+                onDeleteClick = {},
+                onEditClick = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemCardDarkModePreview() {
+    MyAppTheme(darkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeItemCard(
+                item = HomeItem(
+                    id = "1",
+                    title = "Example Item",
+                    description = "This is a sample description for the HomeItemCard preview."
+                ),
+                onDeleteClick = {},
+                onEditClick = {}
+            )
+        }
+    }
+}

@@ -6,7 +6,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
-import com.example.myapp.core.ui.MyAppTheme
+import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.weather.ui.WeatherScreen
 import com.example.myapp.libs.utils.PlatformColors

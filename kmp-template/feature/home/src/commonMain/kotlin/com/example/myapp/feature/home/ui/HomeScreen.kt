@@ -16,12 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -46,17 +43,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.components.HomeItemCard
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
 import myapp.feature.home.generated.resources.home_app_version
-import myapp.feature.home.generated.resources.home_delete_content_description
 import myapp.feature.home.generated.resources.home_dialog_add_title
 import myapp.feature.home.generated.resources.home_dialog_cancel
 import myapp.feature.home.generated.resources.home_dialog_confirm
 import myapp.feature.home.generated.resources.home_dialog_description_label
 import myapp.feature.home.generated.resources.home_dialog_edit_title
 import myapp.feature.home.generated.resources.home_dialog_title_label
-import myapp.feature.home.generated.resources.home_edit_content_description
 import myapp.feature.home.generated.resources.home_error
 import myapp.feature.home.generated.resources.home_refresh_content_description
 import myapp.feature.home.generated.resources.home_title
@@ -182,45 +178,6 @@ fun HomeScreenContent(
                 itemToEdit = null
             }
         )
-    }
-}
-
-@Composable
-fun HomeItemCard(
-    item: HomeItem,
-    onDeleteClick: () -> Unit,
-    onEditClick: () -> Unit
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = item.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.weight(1f)
-                )
-                Row {
-                    IconButton(onClick = onEditClick) {
-                        Icon(Icons.Default.Edit, contentDescription = stringResource(Res.string.home_edit_content_description))
-                    }
-                    IconButton(onClick = onDeleteClick) {
-                        Icon(Icons.Default.Delete, contentDescription = stringResource(Res.string.home_delete_content_description))
-                    }
-                }
-            }
-            Text(
-                text = item.description,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
     }
 }
 
