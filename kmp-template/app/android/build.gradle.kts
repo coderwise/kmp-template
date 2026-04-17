@@ -6,6 +6,8 @@ plugins {
     // NO kotlin.android here — AGP 9+ has built-in Kotlin support
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    //alias(libs.plugins.googleServices)
+    alias(libs.plugins.crashlytics)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -62,6 +64,11 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
+
+    // crashlytics
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 }
 
 fun getGitCommitCount(): Int {

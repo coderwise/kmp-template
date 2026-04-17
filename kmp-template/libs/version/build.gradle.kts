@@ -80,7 +80,7 @@ fun getGitCommitCount(): Int {
         val count = process.inputStream.bufferedReader().readText().trim().toInt()
         process.waitFor()
         count
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         1
     }
 }
