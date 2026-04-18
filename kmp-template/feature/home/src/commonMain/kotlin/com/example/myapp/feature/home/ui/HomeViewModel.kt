@@ -16,22 +16,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Clock
 
-data class HomeUiState(
-    val items: List<HomeItem> = emptyList(),
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val errorMessage: String? = null,
-    val isRefreshing: Boolean = false,
-    val appVersion: String = ""
-)
-
-sealed interface HomeUiEvent {
-    data object Refresh : HomeUiEvent
-    data class AddItem(val title: String, val description: String) : HomeUiEvent
-    data class DeleteItem(val id: String) : HomeUiEvent
-    data class UpdateItem(val item: HomeItem) : HomeUiEvent
-}
-
 class HomeViewModel(
     private val getHomeItemsUseCase: GetHomeItemsUseCase,
     private val addHomeItemUseCase: AddHomeItemUseCase,

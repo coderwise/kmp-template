@@ -13,22 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class WeatherUiState(
-    val searchQuery: String = "",
-    val searchResults: List<Location> = emptyList(),
-    val weatherInfo: WeatherInfo? = null,
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val errorMessage: String? = null
-)
-
-sealed interface WeatherUiEvent {
-    data class OnSearchQueryChange(val query: String) : WeatherUiEvent
-    data class OnLocationSelected(val location: Location) : WeatherUiEvent
-    data object OnSearchClick : WeatherUiEvent
-    data object OnBackClick : WeatherUiEvent
-}
-
 class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase

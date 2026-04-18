@@ -4,7 +4,6 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     // NO kotlin.android here — AGP 9+ has built-in Kotlin support
-    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     //alias(libs.plugins.googleServices)
     alias(libs.plugins.crashlytics)
