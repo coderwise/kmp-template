@@ -66,19 +66,23 @@ class WeatherViewModel(
 
     private fun fetchWeather(latitude: Double, longitude: Double, city: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, isError = false) }
+            _uiState.update { it.loading() }
             val result = getWeatherUseCase(latitude, longitude, city)
             _uiState.update { state ->
                 when (result) {
-                    is Result.Loading -> state.copy(isLoading = true, isError = false)
+                    is Result.Loading -> state.loading()
                     is Result.Success -> state.copy(isLoading = false, weatherInfo = result.data, isError = false)
-                    is Result.Error -> state.copy(
-                        isLoading = false,
-                        isError = true,
-                        errorMessage = result.message ?: result.exception.message
-                    )
+                    is Result.Error -> state.error(result.message ?: result.exception.message)
                 }
             }
         }
     }
 }
+
+private fun WeatherUiState.loading() = copy(
+    isLoading = true, isError = false
+)
+
+private fun WeatherUiState.error(message: String?) = copy(
+    isLoading = false, isError = true, errorMessage = message
+)

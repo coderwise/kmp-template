@@ -55,13 +55,9 @@ class HomeViewModel(
             getHomeItemsUseCase().collect { result ->
                 _uiState.update { state ->
                     when (result) {
-                        is Result.Loading -> state.copy(isLoading = true, isError = false)
+                        is Result.Loading -> state.loading()
                         is Result.Success -> state.copy(isLoading = false, items = result.data, isError = false)
-                        is Result.Error -> state.copy(
-                            isLoading = false,
-                            isError = true,
-                            errorMessage = result.message ?: result.exception.message
-                        )
+                        is Result.Error -> state.error(result.message ?: result.exception.message)
                     }
                 }
             }
@@ -91,3 +87,11 @@ class HomeViewModel(
         }
     }
 }
+
+private fun HomeUiState.loading() = copy(
+    isLoading = true, isError = false
+)
+
+private fun HomeUiState.error(message: String?) = copy(
+    isLoading = false, isError = true, errorMessage = message
+)
