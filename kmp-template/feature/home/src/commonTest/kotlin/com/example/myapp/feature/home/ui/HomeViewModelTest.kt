@@ -1,6 +1,6 @@
 package com.example.myapp.feature.home.ui
 
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.feature.home.domain.usecase.*
 import dev.mokkery.answering.returns

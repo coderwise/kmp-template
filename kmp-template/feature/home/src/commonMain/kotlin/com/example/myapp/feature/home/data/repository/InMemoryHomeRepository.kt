@@ -1,6 +1,6 @@
 package com.example.myapp.feature.home.data.repository
 
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow

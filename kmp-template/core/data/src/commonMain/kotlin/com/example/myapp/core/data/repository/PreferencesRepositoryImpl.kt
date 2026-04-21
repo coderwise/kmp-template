@@ -1,7 +1,7 @@
 package com.example.myapp.core.data.repository
 
 import com.example.myapp.core.data.local.PrefsDataSource
-import com.example.myapp.core.domain.PreferencesRepository
+import com.example.myapp.core.domain.repository.PreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 

@@ -1,4 +1,4 @@
-package com.example.myapp.core.domain
+package com.example.myapp.core.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 

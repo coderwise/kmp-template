@@ -6,7 +6,7 @@ import com.example.myapp.core.api.resources.Home
 import com.example.myapp.core.api.model.HomeItemApi
 import com.example.myapp.libs.database.AppDatabase
 import com.example.myapp.libs.database.HomeItemEntity
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
 import io.ktor.client.HttpClient

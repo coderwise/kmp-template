@@ -1,6 +1,6 @@
 package com.example.myapp.core.domain.repository
 
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import kotlinx.coroutines.flow.Flow
 

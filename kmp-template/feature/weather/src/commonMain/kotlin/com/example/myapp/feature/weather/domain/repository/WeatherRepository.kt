@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.domain.repository
 
-import com.example.myapp.core.domain.Result
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.feature.weather.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 
