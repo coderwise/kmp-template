@@ -2,7 +2,8 @@ package com.example.myapp.feature.weather.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.Result
+import com.example.myapp.core.domain.model.onError
+import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.feature.weather.domain.model.Location
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
@@ -45,9 +46,8 @@ class WeatherViewModel(
 
     private fun searchLocations(query: String) {
         viewModelScope.launch {
-            val result = searchLocationsUseCase(query)
-            if (result is Result.Success) {
-                _uiState.update { it.copy(searchResults = result.data) }
+            searchLocationsUseCase(query).onSuccess { data ->
+                _uiState.update { it.copy(searchResults = data) }
             }
         }
     }
@@ -67,14 +67,13 @@ class WeatherViewModel(
     private fun fetchWeather(latitude: Double, longitude: Double, city: String) {
         viewModelScope.launch {
             _uiState.update { it.loading() }
-            val result = getWeatherUseCase(latitude, longitude, city)
-            _uiState.update { state ->
-                when (result) {
-                    is Result.Loading -> state.loading()
-                    is Result.Success -> state.copy(isLoading = false, weatherInfo = result.data, isError = false)
-                    is Result.Error -> state.error(result.message ?: result.exception.message)
+            getWeatherUseCase(latitude, longitude, city)
+                .onSuccess { data ->
+                    _uiState.update { it.copy(isLoading = false, weatherInfo = data, isError = false) }
                 }
-            }
+                .onError { exception, message ->
+                    _uiState.update { it.error(message ?: exception.message) }
+                }
         }
     }
 }

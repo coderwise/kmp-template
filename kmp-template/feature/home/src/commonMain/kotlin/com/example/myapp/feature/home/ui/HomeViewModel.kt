@@ -2,8 +2,10 @@ package com.example.myapp.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.domain.model.onError
+import com.example.myapp.core.domain.model.onLoading
+import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
@@ -53,12 +55,12 @@ class HomeViewModel(
     private fun loadItems() {
         viewModelScope.launch {
             getHomeItemsUseCase().collect { result ->
-                _uiState.update { state ->
-                    when (result) {
-                        is Result.Loading -> state.loading()
-                        is Result.Success -> state.copy(isLoading = false, items = result.data, isError = false)
-                        is Result.Error -> state.error(result.message ?: result.exception.message)
-                    }
+                result.onLoading {
+                    _uiState.update { it.loading() }
+                }.onSuccess { data ->
+                    _uiState.update { it.copy(isLoading = false, items = data, isError = false) }
+                }.onError { exception, message ->
+                    _uiState.update { it.error(message ?: exception.message) }
                 }
             }
         }
