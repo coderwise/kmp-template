@@ -1,5 +1,8 @@
 package com.example.myapp.app.common.navigation
 
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
@@ -21,6 +24,12 @@ fun AppNavigation(darkTheme: Boolean = isSystemInDarkTheme()) {
         PlatformColors(darkTheme)
         NavDisplay(
             backStack = backStack,
+            popTransitionSpec = {
+                slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+            },
+            predictivePopTransitionSpec = {
+                slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
+            },
             entryProvider = entryProvider {
                 entry<HomeDestination> {
                     HomeScreen(

@@ -19,7 +19,7 @@ kotlin {
             linkerOpts("-lsqlite3")
         }
     }
-    js(IR) { browser() }
+    js { browser() }
     jvm("desktop")
 
     sourceSets {

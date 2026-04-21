@@ -11,7 +11,7 @@ kotlin {
         minSdk = libs.versions.minSdk.get().toInt()
     }
     iosArm64(); iosSimulatorArm64()
-    js(IR) {
+    js {
         browser()
         nodejs()
     }
@@ -29,7 +29,7 @@ kotlin {
             implementation(libs.koin.android)
         }
         iosMain.dependencies { implementation(libs.sqldelight.native) }
-        jsMain.dependencies { implementation(libs.sqldelight.web) }
+        jsMain.dependencies { }
         val desktopMain by getting { dependencies { implementation(libs.sqldelight.sqlite) } }
     }
 }
