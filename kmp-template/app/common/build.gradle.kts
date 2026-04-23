@@ -42,3 +42,7 @@ kotlin {
         }
     }
 }
+
+compose.resources {
+    packageOfResClass = "com.example.myapp.app.common"
+}
