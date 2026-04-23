@@ -1,5 +1,8 @@
 package com.example.myapp.feature.weather.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Location(
     val name: String,
     val latitude: Double,

@@ -5,25 +5,40 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.feature.weather.domain.model.Location
+import com.example.myapp.feature.weather.domain.repository.SettingsRepository
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
-    private val searchLocationsUseCase: SearchLocationsUseCase
+    private val searchLocationsUseCase: SearchLocationsUseCase,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WeatherUiState())
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
     init {
-        // Default location
-        fetchWeather(51.5074, -0.1278, "London")
+        loadSavedLocation()
+    }
+
+    private fun loadSavedLocation() {
+        viewModelScope.launch {
+            val savedLocation = settingsRepository.getSelectedLocation().firstOrNull()
+            if (savedLocation != null) {
+                _uiState.update { it.copy(searchQuery = savedLocation.name) }
+                fetchWeather(savedLocation.latitude, savedLocation.longitude, savedLocation.name)
+            } else {
+                // Default location
+                fetchWeather(51.5074, -0.1278, "London")
+            }
+        }
     }
 
     fun onEvent(event: WeatherUiEvent) {
@@ -54,6 +69,9 @@ class WeatherViewModel(
 
     private fun onLocationSelected(location: Location) {
         _uiState.update { it.copy(searchQuery = location.name, searchResults = emptyList()) }
+        viewModelScope.launch {
+            settingsRepository.saveSelectedLocation(location)
+        }
         fetchWeather(location.latitude, location.longitude, location.name)
     }
 
