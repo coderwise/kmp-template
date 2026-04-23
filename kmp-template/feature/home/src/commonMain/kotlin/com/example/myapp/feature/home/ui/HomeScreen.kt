@@ -80,8 +80,6 @@ fun HomeScreen(
 fun HomeScreenContent(
     uiState: HomeUiState,
     onEvent: (HomeUiEvent) -> Unit,
-    onAddClick: () -> Unit = {},
-    onEditClick: (HomeItem) -> Unit = {},
     onWeatherClick: () -> Unit = {}
 ) {
     var showAddDialog by remember { mutableStateOf(false) }
@@ -97,9 +95,15 @@ fun HomeScreenContent(
                         enabled = !uiState.isRefreshing
                     ) {
                         if (uiState.isRefreshing) {
-                            CircularProgressIndicator(modifier = Modifier.padding(8.dp), strokeWidth = 2.dp)
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(8.dp),
+                                strokeWidth = 2.dp
+                            )
                         } else {
-                            Icon(Icons.Default.Refresh, contentDescription = stringResource(Res.string.home_refresh_content_description))
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = stringResource(Res.string.home_refresh_content_description)
+                            )
                         }
                     }
                     WeatherPill(onClick = onWeatherClick)
@@ -107,8 +111,11 @@ fun HomeScreenContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(Res.string.home_add_item_content_description))
+            FloatingActionButton(onClick = { showAddDialog = true }) {
+                Icon(
+                    Icons.Default.Add,
+                    contentDescription = stringResource(Res.string.home_add_item_content_description)
+                )
             }
         }
     ) { padding ->
@@ -138,7 +145,7 @@ fun HomeScreenContent(
                             HomeItemCard(
                                 item = item,
                                 onDeleteClick = { onEvent(HomeUiEvent.DeleteItem(item.id)) },
-                                onEditClick = { onEditClick(item) }
+                                onEditClick = { itemToEdit = item }
                             )
                         }
                     }
@@ -193,7 +200,13 @@ fun HomeItemDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(if (initialTitle.isEmpty()) stringResource(Res.string.home_dialog_add_title) else stringResource(Res.string.home_dialog_edit_title)) },
+        title = {
+            Text(
+                if (initialTitle.isEmpty()) stringResource(Res.string.home_dialog_add_title) else stringResource(
+                    Res.string.home_dialog_edit_title
+                )
+            )
+        },
         text = {
             Column {
                 OutlinedTextField(
