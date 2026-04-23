@@ -8,7 +8,7 @@ The project is divided into several top-level directories:
 
 - **`app/`**: Contains platform-specific application modules.
     - Android, Desktop, Web, Server.
-- **`core/`**: Shared core modules.
+- **`core/`**: Shared core modules. These modules must contain only platform-agnostic logic; platform-specific implementations (`expect`/`actual`) are not allowed in `:core:*` modules.
     - `:core:domain`: Pure business logic. Contains domain models (entities), repository interfaces, and use cases.
     - `:core:data`: Implementation of data access logic. Contains repository implementations, local data sources (e.g., Prefs), and DI configuration for data.
     - `:core:api`: Networking logic and API definitions. Contains Ktor-based API clients, API response models, and endpoint resources.
@@ -23,7 +23,7 @@ The project is divided into several top-level directories:
 To maintain a clean and maintainable codebase, we enforce the following dependency rules:
 - **`:core:domain` module**: This module contains core business logic (entities, use cases, repository interfaces) and **must not** depend on any other modules.
 - **`libs/` modules**: These are foundational library modules and **must not** depend on `:app:*`, `:core:*`, or `:feature:*` modules.
-- **`core/` modules** (excluding `:core:domain`): Can depend on `libs/` and `:core:domain`, but should not depend on `feature/` or `app/`.
+- **`core/` modules** (excluding `:core:domain`): Can depend on `libs/` and `:core:domain`, but should not depend on `feature/` or `app/`. These modules **must not** contain any platform-specific logic.
 - **`feature/` modules**: Can depend on `core/` and `libs/`. They should be self-contained and not depend on other features or the `app/` module.
 - **`app/` modules**: Can depend on any other module (`feature/`, `core/`, `libs/`).
 
@@ -53,7 +53,7 @@ We use a **Unidirectional Data Flow (UDF)** pattern for UI components:
 - Screen content composables should be decoupled from ViewModels, receiving `UiState` and the `onEvent` handler as parameters.
 
 ## Best Practices
-- **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required.
+- **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required. **Platform-specific logic is prohibited in `:core:*` modules.**
 - **DI Management**: New dependencies must be registered in the corresponding Koin module.
 - **Resources**: Use `myapp.<module_name>.generated.resources.Res` and `stringResource`. Resources are located in `src/commonMain/composeResources/values/`.
 - **UI Previews**: Always include `@Preview` composables using `MyAppTheme`, covering both light and dark modes.

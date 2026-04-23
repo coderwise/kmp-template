@@ -4,7 +4,7 @@ This document provides instructions and context for AI agents working on this Ko
 
 ## Project Structure
 - `app/`: Platform-specific application modules (Android, Desktop, Web, Server).
-- `core/`: Shared core modules (Common UI).
+- `core/`: Shared core modules (Common UI). **Note**: `:core:*` modules must not contain platform-specific logic.
 - `libs/`: Shared library modules (Network, Version, Database).
 - `feature/`: Feature-specific modules (e.g., Home).
 
@@ -18,7 +18,7 @@ This document provides instructions and context for AI agents working on this Ko
 
 ## Guidelines for Agents
 1. **DI Management**: When adding new dependencies, ensure they are registered in the corresponding Koin module and included in the `AppModule` if necessary.
-2. **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required.
+2. **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required. **Platform-specific logic is prohibited in `:core:*` modules.**
 3. **Database**: SQLDelight schemas are located in `libs:database`. Run `./gradlew generateSqlDelightInterface` after schema changes.
 4. **Consistency**: Follow the existing architectural patterns (Domain-driven design with UseCases and Repositories).
 5. **UI-ViewModel Pattern**: Use a unidirectional data flow (UDF) pattern. ViewModels should expose a single `UiState` StateFlow and handle user interactions through a sealed interface `UiEvent` via an `onEvent` method. `UiState` and `UiEvent` should be defined in separate files (e.g., `HomeUiState.kt` and `HomeUiEvent.kt`). Screen content composables should be decoupled from ViewModels, receiving `UiState` and the `onEvent` handler as parameters.
