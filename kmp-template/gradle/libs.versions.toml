@@ -5,7 +5,7 @@ minSdk = "26"
 
 # Plugins
 agp = "9.2.0"
-kotlin = "2.3.20"
+kotlin = "2.3.21"
 compose-multiplatform = "1.10.3"
 mokkery = "3.3.0"
 
@@ -17,7 +17,7 @@ compose-material3 = "1.9.0"
 coroutines = "1.10.2"
 datetime = "0.7.1"
 koin = "4.2.1"
-ktor = "3.4.2"
+ktor = "3.4.3"
 lifecycle = "2.10.0"
 navigation3 = "1.1.1"
 navigation3-ui = "1.1.0"
@@ -36,6 +36,7 @@ androidx-datastore-core = { module = "androidx.datastore:datastore-core", versio
 androidx-datastore-core-okio = { module = "androidx.datastore:datastore-core-okio", version.ref = "datastore" }
 lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
 
 # Compose
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }

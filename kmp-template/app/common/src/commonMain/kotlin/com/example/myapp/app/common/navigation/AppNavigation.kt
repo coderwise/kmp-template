@@ -5,8 +5,10 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.ui.theme.MyAppTheme
@@ -24,6 +26,10 @@ fun AppNavigation(darkTheme: Boolean = isSystemInDarkTheme()) {
         PlatformColors(darkTheme)
         NavDisplay(
             backStack = backStack,
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberViewModelStoreNavEntryDecorator()
+            ),
             popTransitionSpec = {
                 slideInHorizontally { -it } togetherWith slideOutHorizontally { it }
             },
