@@ -68,7 +68,15 @@ read -r -p "Generate project? [y/N] " confirm
 
 # ── Copy template ───────────────────────────────────────────────────────────
 echo "-> Copying template..."
-cp -r "$TEMPLATE_DIR" "$DEST"
+rsync -a \
+    --exclude='.git/' \
+    --exclude='build/' \
+    --exclude='.gradle/' \
+    --exclude='.idea/' \
+    --exclude='node_modules/' \
+    --exclude='local.properties' \
+    --exclude='.DS_Store' \
+    "$TEMPLATE_DIR/" "$DEST/"
 
 # ── Replace content in all text files ───────────────────────────────────────
 echo "-> Replacing placeholders in file contents..."

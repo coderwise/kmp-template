@@ -75,3 +75,5 @@ dist/
 
 # Distribution / Packaging
 /keystore.properties
+
+/secrets/
