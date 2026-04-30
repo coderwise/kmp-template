@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
@@ -23,6 +24,7 @@ class WeatherViewModel(
 
     private val _uiState = MutableStateFlow(WeatherUiState())
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
+    private var searchJob: Job? = null
 
     init {
         loadSavedLocation()
@@ -46,23 +48,28 @@ class WeatherViewModel(
             is WeatherUiEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             WeatherUiEvent.OnSearchClick -> onSearchClick()
-            WeatherUiEvent.OnBackClick -> { /* Handled in Screen */ }
+            WeatherUiEvent.OnBackClick -> { /* Handled in Screen */
+            }
         }
     }
 
     private fun onSearchQueryChange(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
         if (query.length >= 2) {
-            searchLocations(query)
+            searchLocations(query.trim())
         } else {
+            searchJob?.cancel()
             _uiState.update { it.copy(searchResults = emptyList()) }
         }
     }
 
     private fun searchLocations(query: String) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             searchLocationsUseCase(query).onSuccess { data ->
-                _uiState.update { it.copy(searchResults = data) }
+                if (_uiState.value.searchQuery == query) {
+                    _uiState.update { it.copy(searchResults = data) }
+                }
             }
         }
     }
@@ -87,7 +94,13 @@ class WeatherViewModel(
             _uiState.update { it.loading() }
             getWeatherUseCase(latitude, longitude, city)
                 .onSuccess { data ->
-                    _uiState.update { it.copy(isLoading = false, weatherInfo = data, isError = false) }
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            weatherInfo = data,
+                            isError = false
+                        )
+                    }
                 }
                 .onError { exception, message ->
                     _uiState.update { it.error(message ?: exception.message) }
