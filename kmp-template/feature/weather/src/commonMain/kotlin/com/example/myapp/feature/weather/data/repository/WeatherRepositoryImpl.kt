@@ -46,4 +46,25 @@ class WeatherRepositoryImpl(
             Result.Error(e)
         }
     }
+
+    override suspend fun reverseGeocode(latitude: Double, longitude: Double): Result<Location> {
+        return try {
+            val response = api.reverseGeocode(latitude, longitude)
+            val name = response.address?.let {
+                it.city ?: it.town ?: it.village ?: it.hamlet ?: it.suburb ?: response.name
+            } ?: response.display_name
+
+            Result.Success(
+                Location(
+                    name = name,
+                    latitude = latitude,
+                    longitude = longitude,
+                    country = response.address?.country,
+                    admin1 = response.address?.state
+                )
+            )
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
 }

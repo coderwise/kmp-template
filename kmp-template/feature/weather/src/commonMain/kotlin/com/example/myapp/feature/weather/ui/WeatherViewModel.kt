@@ -7,6 +7,7 @@ import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.repository.SettingsRepository
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
+import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
 import com.example.myapp.libs.location.LocationProvider
 import com.example.myapp.libs.location.LocationResult
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase,
+    private val reverseGeocodeUseCase: ReverseGeocodeUseCase,
     private val settingsRepository: SettingsRepository,
     private val locationProvider: LocationProvider
 ) : ViewModel() {
@@ -37,7 +39,6 @@ class WeatherViewModel(
         viewModelScope.launch {
             val savedLocation = settingsRepository.getSelectedLocation().firstOrNull()
             if (savedLocation != null) {
-                _uiState.update { it.copy(searchQuery = savedLocation.name) }
                 fetchWeather(savedLocation.latitude, savedLocation.longitude, savedLocation.name)
             } else {
                 // Default location
@@ -62,13 +63,20 @@ class WeatherViewModel(
             _uiState.update { it.loading() }
             when (val result = locationProvider.getCurrentLocation()) {
                 is LocationResult.Success -> {
-                    onLocationSelected(
-                        Location(
-                            name = "Current Location",
-                            latitude = result.data.latitude,
-                            longitude = result.data.longitude
+                    val lat = result.data.latitude
+                    val lon = result.data.longitude
+                    
+                    reverseGeocodeUseCase(lat, lon).onSuccess { location ->
+                        onLocationSelected(location)
+                    }.onError { _, _ ->
+                        onLocationSelected(
+                            Location(
+                                name = "Current Location",
+                                latitude = lat,
+                                longitude = lon
+                            )
                         )
-                    )
+                    }
                 }
                 is LocationResult.Error -> {
                     _uiState.update { it.error(result.message ?: result.exception.message) }
@@ -99,7 +107,7 @@ class WeatherViewModel(
     }
 
     private fun onLocationSelected(location: Location) {
-        _uiState.update { it.copy(searchQuery = location.name, searchResults = emptyList()) }
+        _uiState.update { it.copy(searchResults = emptyList()) }
         viewModelScope.launch {
             settingsRepository.saveSelectedLocation(location)
         }
