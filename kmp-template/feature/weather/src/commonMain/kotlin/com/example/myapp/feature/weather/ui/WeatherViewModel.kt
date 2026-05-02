@@ -50,9 +50,9 @@ class WeatherViewModel(
         when (event) {
             is WeatherUiEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
-            WeatherUiEvent.OnSearchClick -> onSearchClick()
-            WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
-            WeatherUiEvent.OnBackClick -> { /* Handled in Screen */
+            is WeatherUiEvent.OnSearchClick -> onSearchClick()
+            is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
+            is WeatherUiEvent.OnBackClick -> { /* Handled in Screen */
             }
         }
     }
@@ -62,7 +62,13 @@ class WeatherViewModel(
             _uiState.update { it.loading() }
             when (val result = locationProvider.getCurrentLocation()) {
                 is LocationResult.Success -> {
-                    fetchWeather(result.data.latitude, result.data.longitude, "Current Location")
+                    onLocationSelected(
+                        Location(
+                            name = "Current Location",
+                            latitude = result.data.latitude,
+                            longitude = result.data.longitude
+                        )
+                    )
                 }
                 is LocationResult.Error -> {
                     _uiState.update { it.error(result.message ?: result.exception.message) }

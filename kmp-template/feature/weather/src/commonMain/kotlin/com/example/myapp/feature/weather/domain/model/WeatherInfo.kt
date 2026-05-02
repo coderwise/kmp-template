@@ -6,5 +6,7 @@ import kotlinx.serialization.Serializable
 data class WeatherInfo(
     val temperature: Double,
     val condition: String,
-    val city: String
+    val city: String,
+    val latitude: Double,
+    val longitude: Double
 )

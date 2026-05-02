@@ -17,7 +17,9 @@ class WeatherRepositoryImpl(
                 WeatherInfo(
                     temperature = response.current_weather.temperature,
                     condition = "Clear", // Simplified for this example
-                    city = city
+                    city = city,
+                    latitude = latitude,
+                    longitude = longitude
                 )
             )
         } catch (e: Exception) {

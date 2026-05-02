@@ -39,6 +39,7 @@ import com.example.myapp.libs.permissions.isGranted
 import com.example.myapp.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_back_content_description
+import myapp.feature.weather.generated.resources.weather_coordinates
 import myapp.feature.weather.generated.resources.weather_error
 import myapp.feature.weather.generated.resources.weather_search_placeholder
 import myapp.feature.weather.generated.resources.weather_temperature
@@ -172,6 +173,12 @@ fun WeatherScreenContent(
                                 text = uiState.weatherInfo.condition,
                                 style = MaterialTheme.typography.titleMedium
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(Res.string.weather_coordinates, uiState.weatherInfo.latitude, uiState.weatherInfo.longitude),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                         }
                     }
                 }
@@ -190,7 +197,9 @@ private fun WeatherScreenPreview() {
                 weatherInfo = WeatherInfo(
                     temperature = 22.0,
                     condition = "Sunny",
-                    city = "London"
+                    city = "London",
+                    latitude = 51.5074,
+                    longitude = -0.1278
                 )
             ),
             onEvent = {}
