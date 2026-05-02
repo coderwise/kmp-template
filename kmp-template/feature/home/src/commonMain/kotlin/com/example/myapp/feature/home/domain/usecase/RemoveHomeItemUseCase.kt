@@ -5,10 +5,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-open class RemoveHomeItemUseCase(
+interface RemoveHomeItemUseCase {
+    suspend operator fun invoke(id: String)
+}
+
+class RemoveHomeItemUseCaseImpl(
     private val repository: HomeRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(id: String) =
+) : RemoveHomeItemUseCase {
+    override suspend operator fun invoke(id: String) =
         withContext(dispatcher) { repository.removeHomeItem(id) }
 }

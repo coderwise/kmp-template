@@ -49,7 +49,8 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
         advanceUntilIdle()
@@ -71,7 +72,8 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
         advanceUntilIdle()
@@ -91,10 +93,11 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
-        viewModel.addItem("New Item", "Description")
+        viewModel.onEvent(HomeUiEvent.AddItem("New Item", "Description"))
         advanceUntilIdle()
 
         verifySuspend { addHomeItemUseCase(any()) }
@@ -111,10 +114,11 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
-        viewModel.removeItem("1")
+        viewModel.onEvent(HomeUiEvent.DeleteItem("1"))
         advanceUntilIdle()
 
         verifySuspend { removeHomeItemUseCase("1") }
@@ -132,10 +136,11 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
-        viewModel.updateItem(item)
+        viewModel.onEvent(HomeUiEvent.UpdateItem(item))
         advanceUntilIdle()
 
         verifySuspend { updateHomeItemUseCase(item) }
@@ -151,14 +156,15 @@ class HomeViewModelTest {
             addHomeItemUseCase,
             removeHomeItemUseCase,
             updateHomeItemUseCase,
-            syncHomeItemsUseCase
+            syncHomeItemsUseCase,
+            "1.0.0"
         )
 
         // Initial refresh from init
         advanceUntilIdle()
         assertFalse(viewModel.uiState.value.isRefreshing)
 
-        viewModel.refresh()
+        viewModel.onEvent(HomeUiEvent.Refresh)
         // We can't easily check the 'true' state without more complex setup since it's immediate
         // but we can verify it finishes as false.
         advanceUntilIdle()

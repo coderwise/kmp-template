@@ -6,11 +6,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-open class UpdateHomeItemUseCase(
+interface UpdateHomeItemUseCase {
+    suspend operator fun invoke(item: HomeItem)
+}
+
+class UpdateHomeItemUseCaseImpl(
     private val repository: HomeRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(item: HomeItem) = withContext(dispatcher) {
+) : UpdateHomeItemUseCase {
+    override suspend operator fun invoke(item: HomeItem) = withContext(dispatcher) {
         repository.updateHomeItem(item)
     }
 }

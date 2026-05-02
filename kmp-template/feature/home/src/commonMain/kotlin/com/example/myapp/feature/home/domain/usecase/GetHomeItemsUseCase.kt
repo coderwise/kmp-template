@@ -8,9 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 
-open class GetHomeItemsUseCase(
+interface GetHomeItemsUseCase {
+    operator fun invoke(): Flow<Result<List<HomeItem>>>
+}
+
+class GetHomeItemsUseCaseImpl(
     private val repository: HomeRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    operator fun invoke(): Flow<Result<List<HomeItem>>> = repository.getHomeItems().flowOn(dispatcher)
+) : GetHomeItemsUseCase {
+    override operator fun invoke(): Flow<Result<List<HomeItem>>> = repository.getHomeItems().flowOn(dispatcher)
 }
