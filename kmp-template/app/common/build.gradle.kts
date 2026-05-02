@@ -29,6 +29,7 @@ kotlin {
             implementation(project(":core:data"))
             implementation(project(":feature:home"))
             implementation(project(":feature:weather"))
+            implementation(project(":feature:settings"))
             implementation(project(":libs:settings"))
             implementation(project(":libs:utils"))
 

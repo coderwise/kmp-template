@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -57,6 +58,7 @@ import myapp.feature.home.generated.resources.home_dialog_edit_title
 import myapp.feature.home.generated.resources.home_dialog_title_label
 import myapp.feature.home.generated.resources.home_error
 import myapp.feature.home.generated.resources.home_refresh_content_description
+import myapp.feature.home.generated.resources.home_settings_content_description
 import myapp.feature.home.generated.resources.home_title
 import myapp.feature.home.generated.resources.home_weather_temp
 import org.jetbrains.compose.resources.stringResource
@@ -66,6 +68,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun HomeScreen(
     onWeatherClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -73,7 +76,8 @@ fun HomeScreen(
     HomeScreenContent(
         uiState = uiState,
         onEvent = viewModel::onEvent,
-        onWeatherClick = onWeatherClick
+        onWeatherClick = onWeatherClick,
+        onSettingsClick = onSettingsClick
     )
 }
 
@@ -82,7 +86,8 @@ fun HomeScreen(
 fun HomeScreenContent(
     uiState: HomeUiState,
     onEvent: (HomeUiEvent) -> Unit,
-    onWeatherClick: () -> Unit = {}
+    onWeatherClick: () -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
     var showAddSheet by remember { mutableStateOf(false) }
     var itemToEdit by remember { mutableStateOf<HomeItem?>(null) }
@@ -107,6 +112,14 @@ fun HomeScreenContent(
                                 contentDescription = stringResource(Res.string.home_refresh_content_description)
                             )
                         }
+                    }
+                    IconButton(
+                        onClick = onSettingsClick
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = stringResource(Res.string.home_settings_content_description)
+                        )
                     }
                     WeatherPill(onClick = onWeatherClick)
                 }
