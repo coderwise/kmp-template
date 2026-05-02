@@ -21,6 +21,7 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:ui"))
+            implementation(project(":libs:version"))
             
             implementation(libs.koin.core)
             implementation(libs.koin.compose)

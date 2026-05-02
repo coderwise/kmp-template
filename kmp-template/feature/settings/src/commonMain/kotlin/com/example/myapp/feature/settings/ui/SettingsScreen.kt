@@ -2,6 +2,7 @@ package com.example.myapp.feature.settings.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,6 +33,7 @@ import myapp.feature.settings.generated.resources.settings_theme_light
 import myapp.feature.settings.generated.resources.settings_theme_selection
 import myapp.feature.settings.generated.resources.settings_theme_system
 import myapp.feature.settings.generated.resources.settings_title
+import myapp.feature.settings.generated.resources.settings_version
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
@@ -101,6 +103,15 @@ fun SettingsScreenContent(
                     onClick = { onEvent(SettingsUiEvent.ThemeChanged(ThemeType.DARK)) }
                 )
             }
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Text(
+                text = stringResource(Res.string.settings_version, uiState.appVersion),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -139,7 +150,10 @@ private fun ThemeOption(
 private fun SettingsScreenPreview() {
     MyAppTheme {
         SettingsScreenContent(
-            uiState = SettingsUiState(theme = ThemeType.SYSTEM),
+            uiState = SettingsUiState(
+                theme = ThemeType.SYSTEM,
+                appVersion = "1.0.0 (1)"
+            ),
             onBackClick = {},
             onEvent = {}
         )
@@ -151,7 +165,10 @@ private fun SettingsScreenPreview() {
 private fun SettingsScreenDarkPreview() {
     MyAppTheme(darkTheme = true) {
         SettingsScreenContent(
-            uiState = SettingsUiState(theme = ThemeType.DARK),
+            uiState = SettingsUiState(
+                theme = ThemeType.DARK,
+                appVersion = "1.0.0 (1)"
+            ),
             onBackClick = {},
             onEvent = {}
         )

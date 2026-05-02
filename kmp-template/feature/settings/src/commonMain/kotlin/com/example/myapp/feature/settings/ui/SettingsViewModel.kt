@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.feature.settings.domain.usecase.GetSettingsUseCase
 import com.example.myapp.feature.settings.domain.usecase.UpdateThemeUseCase
+import com.example.myapp.libs.version.appVersion
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -17,7 +18,10 @@ class SettingsViewModel(
 
     val uiState: StateFlow<SettingsUiState> = getSettingsUseCase()
         .map { settings ->
-            SettingsUiState(theme = settings.theme)
+            SettingsUiState(
+                theme = settings.theme,
+                appVersion = appVersion
+            )
         }
         .stateIn(
             scope = viewModelScope,
