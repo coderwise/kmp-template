@@ -31,6 +31,7 @@ kotlin {
             implementation(project(":feature:weather"))
             implementation(project(":feature:settings"))
             implementation(project(":libs:settings"))
+            implementation(project(":libs:location"))
             implementation(project(":libs:utils"))
 
             implementation(libs.compose.runtime)

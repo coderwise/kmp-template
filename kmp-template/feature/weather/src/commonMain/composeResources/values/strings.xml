@@ -2,6 +2,7 @@
     <string name="weather_title">Weather Details</string>
     <string name="weather_back_content_description">Back</string>
     <string name="weather_search_placeholder">Search city...</string>
+    <string name="weather_use_current_location">Use current location</string>
     <string name="weather_error">Error: %1$s</string>
     <string name="weather_unknown_error">Unknown error</string>
     <string name="weather_temperature">%1$s°C</string>

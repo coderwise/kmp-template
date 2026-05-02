@@ -14,5 +14,5 @@ val weatherModule = module {
     single<WeatherRepository> { WeatherRepositoryImpl(get()) }
     factory { GetWeatherUseCase(get()) }
     factory { SearchLocationsUseCase(get()) }
-    viewModel { WeatherViewModel(get(), get(), get()) }
+    viewModel { WeatherViewModel(get(), get(), get(), get()) }
 }

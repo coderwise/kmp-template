@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -36,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import com.example.myapp.core.ui.components.SearchBar
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
+import com.example.myapp.libs.permissions.isGranted
+import com.example.myapp.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_back_content_description
 import myapp.feature.weather.generated.resources.weather_error
@@ -43,6 +44,7 @@ import myapp.feature.weather.generated.resources.weather_search_placeholder
 import myapp.feature.weather.generated.resources.weather_temperature
 import myapp.feature.weather.generated.resources.weather_title
 import myapp.feature.weather.generated.resources.weather_unknown_error
+import myapp.feature.weather.generated.resources.weather_use_current_location
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -73,6 +75,7 @@ fun WeatherScreenContent(
     onEvent: (WeatherUiEvent) -> Unit
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
+    val permissionState = rememberLocationPermissionState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -99,7 +102,23 @@ fun WeatherScreenContent(
                     onEvent(WeatherUiEvent.OnSearchClick)
                     keyboardController?.hide()
                 },
-                placeholder = stringResource(Res.string.weather_search_placeholder)
+                placeholder = stringResource(Res.string.weather_search_placeholder),
+                trailingIcon = {
+                    IconButton(
+                        onClick = {
+                            if (permissionState.status.isGranted) {
+                                onEvent(WeatherUiEvent.OnCurrentLocationClick)
+                            } else {
+                                permissionState.launchPermissionRequest()
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MyLocation,
+                            contentDescription = stringResource(Res.string.weather_use_current_location)
+                        )
+                    }
+                }
             )
 
             if (uiState.searchResults.isNotEmpty()) {

@@ -8,6 +8,8 @@ import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.repository.SettingsRepository
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
+import com.example.myapp.libs.location.LocationProvider
+import com.example.myapp.libs.location.LocationResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val locationProvider: LocationProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WeatherUiState())
@@ -48,7 +51,22 @@ class WeatherViewModel(
             is WeatherUiEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             WeatherUiEvent.OnSearchClick -> onSearchClick()
+            WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
             WeatherUiEvent.OnBackClick -> { /* Handled in Screen */
+            }
+        }
+    }
+
+    private fun onCurrentLocationClick() {
+        viewModelScope.launch {
+            _uiState.update { it.loading() }
+            when (val result = locationProvider.getCurrentLocation()) {
+                is LocationResult.Success -> {
+                    fetchWeather(result.data.latitude, result.data.longitude, "Current Location")
+                }
+                is LocationResult.Error -> {
+                    _uiState.update { it.error(result.message ?: result.exception.message) }
+                }
             }
         }
     }
