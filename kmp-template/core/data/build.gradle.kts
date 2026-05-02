@@ -22,6 +22,7 @@ kotlin {
             implementation(project(":core:api"))
             implementation(project(":libs:network"))
             implementation(project(":libs:database"))
+            implementation(project(":libs:settings"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)

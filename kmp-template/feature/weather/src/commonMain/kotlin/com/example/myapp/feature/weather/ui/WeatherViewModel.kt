@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onSuccess
-import com.example.myapp.feature.weather.domain.model.Location
-import com.example.myapp.feature.weather.domain.repository.SettingsRepository
+import com.example.myapp.core.domain.model.Location
+import com.example.myapp.core.domain.repository.SettingsRepository
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow

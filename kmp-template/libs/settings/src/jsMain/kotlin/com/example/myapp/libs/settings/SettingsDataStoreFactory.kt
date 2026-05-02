@@ -14,7 +14,6 @@ actual class SettingsDataStoreFactory {
         defaultValue: T,
         serializer: KSerializer<T>
     ): SettingsDataStore<T> {
-        // Simple in-memory implementation for JS for now
         return WebSettingsDataStore(fileName, defaultValue, serializer)
     }
 }

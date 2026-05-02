@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.ui
 
-import com.example.myapp.feature.weather.domain.model.Location
+import com.example.myapp.core.domain.model.Location
 
 sealed interface WeatherUiEvent {
     data class OnSearchQueryChange(val query: String) : WeatherUiEvent
