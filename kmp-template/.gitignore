@@ -30,7 +30,6 @@ captures/
 *.ap_
 *.dex
 ndk-stack
-google-services.json
 
 # iOS / Xcode
 *.xcodeproj/
@@ -75,5 +74,5 @@ dist/
 
 # Distribution / Packaging
 /keystore.properties
-
+/app/android/upload.keystore
 /secrets/
