@@ -58,4 +58,5 @@ We use a **Unidirectional Data Flow (UDF)** pattern combined with the **Command 
 - **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required. **Platform-specific logic is prohibited in `:core:*` modules.**
 - **DI Management**: New dependencies must be registered in the corresponding Koin module.
 - **Resources**: Use `myapp.<module_name>.generated.resources.Res` and `stringResource`. Resources are located in `src/commonMain/composeResources/values/`.
+- **Spacing and Theming**: Use the predefined spacing tokens from `MaterialTheme.spacing` (defined in `:core:ui`) for margins, padding, and gaps between elements. Avoid hardcoding `.dp` values for layout spacing to maintain consistency.
 - **UI Previews**: Always include `@Preview` composables using `MyAppTheme`, covering both light and dark modes.

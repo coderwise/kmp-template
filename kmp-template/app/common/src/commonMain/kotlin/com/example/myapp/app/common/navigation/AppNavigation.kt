@@ -17,6 +17,8 @@ import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.util.pop
+import com.example.myapp.core.ui.util.push
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.settings.ui.SettingsScreen
 import com.example.myapp.feature.weather.ui.WeatherScreen
@@ -79,15 +81,5 @@ fun AppNavigation() {
                 }
             }
         )
-    }
-}
-
-private fun <T : Any> MutableList<T>.push(element: T) {
-    add(element)
-}
-
-private fun <T : Any> MutableList<T>.pop() {
-    if (isNotEmpty()) {
-        removeAt(size - 1)
     }
 }
