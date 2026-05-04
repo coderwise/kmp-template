@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kmp.android.library)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -26,10 +27,19 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
+            implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines)
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.resources)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("com.example.myapp.core.database")
         }
     }
 }

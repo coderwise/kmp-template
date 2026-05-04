@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kmp.android.library)
-    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -31,13 +30,5 @@ kotlin {
         iosMain.dependencies { implementation(libs.sqldelight.native) }
         jsMain.dependencies { }
         val desktopMain by getting { dependencies { implementation(libs.sqldelight.sqlite) } }
-    }
-}
-
-sqldelight {
-    databases {
-        create("AppDatabase") {
-            packageName.set("com.example.myapp.libs.database")
-        }
     }
 }
