@@ -19,7 +19,7 @@ import com.example.myapp.core.domain.repository.SettingsRepository
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
-import com.example.myapp.feature.home.ui.HomeScreen
+import com.example.myapp.feature.home.navigation.HomeNavigation
 import com.example.myapp.feature.settings.ui.SettingsScreen
 import com.example.myapp.feature.weather.ui.WeatherScreen
 import com.example.myapp.libs.utils.PlatformColors
@@ -56,7 +56,7 @@ fun AppNavigation() {
             },
             entryProvider = entryProvider {
                 entry<HomeDestination> {
-                    HomeScreen(
+                    HomeNavigation(
                         onWeatherClick = {
                             backStack.push(WeatherDestination)
                         },

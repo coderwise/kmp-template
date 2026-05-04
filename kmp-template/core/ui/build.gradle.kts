@@ -26,6 +26,8 @@ kotlin {
             implementation(libs.compose.icons.extended)
             implementation(libs.compose.preview)
             implementation(libs.compose.components.resources)
+            implementation(libs.navigation3.runtime)
+            implementation(libs.navigation3.ui)
         }
     }
 }

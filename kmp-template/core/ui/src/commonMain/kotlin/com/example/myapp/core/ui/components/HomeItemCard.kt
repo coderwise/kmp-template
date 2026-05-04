@@ -18,9 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.theme.spacing
 import myapp.core.ui.generated.resources.Res
 import myapp.core.ui.generated.resources.home_delete_content_description
 import myapp.core.ui.generated.resources.home_edit_content_description
@@ -36,9 +36,9 @@ fun HomeItemCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(horizontal = MaterialTheme.spacing.gutter, vertical = MaterialTheme.spacing.base)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(MaterialTheme.spacing.gutter)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,

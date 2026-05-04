@@ -24,9 +24,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.settings.generated.resources.Res
 import myapp.feature.settings.generated.resources.settings_theme_dark
 import myapp.feature.settings.generated.resources.settings_theme_light
@@ -78,12 +78,12 @@ fun SettingsScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(MaterialTheme.spacing.gutter)
         ) {
             Text(
                 text = stringResource(Res.string.settings_theme_selection),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(bottom = MaterialTheme.spacing.base)
             )
 
             Column(Modifier.selectableGroup()) {
@@ -130,7 +130,7 @@ private fun ThemeOption(
                 onClick = onClick,
                 role = Role.RadioButton
             )
-            .padding(vertical = 12.dp),
+            .padding(vertical = MaterialTheme.spacing.sm),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(
@@ -140,7 +140,7 @@ private fun ThemeOption(
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = MaterialTheme.spacing.gutter)
         )
     }
 }

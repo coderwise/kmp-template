@@ -15,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.theme.spacing
 
 @Composable
 fun SearchBar(
@@ -54,7 +54,7 @@ private fun SearchBarPreview() {
                 onQueryChange = {},
                 onSearch = {},
                 placeholder = "Search...",
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(MaterialTheme.spacing.gutter)
             )
         }
     }
@@ -70,7 +70,7 @@ private fun SearchBarDarkModePreview() {
                 onQueryChange = {},
                 onSearch = {},
                 placeholder = "Search...",
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(MaterialTheme.spacing.gutter)
             )
         }
     }

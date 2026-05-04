@@ -31,9 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.myapp.core.ui.components.SearchBar
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.libs.permissions.isGranted
 import com.example.myapp.libs.permissions.rememberLocationPermissionState
@@ -93,7 +93,7 @@ fun WeatherScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
+                .padding(MaterialTheme.spacing.gutter),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             SearchBar(
@@ -146,7 +146,7 @@ fun WeatherScreenContent(
                     }
                 }
             } else {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(MaterialTheme.spacing.gutter))
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -164,7 +164,7 @@ fun WeatherScreenContent(
                                 text = uiState.weatherInfo.city,
                                 style = MaterialTheme.typography.headlineLarge
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.gutter))
                             Text(
                                 text = stringResource(Res.string.weather_temperature, uiState.weatherInfo.temperature),
                                 style = MaterialTheme.typography.displayLarge
@@ -173,7 +173,7 @@ fun WeatherScreenContent(
                                 text = uiState.weatherInfo.condition,
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(MaterialTheme.spacing.base))
                             Text(
                                 text = stringResource(Res.string.weather_coordinates, uiState.weatherInfo.latitude, uiState.weatherInfo.longitude),
                                 style = MaterialTheme.typography.bodySmall,
