@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -24,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import com.example.myapp.core.ui.atoms.AppDivider
+import com.example.myapp.core.ui.organisms.EmptyState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,7 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.myapp.core.ui.components.SearchBar
+import com.example.myapp.core.ui.molecules.SearchBar
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
@@ -142,7 +143,7 @@ fun WeatherScreenContent(
                                 keyboardController?.hide()
                             }
                         )
-                        HorizontalDivider()
+                        AppDivider()
                     }
                 }
             } else {
@@ -154,9 +155,8 @@ fun WeatherScreenContent(
                     if (uiState.isLoading && uiState.weatherInfo == null) {
                         CircularProgressIndicator()
                     } else if (uiState.isError && uiState.weatherInfo == null) {
-                        Text(
-                            text = stringResource(Res.string.weather_error, uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error)),
-                            color = MaterialTheme.colorScheme.error
+                        EmptyState(
+                            message = stringResource(Res.string.weather_error, uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error))
                         )
                     } else if (uiState.weatherInfo != null) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

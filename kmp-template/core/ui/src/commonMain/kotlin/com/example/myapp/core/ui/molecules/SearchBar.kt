@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.components
+package com.example.myapp.core.ui.molecules
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,11 +36,7 @@ fun SearchBar(
         trailingIcon = trailingIcon,
         singleLine = true,
         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onSearch()
-            }
-        )
+        keyboardActions = KeyboardActions(onSearch = { onSearch() })
     )
 }
 

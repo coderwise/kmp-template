@@ -5,20 +5,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.atoms.AppButton
+import com.example.myapp.core.ui.atoms.AppTextButton
+import com.example.myapp.core.ui.molecules.LabeledField
+import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_dialog_add_title
@@ -34,7 +36,7 @@ fun HomeItemSheet(
     initialTitle: String = "",
     initialDescription: String = "",
     onDismiss: () -> Unit,
-    onConfirm: (String, String) -> Unit
+    onConfirm: (String, String) -> Unit,
 ) {
     var title by remember { mutableStateOf(initialTitle) }
     var description by remember { mutableStateOf(initialDescription) }
@@ -43,43 +45,77 @@ fun HomeItemSheet(
         modifier = Modifier
             .fillMaxWidth()
             .padding(MaterialTheme.spacing.gutter)
-            .padding(bottom = MaterialTheme.spacing.md)
+            .padding(bottom = MaterialTheme.spacing.md),
+        verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.base)
     ) {
         Text(
-            text = if (initialTitle.isEmpty()) stringResource(Res.string.home_dialog_add_title) else stringResource(
-                Res.string.home_dialog_edit_title
-            ),
+            text = if (initialTitle.isEmpty()) stringResource(Res.string.home_dialog_add_title)
+            else stringResource(Res.string.home_dialog_edit_title),
             style = MaterialTheme.typography.titleLarge
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.gutter))
-        OutlinedTextField(
+        LabeledField(
+            label = stringResource(Res.string.home_dialog_title_label),
             value = title,
             onValueChange = { title = it },
-            label = { Text(stringResource(Res.string.home_dialog_title_label)) },
-            modifier = Modifier.fillMaxWidth()
+            singleLine = true
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.base))
-        OutlinedTextField(
+        LabeledField(
+            label = stringResource(Res.string.home_dialog_description_label),
             value = description,
-            onValueChange = { description = it },
-            label = { Text(stringResource(Res.string.home_dialog_description_label)) },
-            modifier = Modifier.fillMaxWidth()
+            onValueChange = { description = it }
         )
-        Spacer(modifier = Modifier.height(MaterialTheme.spacing.md))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End
         ) {
-            TextButton(onClick = onDismiss) {
-                Text(stringResource(Res.string.home_dialog_cancel))
-            }
+            AppTextButton(
+                text = stringResource(Res.string.home_dialog_cancel),
+                onClick = onDismiss
+            )
             Spacer(modifier = Modifier.width(MaterialTheme.spacing.base))
-            Button(
+            AppButton(
+                text = stringResource(Res.string.home_dialog_confirm),
                 onClick = { onConfirm(title, description) },
                 enabled = title.isNotBlank()
-            ) {
-                Text(stringResource(Res.string.home_dialog_confirm))
-            }
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemSheetAddPreview() {
+    MyAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeItemSheet(onDismiss = {}) { _, _ -> }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemSheetEditPreview() {
+    MyAppTheme {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeItemSheet(
+                initialTitle = "Sample Item",
+                initialDescription = "This is a sample description for the item.",
+                onDismiss = {}
+            ) { _, _ -> }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemSheetDarkModePreview() {
+    MyAppTheme(darkTheme = true) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            HomeItemSheet(
+                initialTitle = "Sample Item",
+                initialDescription = "This is a sample description for the item.",
+                onDismiss = {}
+            ) { _, _ -> }
         }
     }
 }

@@ -27,19 +27,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import com.example.myapp.core.ui.organisms.EmptyState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.components.HomeItemCard
+import com.example.myapp.core.ui.organisms.HomeItemCard
 import com.example.myapp.core.ui.theme.spacing
-import com.example.myapp.feature.home.ui.edit.HomeItemSheet
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
 import myapp.feature.home.generated.resources.home_app_version
@@ -137,18 +136,16 @@ fun HomeScreenContent(
                 if (uiState.isLoading && uiState.items.isEmpty()) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 } else if (uiState.isError && uiState.items.isEmpty()) {
-                    Text(
-                        text = stringResource(Res.string.home_error, uiState.errorMessage ?: ""),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                            .padding(MaterialTheme.spacing.gutter)
+                    EmptyState(
+                        message = stringResource(Res.string.home_error, uiState.errorMessage ?: ""),
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 } else {
                     LazyColumn {
                         items(uiState.items) { item ->
                             HomeItemCard(
-                                item = item,
+                                title = item.title,
+                                description = item.description,
                                 onDeleteClick = { onEvent(HomeUiEvent.DeleteItem(item.id)) },
                                 onEditClick = { onEditItemClick(item) }
                             )

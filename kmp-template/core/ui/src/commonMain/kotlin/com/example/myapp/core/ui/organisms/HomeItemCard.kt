@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.components
+package com.example.myapp.core.ui.organisms
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.core.ui.generated.resources.Res
@@ -28,7 +27,8 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeItemCard(
-    item: HomeItem,
+    title: String,
+    description: String,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -45,7 +45,7 @@ fun HomeItemCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = item.title,
+                    text = title,
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
@@ -65,7 +65,7 @@ fun HomeItemCard(
                 }
             }
             Text(
-                text = item.description,
+                text = description,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -78,11 +78,8 @@ private fun HomeItemCardPreview() {
     MyAppTheme {
         Surface(color = MaterialTheme.colorScheme.background) {
             HomeItemCard(
-                item = HomeItem(
-                    id = "1",
-                    title = "Example Item",
-                    description = "This is a sample description for the HomeItemCard preview."
-                ),
+                title = "Example Item",
+                description = "This is a sample description for the HomeItemCard preview.",
                 onDeleteClick = {},
                 onEditClick = {}
             )
@@ -96,11 +93,8 @@ private fun HomeItemCardDarkModePreview() {
     MyAppTheme(darkTheme = true) {
         Surface(color = MaterialTheme.colorScheme.background) {
             HomeItemCard(
-                item = HomeItem(
-                    id = "1",
-                    title = "Example Item",
-                    description = "This is a sample description for the HomeItemCard preview."
-                ),
+                title = "Example Item",
+                description = "This is a sample description for the HomeItemCard preview.",
                 onDeleteClick = {},
                 onEditClick = {}
             )

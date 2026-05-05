@@ -1,10 +1,8 @@
 package com.example.myapp.feature.settings.ui
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -24,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import com.example.myapp.core.ui.molecules.ActionRow
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
@@ -122,27 +121,15 @@ private fun ThemeOption(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .selectable(
-                selected = selected,
-                onClick = onClick,
-                role = Role.RadioButton
-            )
+    ActionRow(
+        label = text,
+        modifier = Modifier
+            .selectable(selected = selected, onClick = onClick, role = Role.RadioButton)
             .padding(vertical = MaterialTheme.spacing.sm),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        RadioButton(
-            selected = selected,
-            onClick = null // null recommended for accessibility with screen readers
-        )
-        Text(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = MaterialTheme.spacing.gutter)
-        )
-    }
+        leadingContent = {
+            RadioButton(selected = selected, onClick = null)
+        }
+    )
 }
 
 @Preview

@@ -18,7 +18,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":core:domain"))
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
