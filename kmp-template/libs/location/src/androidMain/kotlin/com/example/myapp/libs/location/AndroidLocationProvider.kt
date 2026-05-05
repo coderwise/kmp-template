@@ -62,13 +62,7 @@ class AndroidLocationProvider(
         }
 
         return android?.let {
-            LocationResult.Success(
-                GpsLocation(
-                    latitude = it.latitude,
-                    longitude = it.longitude,
-                    bearing = if (it.hasBearing()) it.bearing else null
-                )
-            )
+            LocationResult.Success(it.toGpsLocation())
         } ?: LocationResult.Error(IllegalStateException("Location unavailable"))
     }
 
@@ -90,15 +84,7 @@ class AndroidLocationProvider(
         return callbackFlow {
             val listener = object : LocationListener {
                 override fun onLocationChanged(location: AndroidLocation) {
-                    trySend(
-                        LocationResult.Success(
-                            GpsLocation(
-                                latitude = location.latitude,
-                                longitude = location.longitude,
-                                bearing = if (location.hasBearing()) location.bearing else null
-                            )
-                        )
-                    )
+                    trySend(LocationResult.Success(location.toGpsLocation()))
                 }
 
                 override fun onProviderDisabled(provider: String) {}
@@ -144,3 +130,13 @@ class AndroidLocationProvider(
         const val MIN_UPDATE_DISTANCE_M = 1f
     }
 }
+
+private fun AndroidLocation.toGpsLocation() = GpsLocation(
+    latitude = latitude,
+    longitude = longitude,
+    bearing = if (hasBearing()) bearing else null,
+    elevation = if (hasAltitude()) altitude else null,
+    time = time,
+    accuracy = if (hasAccuracy()) accuracy else null,
+    speed = if (hasSpeed()) speed else null
+)

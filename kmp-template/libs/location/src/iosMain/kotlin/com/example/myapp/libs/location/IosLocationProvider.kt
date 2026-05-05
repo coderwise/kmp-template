@@ -10,6 +10,7 @@ import platform.CoreLocation.CLLocation
 import platform.CoreLocation.CLLocationManager
 import platform.CoreLocation.CLLocationManagerDelegateProtocol
 import platform.Foundation.NSError
+import platform.Foundation.timeIntervalSince1970
 import platform.darwin.NSObject
 import kotlin.coroutines.resume
 
@@ -28,18 +29,7 @@ class IosLocationProvider : LocationProvider {
                     val loc = didUpdateLocations.lastOrNull() as? CLLocation
                     if (!cont.isActive) return
                     if (loc != null) {
-                        val bearing = if (loc.course >= 0) loc.course.toFloat() else null
-                        loc.coordinate.useContents {
-                            cont.resume(
-                                LocationResult.Success(
-                                    GpsLocation(
-                                        latitude = latitude,
-                                        longitude = longitude,
-                                        bearing = bearing
-                                    )
-                                )
-                            )
-                        }
+                        cont.resume(LocationResult.Success(loc.toGpsLocation()))
                     } else {
                         cont.resume(LocationResult.Error(IllegalStateException("No location received")))
                     }
@@ -78,18 +68,7 @@ class IosLocationProvider : LocationProvider {
                 didUpdateLocations: List<*>
             ) {
                 val loc = didUpdateLocations.lastOrNull() as? CLLocation ?: return
-                val bearing = if (loc.course >= 0) loc.course.toFloat() else null
-                loc.coordinate.useContents {
-                    trySend(
-                        LocationResult.Success(
-                            GpsLocation(
-                                latitude = latitude,
-                                longitude = longitude,
-                                bearing = bearing
-                            )
-                        )
-                    )
-                }
+                trySend(LocationResult.Success(loc.toGpsLocation()))
             }
 
             override fun locationManager(
@@ -112,4 +91,18 @@ class IosLocationProvider : LocationProvider {
             manager.delegate = null
         }
     }
+}
+
+@OptIn(ExperimentalForeignApi::class)
+private fun CLLocation.toGpsLocation(): GpsLocation {
+    val (lat, lon) = coordinate.useContents { latitude to longitude }
+    return GpsLocation(
+        latitude = lat,
+        longitude = lon,
+        bearing = if (course >= 0) course.toFloat() else null,
+        elevation = if (verticalAccuracy >= 0) altitude else null,
+        time = (timestamp.timeIntervalSince1970 * 1000).toLong(),
+        accuracy = if (horizontalAccuracy >= 0) horizontalAccuracy.toFloat() else null,
+        speed = if (speed >= 0) speed.toFloat() else null
+    )
 }

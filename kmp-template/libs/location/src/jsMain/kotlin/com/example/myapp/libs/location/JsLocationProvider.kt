@@ -22,22 +22,7 @@ class JsLocationProvider : LocationProvider {
             }
             val onSuccess: (dynamic) -> Unit = { position ->
                 if (cont.isActive) {
-                    val lat = (position.coords.latitude as Number).toDouble()
-                    val lon = (position.coords.longitude as Number).toDouble()
-                    val rawHeading = position.coords.heading
-                    val bearing: Float? = if (rawHeading != null && rawHeading != undefined) {
-                        val f = (rawHeading as Number).toFloat()
-                        if (f.isNaN()) null else f
-                    } else null
-                    cont.resume(
-                        LocationResult.Success(
-                            GpsLocation(
-                                latitude = lat,
-                                longitude = lon,
-                                bearing = bearing
-                            )
-                        )
-                    )
+                    cont.resume(LocationResult.Success(position.toGpsLocation()))
                 }
             }
             val onError: (dynamic) -> Unit = { error ->
@@ -63,22 +48,7 @@ class JsLocationProvider : LocationProvider {
         }
         return callbackFlow {
             val onSuccess: (dynamic) -> Unit = { position ->
-                val lat = (position.coords.latitude as Number).toDouble()
-                val lon = (position.coords.longitude as Number).toDouble()
-                val rawHeading = position.coords.heading
-                val bearing: Float? = if (rawHeading != null && rawHeading != undefined) {
-                    val f = (rawHeading as Number).toFloat()
-                    if (f.isNaN()) null else f
-                } else null
-                trySend(
-                    LocationResult.Success(
-                        GpsLocation(
-                            latitude = lat,
-                            longitude = lon,
-                            bearing = bearing
-                        )
-                    )
-                )
+                trySend(LocationResult.Success(position.toGpsLocation()))
             }
             val onError: (dynamic) -> Unit = { error ->
                 val message = error.message as? String
@@ -90,4 +60,28 @@ class JsLocationProvider : LocationProvider {
             awaitClose { geolocation.clearWatch(watchId) }
         }
     }
+}
+
+private fun dynamic.toGpsLocation(): GpsLocation {
+    val coords = this.coords
+    val rawHeading = coords.heading
+    val rawAltitude = coords.altitude
+    val rawSpeed = coords.speed
+    return GpsLocation(
+        latitude = (coords.latitude as Number).toDouble(),
+        longitude = (coords.longitude as Number).toDouble(),
+        bearing = if (rawHeading != null && rawHeading != undefined) {
+            val f = (rawHeading as Number).toFloat()
+            if (f.isNaN()) null else f
+        } else null,
+        elevation = if (rawAltitude != null && rawAltitude != undefined) {
+            (rawAltitude as Number).toDouble()
+        } else null,
+        time = (this.timestamp as Number).toLong(),
+        accuracy = (coords.accuracy as Number).toFloat(),
+        speed = if (rawSpeed != null && rawSpeed != undefined) {
+            val f = (rawSpeed as Number).toFloat()
+            if (f.isNaN()) null else f
+        } else null
+    )
 }
