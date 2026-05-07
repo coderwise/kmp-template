@@ -17,9 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.myapp.core.ui.atoms.AppButton
-import com.example.myapp.core.ui.atoms.AppTextButton
-import com.example.myapp.core.ui.molecules.LabeledField
+import com.example.myapp.core.ui.components.AppButton
+import com.example.myapp.core.ui.components.AppTextButton
+import com.example.myapp.core.ui.layouts.LabeledField
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res

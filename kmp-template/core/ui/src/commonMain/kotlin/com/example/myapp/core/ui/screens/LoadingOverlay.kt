@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.organisms
+package com.example.myapp.core.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

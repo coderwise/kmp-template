@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.molecules
+package com.example.myapp.core.ui.layouts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,7 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.myapp.core.ui.atoms.AppTextField
+import com.example.myapp.core.ui.components.AppTextField
 import com.example.myapp.core.ui.theme.spacing
 
 @Composable

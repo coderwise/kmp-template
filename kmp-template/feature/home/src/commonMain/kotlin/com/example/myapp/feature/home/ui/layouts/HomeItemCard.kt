@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.organisms
+package com.example.myapp.feature.home.ui.layouts
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
-import myapp.core.ui.generated.resources.Res
-import myapp.core.ui.generated.resources.home_delete_content_description
-import myapp.core.ui.generated.resources.home_edit_content_description
+import myapp.feature.home.generated.resources.Res
+import myapp.feature.home.generated.resources.home_delete_content_description
+import myapp.feature.home.generated.resources.home_edit_content_description
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

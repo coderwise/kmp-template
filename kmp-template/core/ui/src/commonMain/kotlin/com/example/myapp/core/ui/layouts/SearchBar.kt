@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.molecules
+package com.example.myapp.core.ui.layouts
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

@@ -9,6 +9,10 @@ plugins {
     alias(libs.plugins.crashlytics)
 }
 
+apply(from = "$rootDir/gradle/git-utils.gradle.kts")
+val getGitVersionName: () -> String by extra
+val getGitCommitCount: () -> Int by extra
+
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 try {
@@ -25,7 +29,7 @@ android {
         applicationId = "com.example.myapp.android"
         minSdk = libs.versions.minSdk.get().toInt()
         versionCode = getGitCommitCount()
-        versionName = property("app.versionName") as String
+        versionName = getGitVersionName()
     }
 
     signingConfigs {
@@ -68,16 +72,4 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
-}
-
-fun getGitCommitCount(): Int {
-    return try {
-        val process = ProcessBuilder("git", "rev-list", "--count", "HEAD")
-            .start()
-        val count = process.inputStream.bufferedReader().readText().trim().toInt()
-        process.waitFor()
-        count
-    } catch (_: Exception) {
-        1
-    }
 }

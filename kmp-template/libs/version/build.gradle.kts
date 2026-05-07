@@ -3,7 +3,11 @@ plugins {
     alias(libs.plugins.kmp.android.library)
 }
 
-val appVersionName: String = property("app.versionName") as String
+apply(from = "$rootDir/gradle/git-utils.gradle.kts")
+val getGitVersionName: () -> String by extra
+val getGitCommitCount: () -> Int by extra
+
+val appVersionName: String = getGitVersionName()
 
 kotlin {
     android {
@@ -73,14 +77,3 @@ val generateJsVersionSource by tasks.registering {
 kotlin.sourceSets.getByName("androidMain").kotlin.srcDir(generateAndroidVersionSource.map { it.outputs.files.singleFile })
 kotlin.sourceSets.getByName("desktopMain").resources.srcDir(generateDesktopVersionResource.map { it.outputs.files.singleFile })
 kotlin.sourceSets.getByName("jsMain").kotlin.srcDir(generateJsVersionSource.map { it.outputs.files.singleFile })
-
-fun getGitCommitCount(): Int {
-    return try {
-        val process = ProcessBuilder("git", "rev-list", "--count", "HEAD").start()
-        val count = process.inputStream.bufferedReader().readText().trim().toInt()
-        process.waitFor()
-        count
-    } catch (_: Exception) {
-        1
-    }
-}

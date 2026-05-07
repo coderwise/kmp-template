@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.atoms
+package com.example.myapp.core.ui.components
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton

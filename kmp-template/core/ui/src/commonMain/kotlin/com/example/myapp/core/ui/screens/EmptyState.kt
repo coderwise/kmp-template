@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.organisms
+package com.example.myapp.core.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,7 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Surface
-import com.example.myapp.core.ui.atoms.AppButton
+import com.example.myapp.core.ui.components.AppButton
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 

@@ -1,4 +1,4 @@
-package com.example.myapp.core.ui.molecules
+package com.example.myapp.core.ui.layouts
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip

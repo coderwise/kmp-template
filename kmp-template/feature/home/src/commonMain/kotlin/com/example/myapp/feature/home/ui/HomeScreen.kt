@@ -27,7 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import com.example.myapp.core.ui.organisms.EmptyState
+import com.example.myapp.core.ui.screens.EmptyState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -37,7 +37,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.organisms.HomeItemCard
+import com.example.myapp.feature.home.ui.layouts.HomeItemCard
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description

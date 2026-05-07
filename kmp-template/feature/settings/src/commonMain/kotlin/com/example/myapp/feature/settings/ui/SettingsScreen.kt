@@ -22,7 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
-import com.example.myapp.core.ui.molecules.ActionRow
+import com.example.myapp.core.ui.layouts.ActionRow
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
