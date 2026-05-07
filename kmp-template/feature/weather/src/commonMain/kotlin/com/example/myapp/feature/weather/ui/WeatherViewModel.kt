@@ -24,7 +24,8 @@ class WeatherViewModel(
     private val searchLocationsUseCase: SearchLocationsUseCase,
     private val reverseGeocodeUseCase: ReverseGeocodeUseCase,
     private val settingsRepository: SettingsRepository,
-    private val locationProvider: LocationProvider
+    private val locationProvider: LocationProvider,
+    private val navigator: WeatherNavigator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WeatherUiState())
@@ -53,8 +54,7 @@ class WeatherViewModel(
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             is WeatherUiEvent.OnSearchClick -> onSearchClick()
             is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
-            is WeatherUiEvent.OnBackClick -> { /* Handled in Screen */
-            }
+            is WeatherUiEvent.OnBackClick -> navigator.back()
         }
     }
 

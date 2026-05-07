@@ -12,5 +12,5 @@ val homeModule = module {
     factory<RemoveHomeItemUseCase> { RemoveHomeItemUseCaseImpl(get()) }
     factory<UpdateHomeItemUseCase> { UpdateHomeItemUseCaseImpl(get()) }
     factory<SyncHomeItemsUseCase> { SyncHomeItemsUseCaseImpl(get()) }
-    viewModel { HomeViewModel(get(), get(), get(), get(), get(), appVersion) }
+    viewModel { HomeViewModel(get(), get(), get(), get(), get(), get(), appVersion) }
 }

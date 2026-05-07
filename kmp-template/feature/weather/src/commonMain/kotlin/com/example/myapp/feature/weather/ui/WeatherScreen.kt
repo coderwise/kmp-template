@@ -53,20 +53,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
-    onBackClick: () -> Unit,
     viewModel: WeatherViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     WeatherScreenContent(
         uiState = uiState,
-        onEvent = { event ->
-            if (event is WeatherUiEvent.OnBackClick) {
-                onBackClick()
-            } else {
-                viewModel.onEvent(event)
-            }
-        }
+        onEvent = viewModel::onEvent
     )
 }
 

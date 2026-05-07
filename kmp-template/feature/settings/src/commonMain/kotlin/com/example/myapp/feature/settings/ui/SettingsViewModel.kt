@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val getSettingsUseCase: GetSettingsUseCase,
-    private val updateThemeUseCase: UpdateThemeUseCase
+    private val updateThemeUseCase: UpdateThemeUseCase,
+    private val navigator: SettingsNavigator
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = getSettingsUseCase()
@@ -36,6 +37,7 @@ class SettingsViewModel(
                     updateThemeUseCase(event.theme)
                 }
             }
+            SettingsUiEvent.NavigateBack -> navigator.back()
         }
     }
 }

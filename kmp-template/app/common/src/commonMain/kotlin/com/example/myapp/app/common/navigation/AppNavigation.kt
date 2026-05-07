@@ -7,6 +7,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -20,10 +21,16 @@ import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 import com.example.myapp.feature.home.navigation.HomeNavigation
+import com.example.myapp.feature.settings.ui.SettingsNavigator
 import com.example.myapp.feature.settings.ui.SettingsScreen
+import com.example.myapp.feature.settings.ui.SettingsViewModel
+import com.example.myapp.feature.weather.ui.WeatherNavigator
 import com.example.myapp.feature.weather.ui.WeatherScreen
+import com.example.myapp.feature.weather.ui.WeatherViewModel
 import com.example.myapp.libs.utils.PlatformColors
 import org.koin.compose.koinInject
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavigation() {
@@ -66,18 +73,26 @@ fun AppNavigation() {
                     )
                 }
                 entry<WeatherDestination> {
-                    WeatherScreen(
-                        onBackClick = {
-                            backStack.pop()
+                    val navigator = remember {
+                        object : WeatherNavigator {
+                            override fun back() {
+                                backStack.pop()
+                            }
                         }
-                    )
+                    }
+                    val viewModel: WeatherViewModel = koinViewModel { parametersOf(navigator) }
+                    WeatherScreen(viewModel = viewModel)
                 }
                 entry<SettingsDestination> {
-                    SettingsScreen(
-                        onBackClick = {
-                            backStack.pop()
+                    val navigator = remember {
+                        object : SettingsNavigator {
+                            override fun back() {
+                                backStack.pop()
+                            }
                         }
-                    )
+                    }
+                    val viewModel: SettingsViewModel = koinViewModel { parametersOf(navigator) }
+                    SettingsScreen(viewModel = viewModel)
                 }
             }
         )

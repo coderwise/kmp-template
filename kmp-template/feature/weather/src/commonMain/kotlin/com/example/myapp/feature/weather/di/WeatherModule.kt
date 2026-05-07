@@ -22,7 +22,8 @@ val weatherModule = module {
             searchLocationsUseCase = get(),
             reverseGeocodeUseCase = get(),
             settingsRepository = get(),
-            locationProvider = get()
+            locationProvider = get(),
+            navigator = get()
         )
     }
 }

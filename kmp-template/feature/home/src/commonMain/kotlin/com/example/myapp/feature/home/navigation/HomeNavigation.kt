@@ -12,6 +12,7 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
+import com.example.myapp.feature.home.navigation.HomeNavigator
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
@@ -19,6 +20,7 @@ import com.example.myapp.feature.home.ui.edit.HomeItemSheet
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 private val homeNavSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
@@ -31,8 +33,7 @@ private val homeNavSerializersModule = SerializersModule {
 @Composable
 fun HomeNavigation(
     onWeatherClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    viewModel: HomeViewModel = koinViewModel()
+    onSettingsClick: () -> Unit
 ) {
     val config = remember {
         SavedStateConfiguration {
@@ -41,31 +42,34 @@ fun HomeNavigation(
     }
     val backStack = rememberNavBackStack(config, HomeNavDestination.Root)
 
+    val navigator = remember(backStack, onWeatherClick, onSettingsClick) {
+        object : HomeNavigator {
+            override fun toWeather() = onWeatherClick()
+            override fun toSettings() = onSettingsClick()
+            override fun toAddItem() = backStack.push(HomeNavDestination.AddItem())
+            override fun toEditItem(item: HomeItem) =
+                backStack.push(HomeNavDestination.EditItem(item.id, item.title, item.description))
+
+            override fun back() = backStack.pop()
+        }
+    }
+
+    val viewModel: HomeViewModel = koinViewModel { parametersOf(navigator) }
+
     NavDisplay(
         backStack = backStack,
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {
             entry<HomeNavDestination.Root> {
-                HomeScreen(
-                    onWeatherClick = onWeatherClick,
-                    onSettingsClick = onSettingsClick,
-                    onAddItemClick = {
-                        backStack.push(HomeNavDestination.AddItem())
-                    },
-                    onEditItemClick = { item ->
-                        backStack.push(HomeNavDestination.EditItem(item.id, item.title, item.description))
-                    },
-                    viewModel = viewModel
-                )
+                HomeScreen(viewModel = viewModel)
             }
             entry<HomeNavDestination.AddItem>(
                 metadata = BottomSheetSceneStrategy.bottomSheet()
             ) {
                 HomeItemSheet(
-                    onDismiss = { backStack.pop() },
+                    onDismiss = { navigator.back() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(HomeUiEvent.AddItem(title, description))
-                        backStack.pop()
                     }
                 )
             }
@@ -75,7 +79,7 @@ fun HomeNavigation(
                 HomeItemSheet(
                     initialTitle = destination.title,
                     initialDescription = destination.description,
-                    onDismiss = { backStack.pop() },
+                    onDismiss = { navigator.back() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(
                             HomeUiEvent.UpdateItem(
@@ -86,7 +90,6 @@ fun HomeNavigation(
                                 )
                             )
                         )
-                        backStack.pop()
                     }
                 )
             }

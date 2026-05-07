@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.compose.material3)
 
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation3.runtime)
             implementation(libs.navigation3.ui)
             implementation(libs.lifecycle.viewmodel.navigation3)

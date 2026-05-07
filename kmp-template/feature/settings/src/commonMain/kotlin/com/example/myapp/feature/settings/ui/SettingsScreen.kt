@@ -39,14 +39,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingsScreen(
-    onBackClick: () -> Unit,
     viewModel: SettingsViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     SettingsScreenContent(
         uiState = uiState,
-        onBackClick = onBackClick,
         onEvent = viewModel::onEvent
     )
 }
@@ -55,7 +53,6 @@ fun SettingsScreen(
 @Composable
 fun SettingsScreenContent(
     uiState: SettingsUiState,
-    onBackClick: () -> Unit,
     onEvent: (SettingsUiEvent) -> Unit
 ) {
     Scaffold(
@@ -63,7 +60,7 @@ fun SettingsScreenContent(
             TopAppBar(
                 title = { Text(stringResource(Res.string.settings_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = { onEvent(SettingsUiEvent.NavigateBack) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
@@ -141,7 +138,6 @@ private fun SettingsScreenPreview() {
                 theme = ThemeType.SYSTEM,
                 appVersion = "1.0.0 (1)"
             ),
-            onBackClick = {},
             onEvent = {}
         )
     }
@@ -156,7 +152,6 @@ private fun SettingsScreenDarkPreview() {
                 theme = ThemeType.DARK,
                 appVersion = "1.0.0 (1)"
             ),
-            onBackClick = {},
             onEvent = {}
         )
     }

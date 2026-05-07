@@ -37,21 +37,13 @@ import org.koin.compose.viewmodel.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onWeatherClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onAddItemClick: () -> Unit,
-    onEditItemClick: (HomeItem) -> Unit,
     viewModel: HomeViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     HomeScreenContent(
         uiState = uiState,
-        onEvent = viewModel::onEvent,
-        onWeatherClick = onWeatherClick,
-        onSettingsClick = onSettingsClick,
-        onAddItemClick = onAddItemClick,
-        onEditItemClick = onEditItemClick
+        onEvent = viewModel::onEvent
     )
 }
 
@@ -59,23 +51,19 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     uiState: HomeUiState,
-    onEvent: (HomeUiEvent) -> Unit,
-    onWeatherClick: () -> Unit = {},
-    onSettingsClick: () -> Unit = {},
-    onAddItemClick: () -> Unit = {},
-    onEditItemClick: (HomeItem) -> Unit = {}
+    onEvent: (HomeUiEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
             HomeTopBar(
                 isRefreshing = uiState.isRefreshing,
                 onRefreshClick = { onEvent(HomeUiEvent.Refresh) },
-                onSettingsClick = onSettingsClick,
-                onWeatherClick = onWeatherClick
+                onSettingsClick = { onEvent(HomeUiEvent.NavigateToSettings) },
+                onWeatherClick = { onEvent(HomeUiEvent.NavigateToWeather) }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddItemClick) {
+            FloatingActionButton(onClick = { onEvent(HomeUiEvent.NavigateToAddItem) }) {
                 Icon(
                     Icons.Default.Add,
                     contentDescription = stringResource(Res.string.home_add_item_content_description)
@@ -107,7 +95,7 @@ fun HomeScreenContent(
                                 title = item.title,
                                 description = item.description,
                                 onDeleteClick = { onEvent(HomeUiEvent.DeleteItem(item.id)) },
-                                onEditClick = { onEditItemClick(item) }
+                                onEditClick = { onEvent(HomeUiEvent.NavigateToEditItem(item)) }
                             )
                         }
                     }
