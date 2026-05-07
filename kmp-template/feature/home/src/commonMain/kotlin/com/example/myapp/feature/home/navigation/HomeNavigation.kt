@@ -16,22 +16,9 @@ import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
-
-@Serializable
-sealed interface HomeNavDestination : NavKey {
-    @Serializable
-    data object Root : HomeNavDestination
-
-    @Serializable
-    data class AddItem(val title: String = "", val description: String = "") : HomeNavDestination
-
-    @Serializable
-    data class EditItem(val id: String, val title: String, val description: String) : HomeNavDestination
-}
 
 private val homeNavSerializersModule = SerializersModule {
     polymorphic(NavKey::class) {
