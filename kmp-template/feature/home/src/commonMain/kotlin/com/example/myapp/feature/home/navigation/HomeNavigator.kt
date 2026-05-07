@@ -1,11 +1,13 @@
 package com.example.myapp.feature.home.navigation
 
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.navigation.Navigator
 
-interface HomeNavigator {
-    fun toWeather()
-    fun toSettings()
-    fun toAddItem()
-    fun toEditItem(item: HomeItem)
-    fun back()
+sealed interface HomeNavEvent {
+    data object ToWeather : HomeNavEvent
+    data object ToSettings : HomeNavEvent
+    data object ToAddItem : HomeNavEvent
+    data class ToEditItem(val item: HomeItem) : HomeNavEvent
 }
+
+interface HomeNavigator : Navigator<HomeNavEvent>

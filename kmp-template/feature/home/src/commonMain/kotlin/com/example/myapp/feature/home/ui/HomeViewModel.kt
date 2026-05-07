@@ -11,6 +11,7 @@ import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
+import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,10 +44,10 @@ class HomeViewModel(
             is HomeUiEvent.AddItem -> addItem(event.title, event.description)
             is HomeUiEvent.DeleteItem -> removeItem(event.id)
             is HomeUiEvent.UpdateItem -> updateItem(event.item)
-            HomeUiEvent.NavigateToWeather -> navigator.toWeather()
-            HomeUiEvent.NavigateToSettings -> navigator.toSettings()
-            HomeUiEvent.NavigateToAddItem -> navigator.toAddItem()
-            is HomeUiEvent.NavigateToEditItem -> navigator.toEditItem(event.item)
+            is HomeUiEvent.NavigateToWeather -> navigator.onEvent(HomeNavEvent.ToWeather)
+            is HomeUiEvent.NavigateToSettings -> navigator.onEvent(HomeNavEvent.ToSettings)
+            is HomeUiEvent.NavigateToAddItem -> navigator.onEvent(HomeNavEvent.ToAddItem)
+            is HomeUiEvent.NavigateToEditItem -> navigator.onEvent(HomeNavEvent.ToEditItem(event.item))
         }
     }
 

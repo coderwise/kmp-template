@@ -1,5 +1,7 @@
 package com.example.myapp.feature.weather.ui
 
-interface WeatherNavigator {
-    fun back()
-}
+import com.example.myapp.core.ui.navigation.Navigator
+
+sealed interface WeatherNavEvent
+
+interface WeatherNavigator : Navigator<WeatherNavEvent>

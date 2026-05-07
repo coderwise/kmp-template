@@ -12,7 +12,6 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
-import com.example.myapp.feature.home.navigation.HomeNavigator
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
@@ -44,13 +43,25 @@ fun HomeNavigation(
 
     val navigator = remember(backStack, onWeatherClick, onSettingsClick) {
         object : HomeNavigator {
-            override fun toWeather() = onWeatherClick()
-            override fun toSettings() = onSettingsClick()
-            override fun toAddItem() = backStack.push(HomeNavDestination.AddItem())
-            override fun toEditItem(item: HomeItem) =
-                backStack.push(HomeNavDestination.EditItem(item.id, item.title, item.description))
-
             override fun back() = backStack.pop()
+
+            override fun onEvent(event: HomeNavEvent) {
+                when (event) {
+                    is HomeNavEvent.ToWeather -> onWeatherClick()
+                    is HomeNavEvent.ToSettings -> onSettingsClick()
+                    is HomeNavEvent.ToAddItem -> backStack.push(HomeNavDestination.AddItem())
+                    is HomeNavEvent.ToEditItem -> {
+                        val item = event.item
+                        backStack.push(
+                            HomeNavDestination.EditItem(
+                                item.id,
+                                item.title,
+                                item.description
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 

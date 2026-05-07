@@ -1,5 +1,7 @@
 package com.example.myapp.feature.settings.ui
 
-interface SettingsNavigator {
-    fun back()
-}
+import com.example.myapp.core.ui.navigation.Navigator
+
+sealed interface SettingsNavEvent
+
+interface SettingsNavigator : Navigator<SettingsNavEvent>

@@ -21,9 +21,11 @@ import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 import com.example.myapp.feature.home.navigation.HomeNavigation
+import com.example.myapp.feature.settings.ui.SettingsNavEvent
 import com.example.myapp.feature.settings.ui.SettingsNavigator
 import com.example.myapp.feature.settings.ui.SettingsScreen
 import com.example.myapp.feature.settings.ui.SettingsViewModel
+import com.example.myapp.feature.weather.ui.WeatherNavEvent
 import com.example.myapp.feature.weather.ui.WeatherNavigator
 import com.example.myapp.feature.weather.ui.WeatherScreen
 import com.example.myapp.feature.weather.ui.WeatherViewModel
@@ -75,9 +77,7 @@ fun AppNavigation() {
                 entry<WeatherDestination> {
                     val navigator = remember {
                         object : WeatherNavigator {
-                            override fun back() {
-                                backStack.pop()
-                            }
+                            override fun back() { backStack.pop() }
                         }
                     }
                     val viewModel: WeatherViewModel = koinViewModel { parametersOf(navigator) }
@@ -86,9 +86,7 @@ fun AppNavigation() {
                 entry<SettingsDestination> {
                     val navigator = remember {
                         object : SettingsNavigator {
-                            override fun back() {
-                                backStack.pop()
-                            }
+                            override fun back() { backStack.pop() }
                         }
                     }
                     val viewModel: SettingsViewModel = koinViewModel { parametersOf(navigator) }
