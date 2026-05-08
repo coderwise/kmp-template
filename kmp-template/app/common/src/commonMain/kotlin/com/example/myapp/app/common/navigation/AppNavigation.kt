@@ -9,7 +9,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
@@ -41,18 +40,7 @@ fun AppNavigation() {
         serializersModule = appNavSerializersModule
     }
 
-    val homeBackStack = rememberNavBackStack(config, HomeDestination)
-    val weatherBackStack = rememberNavBackStack(config, WeatherDestination)
-    val settingsBackStack = rememberNavBackStack(config, SettingsDestination)
-
-    val multiStackState = rememberMultiStackNavigationState(
-        stacks = mapOf(
-            HomeDestination to homeBackStack,
-            WeatherDestination to weatherBackStack,
-            SettingsDestination to settingsBackStack
-        ),
-        startKey = HomeDestination
-    )
+    val multiStackState = rememberMultiStackNavigationState(startKey = HomeDestination)
 
     val navigator = rememberMultiStackNavigator(multiStackState) { event ->
         when (event) {

@@ -2,6 +2,7 @@ package com.example.myapp.core.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavBackStack
@@ -57,23 +58,25 @@ fun rememberNavigator(
 // ---- Multi stack ----
 
 class MultiStackNavigationState(
-    private val stacks: Map<NavKey, NavBackStack<NavKey>>,
+    private val stacks: MutableMap<NavKey, NavBackStack<NavKey>>,
     private val currentKeyState: MutableState<NavKey>
 ) {
     val currentKey: NavKey get() = currentKeyState.value
     val currentBackStack: NavBackStack<NavKey> get() = stacks.getValue(currentKey)
 
-    fun selectTab(tab: NavKey) { currentKeyState.value = tab }
-    fun backStack(tab: NavKey): NavBackStack<NavKey> = stacks.getValue(tab)
+    fun selectTab(tab: NavKey) {
+        stacks.getOrPut(tab) { NavBackStack(tab) }
+        currentKeyState.value = tab
+    }
+
+    fun backStack(tab: NavKey): NavBackStack<NavKey>? = stacks[tab]
 }
 
 @Composable
-fun rememberMultiStackNavigationState(
-    stacks: Map<NavKey, NavBackStack<NavKey>>,
-    startKey: NavKey,
-): MultiStackNavigationState {
+fun rememberMultiStackNavigationState(startKey: NavKey): MultiStackNavigationState {
+    val stacks = remember { mutableStateMapOf(startKey to NavBackStack(startKey)) }
     val currentState = remember { mutableStateOf(startKey) }
-    return remember(stacks) { MultiStackNavigationState(stacks, currentState) }
+    return remember { MultiStackNavigationState(stacks, currentState) }
 }
 
 class MultiStackNavigatorImpl internal constructor(
