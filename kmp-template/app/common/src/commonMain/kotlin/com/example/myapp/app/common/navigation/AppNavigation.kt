@@ -15,7 +15,6 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.navigation.rememberMultiStackNavigationState
 import com.example.myapp.core.ui.navigation.rememberMultiStackNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.home.navigation.HomeNavEvent
@@ -40,9 +39,7 @@ fun AppNavigation() {
         serializersModule = appNavSerializersModule
     }
 
-    val multiStackState = rememberMultiStackNavigationState(startKey = HomeDestination)
-
-    val navigator = rememberMultiStackNavigator(multiStackState) { event ->
+    val navigator = rememberMultiStackNavigator(startKey = HomeDestination) { event ->
         when (event) {
             is HomeNavEvent.ToWeather -> switchTab(WeatherDestination)
             is HomeNavEvent.ToSettings -> switchTab(SettingsDestination)
@@ -52,7 +49,8 @@ fun AppNavigation() {
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
         NavDisplay(
-            backStack = multiStackState.currentBackStack,
+            backStack = navigator.currentBackStack,
+            onBack = { navigator.pop() },
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
