@@ -6,13 +6,13 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onLoading
 import com.example.myapp.core.domain.model.onSuccess
+import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import com.example.myapp.feature.home.navigation.HomeNavEvent
-import com.example.myapp.feature.home.navigation.HomeNavigator
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +26,7 @@ class HomeViewModel(
     private val removeHomeItemUseCase: RemoveHomeItemUseCase,
     private val updateHomeItemUseCase: UpdateHomeItemUseCase,
     private val syncHomeItemsUseCase: SyncHomeItemsUseCase,
-    private val navigator: HomeNavigator,
+    private val navigator: Navigator,
     appVersion: String
 ) : ViewModel() {
 
@@ -44,10 +44,10 @@ class HomeViewModel(
             is HomeUiEvent.AddItem -> addItem(event.title, event.description)
             is HomeUiEvent.DeleteItem -> removeItem(event.id)
             is HomeUiEvent.UpdateItem -> updateItem(event.item)
-            is HomeUiEvent.NavigateToWeather -> navigator.onEvent(HomeNavEvent.ToWeather)
-            is HomeUiEvent.NavigateToSettings -> navigator.onEvent(HomeNavEvent.ToSettings)
-            is HomeUiEvent.NavigateToAddItem -> navigator.onEvent(HomeNavEvent.ToAddItem)
-            is HomeUiEvent.NavigateToEditItem -> navigator.onEvent(HomeNavEvent.ToEditItem(event.item))
+            is HomeUiEvent.NavigateToWeather -> navigator.dispatch(HomeNavEvent.ToWeather)
+            is HomeUiEvent.NavigateToSettings -> navigator.dispatch(HomeNavEvent.ToSettings)
+            is HomeUiEvent.NavigateToAddItem -> navigator.dispatch(HomeNavEvent.ToAddItem)
+            is HomeUiEvent.NavigateToEditItem -> navigator.dispatch(HomeNavEvent.ToEditItem(event.item))
         }
     }
 
@@ -81,7 +81,7 @@ class HomeViewModel(
                 description = description
             )
             addHomeItemUseCase(newItem)
-            navigator.back()
+            navigator.dispatch(HomeNavEvent.Back)
         }
     }
 
@@ -94,7 +94,7 @@ class HomeViewModel(
     private fun updateItem(item: HomeItem) {
         viewModelScope.launch {
             updateHomeItemUseCase(item)
-            navigator.back()
+            navigator.dispatch(HomeNavEvent.Back)
         }
     }
 }

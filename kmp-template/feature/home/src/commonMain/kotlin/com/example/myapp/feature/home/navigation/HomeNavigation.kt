@@ -4,14 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.navigation.Navigator
+import com.example.myapp.core.ui.navigation.rememberNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
-import com.example.myapp.core.ui.util.pop
-import com.example.myapp.core.ui.util.push
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
@@ -31,66 +30,65 @@ private val homeNavSerializersModule = SerializersModule {
 
 @Composable
 fun HomeNavigation(
-    onWeatherClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    appNavigator: Navigator
 ) {
     val config = remember {
         SavedStateConfiguration {
             serializersModule = homeNavSerializersModule
         }
     }
-    val backStack = rememberNavBackStack(config, HomeNavDestination.Root)
 
-    val navigator = remember(backStack, onWeatherClick, onSettingsClick) {
-        object : HomeNavigator {
-            override fun back() = backStack.pop()
-
-            override fun onEvent(event: HomeNavEvent) {
-                when (event) {
-                    is HomeNavEvent.ToWeather -> onWeatherClick()
-                    is HomeNavEvent.ToSettings -> onSettingsClick()
-                    is HomeNavEvent.ToAddItem -> backStack.push(HomeNavDestination.AddItem())
-                    is HomeNavEvent.ToEditItem -> {
-                        val item = event.item
-                        backStack.push(
-                            HomeNavDestination.EditItem(
-                                item.id,
-                                item.title,
-                                item.description
-                            )
-                        )
-                    }
-                }
+    val navigator = rememberNavigator(config, HomeNavDestination.Root) { event ->
+        when (event) {
+            is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
+            is HomeNavEvent.ToEditItem -> {
+                val item = event.item
+                push(
+                    HomeNavDestination.EditItem(
+                        item.id,
+                        item.title,
+                        item.description
+                    )
+                )
             }
+
+            HomeNavEvent.Back -> pop()
+
+            else -> appNavigator.dispatch(event)
         }
     }
 
     val viewModel: HomeViewModel = koinViewModel { parametersOf(navigator) }
 
     NavDisplay(
-        backStack = backStack,
+        backStack = navigator.backStack,
+        onBack = { navigator.pop() },
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {
             entry<HomeNavDestination.Root> {
                 HomeScreen(viewModel = viewModel)
             }
             entry<HomeNavDestination.AddItem>(
-                metadata = BottomSheetSceneStrategy.bottomSheet()
+                metadata = BottomSheetSceneStrategy.bottomSheet(
+                    onDismiss = { navigator.pop() }
+                )
             ) {
                 HomeItemSheet(
-                    onDismiss = { navigator.back() },
+                    onDismiss = { navigator.pop() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(HomeUiEvent.AddItem(title, description))
                     }
                 )
             }
             entry<HomeNavDestination.EditItem>(
-                metadata = BottomSheetSceneStrategy.bottomSheet()
+                metadata = BottomSheetSceneStrategy.bottomSheet(
+                    onDismiss = { navigator.pop() }
+                )
             ) { destination ->
                 HomeItemSheet(
                     initialTitle = destination.title,
                     initialDescription = destination.description,
-                    onDismiss = { navigator.back() },
+                    onDismiss = { navigator.pop() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(
                             HomeUiEvent.UpdateItem(

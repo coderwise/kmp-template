@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.layouts.SearchBar
+import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
@@ -49,11 +50,13 @@ import myapp.feature.weather.generated.resources.weather_unknown_error
 import myapp.feature.weather.generated.resources.weather_use_current_location
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
-    viewModel: WeatherViewModel = koinViewModel()
+    navigator: Navigator,
+    viewModel: WeatherViewModel = koinViewModel { parametersOf(navigator) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

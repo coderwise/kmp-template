@@ -13,6 +13,9 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
 
+private object BottomSheetKey : NavMetadataKey<Unit>
+private object OnDismissKey : NavMetadataKey<() -> Unit>
+
 class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): BottomSheetScene<T>? {
@@ -28,9 +31,10 @@ class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
     }
 
     companion object {
-        object BottomSheetKey : NavMetadataKey<Unit>
-
-        fun bottomSheet(): Map<String, Any> = metadata { put(BottomSheetKey, Unit) }
+        fun bottomSheet(onDismiss: (() -> Unit)? = null): Map<String, Any> = metadata {
+            put(BottomSheetKey, Unit)
+            onDismiss?.let { put(OnDismissKey, it) }
+        }
     }
 }
 
@@ -56,7 +60,14 @@ class BottomSheetScene<T : Any>(
         }
 
         ModalBottomSheet(
-            onDismissRequest = onBack,
+            onDismissRequest = {
+                val onDismiss = entry.metadata[OnDismissKey]
+                if (onDismiss != null) {
+                    onDismiss()
+                } else {
+                    onBack()
+                }
+            },
             sheetState = sheetState,
         ) {
             entry.Content()

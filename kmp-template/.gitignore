@@ -76,3 +76,4 @@ dist/
 /keystore.properties
 /app/android/upload.keystore
 /secrets/
+/gradle/gradle-daemon-jvm.properties

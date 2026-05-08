@@ -35,11 +35,14 @@ import myapp.feature.settings.generated.resources.settings_title
 import myapp.feature.settings.generated.resources.settings_version
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.navigation.Navigator
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = koinViewModel()
+    navigator: Navigator,
+    viewModel: SettingsViewModel = koinViewModel { parametersOf(navigator) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

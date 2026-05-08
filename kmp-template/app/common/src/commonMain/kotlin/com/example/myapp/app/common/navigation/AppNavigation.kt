@@ -7,32 +7,24 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
+import com.example.myapp.core.ui.navigation.rememberNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
-import com.example.myapp.core.ui.util.pop
-import com.example.myapp.core.ui.util.push
+import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigation
 import com.example.myapp.feature.settings.ui.SettingsNavEvent
-import com.example.myapp.feature.settings.ui.SettingsNavigator
 import com.example.myapp.feature.settings.ui.SettingsScreen
-import com.example.myapp.feature.settings.ui.SettingsViewModel
 import com.example.myapp.feature.weather.ui.WeatherNavEvent
-import com.example.myapp.feature.weather.ui.WeatherNavigator
 import com.example.myapp.feature.weather.ui.WeatherScreen
-import com.example.myapp.feature.weather.ui.WeatherViewModel
 import com.example.myapp.libs.utils.PlatformColors
 import org.koin.compose.koinInject
-import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun AppNavigation() {
@@ -48,11 +40,20 @@ fun AppNavigation() {
     val config = SavedStateConfiguration {
         serializersModule = appNavSerializersModule
     }
-    val backStack = rememberNavBackStack(config, HomeDestination)
+    val navigator = rememberNavigator(config, HomeDestination) { event ->
+        when (event) {
+            is SettingsNavEvent.Back,
+            is WeatherNavEvent.Back -> pop()
+
+            is HomeNavEvent.ToWeather -> push(WeatherDestination)
+            is HomeNavEvent.ToSettings -> push(SettingsDestination)
+        }
+    }
+
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
         NavDisplay(
-            backStack = backStack,
+            backStack = navigator.backStack,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
@@ -65,32 +66,13 @@ fun AppNavigation() {
             },
             entryProvider = entryProvider {
                 entry<HomeDestination> {
-                    HomeNavigation(
-                        onWeatherClick = {
-                            backStack.push(WeatherDestination)
-                        },
-                        onSettingsClick = {
-                            backStack.push(SettingsDestination)
-                        }
-                    )
+                    HomeNavigation(navigator)
                 }
                 entry<WeatherDestination> {
-                    val navigator = remember {
-                        object : WeatherNavigator {
-                            override fun back() { backStack.pop() }
-                        }
-                    }
-                    val viewModel: WeatherViewModel = koinViewModel { parametersOf(navigator) }
-                    WeatherScreen(viewModel = viewModel)
+                    WeatherScreen(navigator)
                 }
                 entry<SettingsDestination> {
-                    val navigator = remember {
-                        object : SettingsNavigator {
-                            override fun back() { backStack.pop() }
-                        }
-                    }
-                    val viewModel: SettingsViewModel = koinViewModel { parametersOf(navigator) }
-                    SettingsScreen(viewModel = viewModel)
+                    SettingsScreen(navigator)
                 }
             }
         )
