@@ -1,7 +1,6 @@
 package com.example.myapp.feature.home.navigation
 
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.navigation.Navigator
 
 sealed interface HomeNavEvent {
     data object Back : HomeNavEvent

@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
@@ -33,10 +32,6 @@ fun AppNavigation() {
         ThemeType.LIGHT -> false
         ThemeType.DARK -> true
         ThemeType.SYSTEM -> isSystemInDarkTheme()
-    }
-
-    val config = SavedStateConfiguration {
-        serializersModule = appNavSerializersModule
     }
 
     val navigator = rememberMultiStackNavigator(startKey = HomeDestination) { event ->
