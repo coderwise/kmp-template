@@ -38,7 +38,7 @@ class SettingsViewModel(
                     updateThemeUseCase(event.theme)
                 }
             }
-            SettingsUiEvent.NavigateBack -> navigator.dispatch(SettingsNavEvent.Back)
+            is SettingsUiEvent.NavigateBack -> navigator.navigateUp()
         }
     }
 }

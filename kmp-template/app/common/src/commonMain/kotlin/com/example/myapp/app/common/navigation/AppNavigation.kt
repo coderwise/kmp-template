@@ -9,19 +9,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.navigation.rememberNavigator
+import com.example.myapp.core.ui.navigation.rememberMultiStackNavigationState
+import com.example.myapp.core.ui.navigation.rememberMultiStackNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigation
-import com.example.myapp.feature.settings.ui.SettingsNavEvent
 import com.example.myapp.feature.settings.ui.SettingsScreen
-import com.example.myapp.feature.weather.ui.WeatherNavEvent
 import com.example.myapp.feature.weather.ui.WeatherScreen
 import com.example.myapp.libs.utils.PlatformColors
 import org.koin.compose.koinInject
@@ -40,20 +40,31 @@ fun AppNavigation() {
     val config = SavedStateConfiguration {
         serializersModule = appNavSerializersModule
     }
-    val navigator = rememberNavigator(config, HomeDestination) { event ->
-        when (event) {
-            is SettingsNavEvent.Back,
-            is WeatherNavEvent.Back -> pop()
 
-            is HomeNavEvent.ToWeather -> push(WeatherDestination)
-            is HomeNavEvent.ToSettings -> push(SettingsDestination)
+    val homeBackStack = rememberNavBackStack(config, HomeDestination)
+    val weatherBackStack = rememberNavBackStack(config, WeatherDestination)
+    val settingsBackStack = rememberNavBackStack(config, SettingsDestination)
+
+    val multiStackState = rememberMultiStackNavigationState(
+        stacks = mapOf(
+            HomeDestination to homeBackStack,
+            WeatherDestination to weatherBackStack,
+            SettingsDestination to settingsBackStack
+        ),
+        startKey = HomeDestination
+    )
+
+    val navigator = rememberMultiStackNavigator(multiStackState) { event ->
+        when (event) {
+            is HomeNavEvent.ToWeather -> switchTab(WeatherDestination)
+            is HomeNavEvent.ToSettings -> switchTab(SettingsDestination)
         }
     }
 
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
         NavDisplay(
-            backStack = navigator.backStack,
+            backStack = multiStackState.currentBackStack,
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
@@ -71,7 +82,7 @@ fun AppNavigation() {
                 entry<WeatherDestination> {
                     WeatherScreen(navigator)
                 }
-                entry<SettingsDestination> {
+                entry<SettingsDestination>(metadata = popTransition()) {
                     SettingsScreen(navigator)
                 }
             }

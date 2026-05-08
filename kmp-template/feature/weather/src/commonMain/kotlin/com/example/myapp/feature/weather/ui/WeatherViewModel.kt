@@ -55,7 +55,7 @@ class WeatherViewModel(
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             is WeatherUiEvent.OnSearchClick -> onSearchClick()
             is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
-            is WeatherUiEvent.OnBackClick -> navigator.dispatch(WeatherNavEvent.Back)
+            is WeatherUiEvent.OnBackClick -> navigator.navigateUp()
         }
     }
 

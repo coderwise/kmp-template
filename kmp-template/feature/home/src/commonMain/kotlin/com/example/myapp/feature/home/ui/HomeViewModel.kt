@@ -44,10 +44,10 @@ class HomeViewModel(
             is HomeUiEvent.AddItem -> addItem(event.title, event.description)
             is HomeUiEvent.DeleteItem -> removeItem(event.id)
             is HomeUiEvent.UpdateItem -> updateItem(event.item)
-            is HomeUiEvent.NavigateToWeather -> navigator.dispatch(HomeNavEvent.ToWeather)
-            is HomeUiEvent.NavigateToSettings -> navigator.dispatch(HomeNavEvent.ToSettings)
-            is HomeUiEvent.NavigateToAddItem -> navigator.dispatch(HomeNavEvent.ToAddItem)
-            is HomeUiEvent.NavigateToEditItem -> navigator.dispatch(HomeNavEvent.ToEditItem(event.item))
+            is HomeUiEvent.NavigateToWeather -> navigator.navigate(HomeNavEvent.ToWeather)
+            is HomeUiEvent.NavigateToSettings -> navigator.navigate(HomeNavEvent.ToSettings)
+            is HomeUiEvent.NavigateToAddItem -> navigator.navigate(HomeNavEvent.ToAddItem)
+            is HomeUiEvent.NavigateToEditItem -> navigator.navigate(HomeNavEvent.ToEditItem(event.item))
         }
     }
 
@@ -81,7 +81,7 @@ class HomeViewModel(
                 description = description
             )
             addHomeItemUseCase(newItem)
-            navigator.dispatch(HomeNavEvent.Back)
+            navigator.navigate(HomeNavEvent.Back)
         }
     }
 
@@ -94,7 +94,7 @@ class HomeViewModel(
     private fun updateItem(item: HomeItem) {
         viewModelScope.launch {
             updateHomeItemUseCase(item)
-            navigator.dispatch(HomeNavEvent.Back)
+            navigator.navigate(HomeNavEvent.Back)
         }
     }
 }

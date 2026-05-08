@@ -9,6 +9,7 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.navigation.Navigator
+import com.example.myapp.core.ui.navigation.rememberNavigationState
 import com.example.myapp.core.ui.navigation.rememberNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
@@ -38,7 +39,8 @@ fun HomeNavigation(
         }
     }
 
-    val navigator = rememberNavigator(config, HomeNavDestination.Root) { event ->
+    val navigationState = rememberNavigationState(config, HomeNavDestination.Root)
+    val navigator = rememberNavigator(navigationState) { event ->
         when (event) {
             is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {
@@ -54,7 +56,7 @@ fun HomeNavigation(
 
             HomeNavEvent.Back -> pop()
 
-            else -> appNavigator.dispatch(event)
+            else -> appNavigator.navigate(event)
         }
     }
 

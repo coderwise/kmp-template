@@ -1,5 +1,6 @@
 package com.example.myapp.core.ui.navigation
 
 interface Navigator {
-    fun dispatch(event: Any)
+    fun navigate(event: Any)
+    fun navigateUp()
 }
