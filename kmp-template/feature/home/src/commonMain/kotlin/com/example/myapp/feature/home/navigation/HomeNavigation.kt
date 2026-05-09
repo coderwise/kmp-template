@@ -1,7 +1,6 @@
 package com.example.myapp.feature.home.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.SinglePaneSceneStrategy
@@ -20,11 +19,13 @@ import kotlinx.serialization.modules.polymorphic
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-private val homeNavSerializersModule = SerializersModule {
-    polymorphic(NavKey::class) {
-        subclass(HomeNavDestination.Root::class, HomeNavDestination.Root.serializer())
-        subclass(HomeNavDestination.AddItem::class, HomeNavDestination.AddItem.serializer())
-        subclass(HomeNavDestination.EditItem::class, HomeNavDestination.EditItem.serializer())
+private val homeNavConfig = SavedStateConfiguration {
+    serializersModule = SerializersModule {
+        polymorphic(NavKey::class) {
+            subclass(HomeNavDestination.Root::class, HomeNavDestination.Root.serializer())
+            subclass(HomeNavDestination.AddItem::class, HomeNavDestination.AddItem.serializer())
+            subclass(HomeNavDestination.EditItem::class, HomeNavDestination.EditItem.serializer())
+        }
     }
 }
 
@@ -32,13 +33,7 @@ private val homeNavSerializersModule = SerializersModule {
 fun HomeNavigation(
     appNavigator: Navigator
 ) {
-    val config = remember {
-        SavedStateConfiguration {
-            serializersModule = homeNavSerializersModule
-        }
-    }
-
-    val navigator = rememberNavigator(HomeNavDestination.Root, config) { event ->
+    val navigator = rememberNavigator(HomeNavDestination.Root, homeNavConfig) { event ->
         when (event) {
             is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {

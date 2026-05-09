@@ -8,18 +8,12 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 
-interface NavigatorScope {
-    fun push(destination: NavKey)
-    fun pop()
-    fun switchTab(tab: NavKey) = Unit
-}
-
 class NavigatorImpl(
     val backStack: NavBackStack<NavKey>,
-    private val onEvent: NavigatorScope.(Any) -> Unit
-) : Navigator, NavigatorScope {
-    override fun push(destination: NavKey) = backStack.push(destination)
-    override fun pop() { if (backStack.size > 1) backStack.pop() }
+    private val onEvent: NavigatorImpl.(Any) -> Unit
+) : Navigator {
+    fun push(destination: NavKey) = backStack.push(destination)
+    fun pop() { if (backStack.size > 1) backStack.pop() }
     override fun navigate(event: Any) = onEvent(event)
     override fun navigateUp() = pop()
 }
@@ -28,7 +22,7 @@ class NavigatorImpl(
 fun rememberNavigator(
     startDestination: NavKey,
     configuration: SavedStateConfiguration,
-    onEvent: NavigatorScope.(Any) -> Unit = {}
+    onEvent: NavigatorImpl.(Any) -> Unit = {}
 ): NavigatorImpl {
     val backStack = rememberNavBackStack(configuration, startDestination)
     return remember(backStack, onEvent) { NavigatorImpl(backStack, onEvent) }
@@ -38,13 +32,13 @@ class MultiStackNavigatorImpl(
     val stacks: MutableMap<NavKey, NavBackStack<NavKey>>,
     val currentKey: MutableState<NavKey>,
     val startKey: NavKey,
-    private val onEvent: NavigatorScope.(Any) -> Unit
-) : Navigator, NavigatorScope {
+    private val onEvent: MultiStackNavigatorImpl.(Any) -> Unit
+) : Navigator {
     val currentBackStack get() = stacks.getOrPut(currentKey.value) { NavBackStack(currentKey.value) }
 
-    override fun push(destination: NavKey) = currentBackStack.push(destination)
+    fun push(destination: NavKey) = currentBackStack.push(destination)
 
-    override fun pop() {
+    fun pop() {
         if (currentBackStack.size > 1) {
             currentBackStack.pop()
         } else if (currentKey.value != startKey) {
@@ -52,7 +46,7 @@ class MultiStackNavigatorImpl(
         }
     }
 
-    override fun switchTab(tab: NavKey) {
+    fun switchTab(tab: NavKey) {
         stacks.getOrPut(tab) { NavBackStack(tab) }
         currentKey.value = tab
     }
@@ -64,7 +58,7 @@ class MultiStackNavigatorImpl(
 @Composable
 fun rememberMultiStackNavigator(
     startKey: NavKey,
-    onEvent: NavigatorScope.(Any) -> Unit = {}
+    onEvent: MultiStackNavigatorImpl.(Any) -> Unit = {}
 ): MultiStackNavigatorImpl {
     val stacks = remember { mutableStateMapOf(startKey to NavBackStack(startKey)) }
     val currentKey = remember { mutableStateOf(startKey) }
