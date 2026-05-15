@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,7 +21,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import com.example.myapp.core.ui.components.AppDivider
 import com.example.myapp.core.ui.screens.EmptyState
 import androidx.compose.runtime.Composable
@@ -32,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.layouts.SearchBar
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.theme.MyAppTheme
@@ -76,13 +75,10 @@ fun WeatherScreenContent(
     val permissionState = rememberLocationPermissionState()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.weather_title)) },
-                navigationIcon = {
-                    IconButton(onClick = { onEvent(WeatherUiEvent.OnBackClick) }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(Res.string.weather_back_content_description))
-                    }
-                }
+            AppTopBar(
+                title = stringResource(Res.string.weather_title),
+                onBackClick = { onEvent(WeatherUiEvent.OnBackClick) },
+                backContentDescription = stringResource(Res.string.weather_back_content_description)
             )
         }
     ) { padding ->

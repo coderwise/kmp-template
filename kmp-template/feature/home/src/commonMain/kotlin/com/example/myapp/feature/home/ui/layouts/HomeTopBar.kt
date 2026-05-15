@@ -17,12 +17,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_refresh_content_description
@@ -39,8 +39,8 @@ fun HomeTopBar(
     onSettingsClick: () -> Unit,
     onWeatherClick: () -> Unit
 ) {
-    TopAppBar(
-        title = { Text(stringResource(Res.string.home_title)) },
+    AppTopBar(
+        title = stringResource(Res.string.home_title),
         actions = {
             IconButton(
                 onClick = onRefreshClick,
