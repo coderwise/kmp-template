@@ -1,0 +1,3 @@
+- Add current location support with reverse geocoding
+- Add location request button to the forecast screen
+- Show "Today" label for the current day in the 7-day forecast

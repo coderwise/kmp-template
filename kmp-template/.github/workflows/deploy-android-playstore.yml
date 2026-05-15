@@ -43,3 +43,4 @@ jobs:
           releaseFiles: app/android/build/outputs/bundle/release/android-release.aab
           tracks: internal
           status: draft # change to 'completed' after the first release is manually published in Play Console
+          whatsNewDirectory: docs/playstore/release-notes

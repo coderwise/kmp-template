@@ -4,7 +4,7 @@ import SwiftUI
 struct MyAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().ignoresSafeArea()
         }
     }
 }
