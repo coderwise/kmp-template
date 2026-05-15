@@ -21,8 +21,8 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
 
     val onResultState = remember { mutableStateOf<((Boolean) -> Unit)?>(null) }
 
-    DisposableEffect(manager) {
-        val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
+    val delegate = remember {
+        object : NSObject(), CLLocationManagerDelegateProtocol {
             override fun locationManagerDidChangeAuthorization(manager: CLLocationManager) {
                 val current = currentStatus()
                 statusState.value = current
@@ -40,6 +40,9 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
                 onResultState.value = null
             }
         }
+    }
+
+    DisposableEffect(manager, delegate) {
         manager.delegate = delegate
         onDispose { manager.delegate = null }
     }
@@ -50,8 +53,12 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
                 get() = statusState.value
 
             override fun launchPermissionRequest(onResult: (Boolean) -> Unit) {
-                onResultState.value = onResult
-                manager.requestWhenInUseAuthorization()
+                if (CLLocationManager.authorizationStatus() == kCLAuthorizationStatusNotDetermined) {
+                    onResultState.value = onResult
+                    manager.requestWhenInUseAuthorization()
+                } else {
+                    onResult(status.isGranted)
+                }
             }
         }
     }
