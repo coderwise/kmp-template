@@ -24,17 +24,20 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
             override val status: PermissionStatus
                 get() = statusState.value
 
-            override fun launchPermissionRequest() {
+            override fun launchPermissionRequest(onResult: (Boolean) -> Unit) {
                 val geolocation = js("navigator.geolocation")
                 if (geolocation == null || geolocation == undefined) {
                     statusState.value = PermissionStatus.Denied(false)
+                    onResult(false)
                     return
                 }
                 val onSuccess: (dynamic) -> Unit = {
                     statusState.value = PermissionStatus.Granted
+                    onResult(true)
                 }
                 val onError: (dynamic) -> Unit = {
                     statusState.value = PermissionStatus.Denied(false)
+                    onResult(false)
                 }
                 geolocation.getCurrentPosition(onSuccess, onError)
             }

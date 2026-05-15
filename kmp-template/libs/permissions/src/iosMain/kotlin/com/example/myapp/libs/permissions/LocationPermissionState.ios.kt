@@ -19,17 +19,25 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
     val manager = remember { CLLocationManager() }
     val statusState = remember { mutableStateOf(currentStatus()) }
 
+    val onResultState = remember { mutableStateOf<((Boolean) -> Unit)?>(null) }
+
     DisposableEffect(manager) {
         val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
             override fun locationManagerDidChangeAuthorization(manager: CLLocationManager) {
-                statusState.value = currentStatus()
+                val current = currentStatus()
+                statusState.value = current
+                onResultState.value?.invoke(current.isGranted)
+                onResultState.value = null
             }
 
             override fun locationManager(
                 manager: CLLocationManager,
                 didChangeAuthorizationStatus: CLAuthorizationStatus
             ) {
-                statusState.value = currentStatus()
+                val current = currentStatus()
+                statusState.value = current
+                onResultState.value?.invoke(current.isGranted)
+                onResultState.value = null
             }
         }
         manager.delegate = delegate
@@ -41,7 +49,8 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
             override val status: PermissionStatus
                 get() = statusState.value
 
-            override fun launchPermissionRequest() {
+            override fun launchPermissionRequest(onResult: (Boolean) -> Unit) {
+                onResultState.value = onResult
                 manager.requestWhenInUseAuthorization()
             }
         }

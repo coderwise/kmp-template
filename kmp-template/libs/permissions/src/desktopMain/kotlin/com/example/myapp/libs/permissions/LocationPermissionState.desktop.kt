@@ -7,6 +7,8 @@ import androidx.compose.runtime.remember
 actual fun rememberLocationPermissionState(): LocationPermissionState = remember {
     object : LocationPermissionState {
         override val status: PermissionStatus = PermissionStatus.Granted
-        override fun launchPermissionRequest() = Unit
+        override fun launchPermissionRequest(onResult: (Boolean) -> Unit) {
+            onResult(true)
+        }
     }
 }

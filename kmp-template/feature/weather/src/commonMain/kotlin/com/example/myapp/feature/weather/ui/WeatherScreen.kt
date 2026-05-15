@@ -107,7 +107,11 @@ fun WeatherScreenContent(
                             if (permissionState.status.isGranted) {
                                 onEvent(WeatherUiEvent.OnCurrentLocationClick)
                             } else {
-                                permissionState.launchPermissionRequest()
+                                permissionState.launchPermissionRequest { isGranted ->
+                                    if (isGranted) {
+                                        onEvent(WeatherUiEvent.OnCurrentLocationClick)
+                                    }
+                                }
                             }
                         }
                     ) {

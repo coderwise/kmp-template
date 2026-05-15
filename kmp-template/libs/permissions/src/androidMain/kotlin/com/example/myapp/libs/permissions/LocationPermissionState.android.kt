@@ -32,10 +32,14 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
         onPauseOrDispose { }
     }
 
+    val onResultState = remember { mutableStateOf<((Boolean) -> Unit)?>(null) }
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
     ) {
-        statusState.value = resolveStatus(context, activity)
+        val currentStatus = resolveStatus(context, activity)
+        statusState.value = currentStatus
+        onResultState.value?.invoke(currentStatus.isGranted)
+        onResultState.value = null
     }
 
     return remember(launcher) {
@@ -43,7 +47,8 @@ actual fun rememberLocationPermissionState(): LocationPermissionState {
             override val status: PermissionStatus
                 get() = statusState.value
 
-            override fun launchPermissionRequest() {
+            override fun launchPermissionRequest(onResult: (Boolean) -> Unit) {
+                onResultState.value = onResult
                 launcher.launch(LOCATION_PERMISSIONS)
             }
         }

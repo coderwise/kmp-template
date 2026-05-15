@@ -6,7 +6,7 @@ import androidx.compose.runtime.Stable
 @Stable
 interface LocationPermissionState {
     val status: PermissionStatus
-    fun launchPermissionRequest()
+    fun launchPermissionRequest(onResult: (Boolean) -> Unit = {})
 }
 
 @Composable
