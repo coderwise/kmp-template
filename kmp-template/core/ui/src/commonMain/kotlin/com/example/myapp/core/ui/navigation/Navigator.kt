@@ -16,8 +16,10 @@ fun interface NavEventHandler {
 interface Navigator : NavEventHandler {
     val currentBackStack: NavBackStack<NavKey>
     fun navigate(key: NavKey)
+    fun push(key: NavKey) = navigate(key)
     fun switchRoot(key: NavKey)
     fun navigateUp()
+    fun pop()
     
     override fun onEvent(event: Any)
 }

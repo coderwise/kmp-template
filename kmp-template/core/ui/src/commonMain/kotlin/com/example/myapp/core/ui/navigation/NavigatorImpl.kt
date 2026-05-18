@@ -29,31 +29,35 @@ internal class NavBridge : ViewModel(), Navigator {
         target?.navigateUp()
     }
 
+    override fun pop() {
+        target?.pop()
+    }
+
     override fun onEvent(event: Any) {
         target?.onEvent(event)
     }
 }
 
 @Stable
-class NavigatorImpl(
-    val backStack: NavBackStack<NavKey>,
-    private val eventHandler: NavigatorImpl.(Any) -> Unit
+private class ActionNavigator(
+    override val currentBackStack: NavBackStack<NavKey>,
+    private val onNavigate: (NavKey) -> Unit,
+    private val onSwitchRoot: (NavKey) -> Unit = {},
+    private val onPop: () -> Unit,
+    private val eventHandler: Navigator.(Any) -> Unit
 ) : Navigator {
-    override val currentBackStack: NavBackStack<NavKey> get() = backStack
-    fun push(destination: NavKey) = backStack.push(destination)
-    override fun navigate(key: NavKey) = push(key)
-    override fun switchRoot(key: NavKey) { /* Not supported for single stack */ }
+    override fun navigate(key: NavKey) = onNavigate(key)
+    override fun switchRoot(key: NavKey) = onSwitchRoot(key)
     override fun onEvent(event: Any) = eventHandler(event)
     override fun navigateUp() = onEvent(GlobalNavEvent.Back)
-    
-    fun pop() { if (backStack.size > 1) backStack.pop() }
+    override fun pop() = onPop()
 }
 
 @Composable
 fun rememberNavigator(
     startDestination: NavKey,
     configuration: SavedStateConfiguration,
-    onEvent: NavigatorImpl.(Any) -> Unit = {}
+    onEvent: Navigator.(Any) -> Unit = {}
 ): Navigator {
     val backStack = rememberNavBackStack(configuration, startDestination)
     val currentOnEvent by rememberUpdatedState(onEvent)
@@ -61,46 +65,22 @@ fun rememberNavigator(
     val bridge = viewModel { NavBridge() }
     
     val activeNavigator = remember(backStack) { 
-        NavigatorImpl(backStack) { event ->
-            currentOnEvent(event)
-        }
+        ActionNavigator(
+            currentBackStack = backStack,
+            onNavigate = { backStack.push(it) },
+            onPop = { if (backStack.size > 1) backStack.pop() },
+            eventHandler = { event -> currentOnEvent(event) }
+        )
     }
     
     bridge.target = activeNavigator
     return bridge
 }
 
-@Stable
-class NavigationStateNavigator(
-    val state: NavigationState,
-    private val eventHandler: NavigationStateNavigator.(Any) -> Unit
-) : Navigator {
-    override val currentBackStack: NavBackStack<NavKey>
-        get() = state.currentBackStack
-
-    override fun navigate(key: NavKey) {
-        state.push(key)
-    }
-
-    override fun switchRoot(key: NavKey) {
-        state.switchRoot(key)
-    }
-
-    override fun onEvent(event: Any) {
-        eventHandler(event)
-    }
-
-    override fun navigateUp() = onEvent(GlobalNavEvent.Back)
-    
-    fun pop() {
-        state.pop()
-    }
-}
-
 @Composable
 fun rememberAppNavigator(
     startRoot: NavKey,
-    onEvent: NavigationStateNavigator.(Any) -> Unit = {}
+    onEvent: Navigator.(Any) -> Unit = {}
 ): Navigator {
     val state = rememberNavigationState(startRoot)
     val currentOnEvent by rememberUpdatedState(onEvent)
@@ -108,9 +88,13 @@ fun rememberAppNavigator(
     val bridge = viewModel { NavBridge() }
     
     val activeNavigator = remember(state) {
-        NavigationStateNavigator(state) { event ->
-            currentOnEvent(event)
-        }
+        ActionNavigator(
+            currentBackStack = state.currentBackStack,
+            onNavigate = { state.push(it) },
+            onSwitchRoot = { state.switchRoot(it) },
+            onPop = { state.pop() },
+            eventHandler = { event -> currentOnEvent(event) }
+        )
     }
     
     bridge.target = activeNavigator
