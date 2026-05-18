@@ -29,19 +29,7 @@ class NavigationState : Navigator {
         }
 
     override fun navigate(key: NavKey) {
-        push(key)
-    }
-
-    override fun push(key: NavKey) {
         currentBackStack.push(key)
-    }
-
-    override fun pop() {
-        if (currentBackStack.size > 1) {
-            currentBackStack.pop()
-        } else if (rootBackStack.size > 1) {
-            rootBackStack.pop()
-        }
     }
 
     override fun switchRoot(key: NavKey) {
@@ -58,7 +46,11 @@ class NavigationState : Navigator {
     }
 
     override fun navigateUp() {
-        pop()
+        if (currentBackStack.size > 1) {
+            currentBackStack.pop()
+        } else if (rootBackStack.size > 1) {
+            rootBackStack.pop()
+        }
     }
 
     private var eventHandler: (Navigator.(Any) -> Unit)? = null

@@ -35,13 +35,13 @@ fun AppNavigation() {
 
     val navigator = rememberAppNavigator(startRoot = HomeDestination) { event ->
         when (event) {
-            is GlobalNavEvent.Back -> pop()
+            is GlobalNavEvent.Back -> navigateUp()
             is HomeNavEvent.ToWeather -> switchRoot(WeatherDestination)
             is HomeNavEvent.ToSettings -> switchRoot(SettingsDestination)
-            is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
+            is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
-                push(
+                navigate(
                     HomeNavDestination.EditItem(
                         item.id,
                         item.title,
