@@ -2,6 +2,7 @@ package com.example.myapp.app.common.di
 
 import com.example.myapp.app.common.navigation.AppViewModel
 import com.example.myapp.core.data.di.dataModule
+import com.example.myapp.core.ui.di.uiModule
 import com.example.myapp.feature.home.di.homeModule
 import com.example.myapp.feature.settings.di.featureSettingsModule
 import com.example.myapp.feature.weather.di.weatherModule
@@ -11,6 +12,6 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
-    includes(dataModule, homeModule, weatherModule, settingsModule, featureSettingsModule, locationModule)
+    includes(dataModule, uiModule, homeModule, weatherModule, settingsModule, featureSettingsModule, locationModule)
     viewModelOf(::AppViewModel)
 }

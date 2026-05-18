@@ -9,6 +9,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
+import org.koin.compose.koinInject
 
 @Stable
 internal class NavBridge : ViewModel(), Navigator {
@@ -82,21 +83,16 @@ fun rememberAppNavigator(
     startRoot: NavKey,
     onEvent: Navigator.(Any) -> Unit = {}
 ): Navigator {
-    val state = rememberNavigationState(startRoot)
-    val currentOnEvent by rememberUpdatedState(onEvent)
-    
-    val bridge = viewModel { NavBridge() }
-    
-    val activeNavigator = remember(state) {
-        ActionNavigator(
-            currentBackStack = state.currentBackStack,
-            onNavigate = { state.push(it) },
-            onSwitchRoot = { state.switchRoot(it) },
-            onPop = { state.pop() },
-            eventHandler = { event -> currentOnEvent(event) }
-        )
+    val navigator = koinInject<NavigationState>()
+
+    remember(navigator, startRoot) {
+        navigator.onStart(startRoot)
     }
-    
-    bridge.target = activeNavigator
-    return bridge
+
+    val currentOnEvent by rememberUpdatedState(onEvent)
+    LaunchedEffect(currentOnEvent) {
+        navigator.setEventHandler(currentOnEvent)
+    }
+
+    return navigator
 }

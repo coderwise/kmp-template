@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.layouts.SearchBar
-import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
@@ -54,8 +53,7 @@ import org.koin.core.parameter.parametersOf
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
-    navEventHandler: NavEventHandler,
-    viewModel: WeatherViewModel = koinViewModel { parametersOf(navEventHandler) }
+    viewModel: WeatherViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

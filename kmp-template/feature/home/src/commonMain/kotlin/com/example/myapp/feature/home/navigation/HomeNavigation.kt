@@ -1,61 +1,31 @@
 package com.example.myapp.feature.home.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.navigation.GlobalNavEvent
-import com.example.myapp.core.ui.navigation.Navigator
-import com.example.myapp.core.ui.navigation.rememberNavigator
+import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
-
-private val homeNavConfig = SavedStateConfiguration {
-    serializersModule = SerializersModule {
-        polymorphic(NavKey::class) {
-            subclass(HomeNavDestination.Root::class, HomeNavDestination.Root.serializer())
-            subclass(HomeNavDestination.AddItem::class, HomeNavDestination.AddItem.serializer())
-            subclass(HomeNavDestination.EditItem::class, HomeNavDestination.EditItem.serializer())
-        }
-    }
-}
 
 @Composable
-fun HomeNavigation(
-    appNavigator: Navigator
-) {
-    val navigator = rememberNavigator(HomeNavDestination.Root, homeNavConfig) { event ->
-        when (event) {
-            is GlobalNavEvent.Back -> pop()
-            is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
-            is HomeNavEvent.ToEditItem -> {
-                val item = event.item
-                push(
-                    HomeNavDestination.EditItem(
-                        item.id,
-                        item.title,
-                        item.description
-                    )
-                )
-            }
-            else -> appNavigator.onEvent(event)
-        }
+fun HomeNavigation() {
+    val navigator = koinInject<NavigationState>()
+    val viewModel: HomeViewModel = koinViewModel()
+
+    val backStack = navigator.currentBackStack
+    if (backStack.isEmpty()) {
+        backStack.add(HomeNavDestination.Root)
     }
 
-    val viewModel: HomeViewModel = koinViewModel { parametersOf(navigator) }
-
     NavDisplay(
-        backStack = navigator.currentBackStack,
+        backStack = backStack,
         onBack = { navigator.navigateUp() },
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {

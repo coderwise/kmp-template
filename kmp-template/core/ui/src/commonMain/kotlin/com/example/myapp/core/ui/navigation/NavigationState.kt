@@ -1,36 +1,42 @@
 package com.example.myapp.core.ui.navigation
 
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.listSaver
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 
 @Stable
-class NavigationState(
-    val rootBackStack: NavBackStack<NavKey>,
-    initialChildBackStacks: Map<NavKey, NavBackStack<NavKey>> = emptyMap()
-) {
-    val childBackStacks = mutableStateMapOf<NavKey, NavBackStack<NavKey>>().apply {
-        putAll(initialChildBackStacks)
+class NavigationState : Navigator {
+    private var _rootBackStack: NavBackStack<NavKey>? = null
+    val rootBackStack: NavBackStack<NavKey>
+        get() = _rootBackStack ?: error("NavigationState not initialized. Call onStart(startRoot) first.")
+
+    val childBackStacks = mutableStateMapOf<NavKey, NavBackStack<NavKey>>()
+
+    fun onStart(startRoot: NavKey) {
+        if (_rootBackStack == null) {
+            _rootBackStack = NavBackStack<NavKey>().apply { add(startRoot) }
+        }
     }
 
     val currentRootKey: NavKey
         get() = rootBackStack.last()
 
-    val currentBackStack: NavBackStack<NavKey>
+    override val currentBackStack: NavBackStack<NavKey>
         get() = childBackStacks.getOrPut(currentRootKey) {
-            NavBackStack(currentRootKey)
+            NavBackStack()
         }
 
-    fun push(key: NavKey) {
+    override fun navigate(key: NavKey) {
+        push(key)
+    }
+
+    override fun push(key: NavKey) {
         currentBackStack.push(key)
     }
 
-    fun pop() {
+    override fun pop() {
         if (currentBackStack.size > 1) {
             currentBackStack.pop()
         } else if (rootBackStack.size > 1) {
@@ -38,7 +44,7 @@ class NavigationState(
         }
     }
 
-    fun switchRoot(key: NavKey) {
+    override fun switchRoot(key: NavKey) {
         if (currentRootKey == key) {
             while (currentBackStack.size > 1) {
                 currentBackStack.pop()
@@ -51,43 +57,22 @@ class NavigationState(
         }
     }
 
-    companion object {
-        fun Saver(): Saver<NavigationState, *> = listSaver(
-            save = { state ->
-                listOf(
-                    state.rootBackStack.toList(),
-                    state.childBackStacks.mapValues { it.value.toList() }
-                )
-            },
-            restore = { saved ->
-                @Suppress("UNCHECKED_CAST")
-                val rootList = saved[0] as List<NavKey>
-                @Suppress("UNCHECKED_CAST")
-                val childrenMap = saved[1] as Map<NavKey, List<NavKey>>
-                
-                val rootBackStack = NavBackStack<NavKey>().apply {
-                    rootList.forEach { add(it) }
-                }
-                
-                val childrenBackStacks = childrenMap.mapValues { (_, list) ->
-                    NavBackStack<NavKey>().apply {
-                        list.forEach { add(it) }
-                    }
-                }
-
-                NavigationState(
-                    rootBackStack = rootBackStack,
-                    initialChildBackStacks = childrenBackStacks
-                )
-            }
-        )
+    override fun navigateUp() {
+        pop()
     }
-}
 
-@Composable
-fun rememberNavigationState(startRoot: NavKey): NavigationState {
-    return rememberSaveable(saver = NavigationState.Saver()) {
-        val rootBackStack = NavBackStack<NavKey>().apply { add(startRoot) }
-        NavigationState(rootBackStack)
+    private var eventHandler: (Navigator.(Any) -> Unit)? = null
+
+    fun setEventHandler(handler: Navigator.(Any) -> Unit) {
+        this.eventHandler = handler
+    }
+
+    override fun onEvent(event: Any) {
+        val handler = eventHandler
+        if (handler != null) {
+            handler(event)
+        } else if (event is GlobalNavEvent.Back) {
+            navigateUp()
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.myapp.app.common.navigation
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -9,15 +10,16 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.navigation.GlobalNavEvent
+import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.feature.home.navigation.HomeNavDestination
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigation
 import com.example.myapp.feature.settings.ui.SettingsScreen
 import com.example.myapp.feature.weather.ui.WeatherScreen
 import com.example.myapp.libs.utils.PlatformColors
-import androidx.compose.foundation.isSystemInDarkTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -36,6 +38,17 @@ fun AppNavigation() {
             is GlobalNavEvent.Back -> pop()
             is HomeNavEvent.ToWeather -> switchRoot(WeatherDestination)
             is HomeNavEvent.ToSettings -> switchRoot(SettingsDestination)
+            is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
+            is HomeNavEvent.ToEditItem -> {
+                val item = event.item
+                push(
+                    HomeNavDestination.EditItem(
+                        item.id,
+                        item.title,
+                        item.description
+                    )
+                )
+            }
         }
     }
 
@@ -50,10 +63,11 @@ private fun AppNavigationContent(
     darkTheme: Boolean,
     navigator: Navigator
 ) {
+    val navigationState = navigator as NavigationState
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
         NavDisplay(
-            backStack = navigator.currentBackStack,
+            backStack = navigationState.rootBackStack,
             onBack = { navigator.navigateUp() },
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
@@ -67,13 +81,13 @@ private fun AppNavigationContent(
             },
             entryProvider = entryProvider {
                 entry<HomeDestination> {
-                    HomeNavigation(navigator)
+                    HomeNavigation()
                 }
                 entry<WeatherDestination> {
-                    WeatherScreen(navigator)
+                    WeatherScreen()
                 }
                 entry<SettingsDestination>(metadata = popTransition()) {
-                    SettingsScreen(navigator)
+                    SettingsScreen()
                 }
             }
         )
