@@ -53,18 +53,28 @@ class NavigationState : Navigator {
         }
     }
 
-    private var eventHandler: (Navigator.(Any) -> Unit)? = null
+    private val eventHandlers = mutableStateListOf<Navigator.(Any) -> Unit>()
 
-    fun setEventHandler(handler: Navigator.(Any) -> Unit) {
-        this.eventHandler = handler
+    fun addEventHandler(handler: Navigator.(Any) -> Unit) {
+        if (!eventHandlers.contains(handler)) {
+            eventHandlers.add(handler)
+        }
+    }
+
+    fun removeEventHandler(handler: Navigator.(Any) -> Unit) {
+        eventHandlers.remove(handler)
     }
 
     override fun onEvent(event: Any) {
-        val handler = eventHandler
-        if (handler != null) {
-            handler(event)
-        } else if (event is GlobalNavEvent.Back) {
+        if (event is GlobalNavEvent.Back) {
             navigateUp()
+            return
+        }
+        // Iterate backwards to let more specific (later added) handlers take precedence if needed,
+        // but here we just call all of them. 
+        // Note: We might want a way to "consume" events, but for now we just call all.
+        eventHandlers.forEach { handler ->
+            handler(this, event)
         }
     }
 }

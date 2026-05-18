@@ -21,8 +21,6 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import com.example.myapp.core.ui.components.AppDivider
-import com.example.myapp.core.ui.screens.EmptyState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,8 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.components.AppDivider
 import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.layouts.SearchBar
+import com.example.myapp.core.ui.screens.EmptyState
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
@@ -48,7 +48,6 @@ import myapp.feature.weather.generated.resources.weather_unknown_error
 import myapp.feature.weather.generated.resources.weather_use_current_location
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

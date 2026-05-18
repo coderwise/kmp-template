@@ -5,27 +5,36 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.navigation.NavigationState
+import com.example.myapp.core.ui.navigation.rememberChildNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun HomeNavigation() {
-    val navigator = koinInject<NavigationState>()
     val viewModel: HomeViewModel = koinViewModel()
-
-    val backStack = navigator.currentBackStack
-    if (backStack.isEmpty()) {
-        backStack.add(HomeNavDestination.Root)
+    val navigator = rememberChildNavigator(HomeNavDestination.Root) { event ->
+        // Handle child specific events if any
+        when(event) {
+            is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
+            is HomeNavEvent.ToEditItem -> {
+                val item = event.item
+                navigate(
+                    HomeNavDestination.EditItem(
+                        item.id,
+                        item.title,
+                        item.description
+                    )
+                )
+            }
+        }
     }
 
     NavDisplay(
-        backStack = backStack,
+        backStack = navigator.currentBackStack,
         onBack = { navigator.navigateUp() },
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {

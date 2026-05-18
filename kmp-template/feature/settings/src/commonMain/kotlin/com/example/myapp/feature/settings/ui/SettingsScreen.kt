@@ -16,9 +16,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.layouts.ActionRow
 import com.example.myapp.core.ui.layouts.AppTopBar
-import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.settings.generated.resources.Res
@@ -29,9 +30,7 @@ import myapp.feature.settings.generated.resources.settings_theme_system
 import myapp.feature.settings.generated.resources.settings_title
 import myapp.feature.settings.generated.resources.settings_version
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun SettingsScreen(

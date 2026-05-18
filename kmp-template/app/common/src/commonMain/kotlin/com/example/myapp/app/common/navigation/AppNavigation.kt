@@ -9,7 +9,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.myapp.core.domain.model.ThemeType
-import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
@@ -35,20 +34,8 @@ fun AppNavigation() {
 
     val navigator = rememberAppNavigator(startRoot = HomeDestination) { event ->
         when (event) {
-            is GlobalNavEvent.Back -> navigateUp()
             is HomeNavEvent.ToWeather -> switchRoot(WeatherDestination)
             is HomeNavEvent.ToSettings -> switchRoot(SettingsDestination)
-            is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
-            is HomeNavEvent.ToEditItem -> {
-                val item = event.item
-                navigate(
-                    HomeNavDestination.EditItem(
-                        item.id,
-                        item.title,
-                        item.description
-                    )
-                )
-            }
         }
     }
 
