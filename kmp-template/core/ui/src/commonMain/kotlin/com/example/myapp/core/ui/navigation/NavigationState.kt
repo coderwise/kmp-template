@@ -60,7 +60,9 @@ class NavigationState(
                 )
             },
             restore = { saved ->
+                @Suppress("UNCHECKED_CAST")
                 val rootList = saved[0] as List<NavKey>
+                @Suppress("UNCHECKED_CAST")
                 val childrenMap = saved[1] as Map<NavKey, List<NavKey>>
                 
                 val rootBackStack = NavBackStack<NavKey>().apply {

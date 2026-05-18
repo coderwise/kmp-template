@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val getSettingsUseCase: GetSettingsUseCase,
+    getSettingsUseCase: GetSettingsUseCase,
     private val updateThemeUseCase: UpdateThemeUseCase,
     private val navEventHandler: NavEventHandler
 ) : ViewModel() {

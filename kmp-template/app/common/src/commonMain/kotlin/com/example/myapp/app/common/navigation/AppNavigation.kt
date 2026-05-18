@@ -41,7 +41,7 @@ fun AppNavigation() {
 
     AppNavigationContent(
         darkTheme = darkTheme,
-        navigator = navigator
+        navigator = navigator,
     )
 }
 

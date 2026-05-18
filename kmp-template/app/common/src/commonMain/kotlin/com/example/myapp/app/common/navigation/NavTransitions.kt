@@ -14,11 +14,11 @@ internal fun popTransition() = NavDisplay.popTransitionSpec {
 }
 
 internal fun slideInPopTransform() =
-    slideInHorizontally(
+    (slideInHorizontally(
         initialOffsetX = { -it / 4 },
-        animationSpec = tween(700)
-    ) + fadeIn(animationSpec = tween(700)) togetherWith
+        animationSpec = tween(700),
+    ) + fadeIn(animationSpec = tween(700))) togetherWith
         slideOutHorizontally(
             targetOffsetX = { it },
-            animationSpec = tween(700)
+            animationSpec = tween(700),
         )

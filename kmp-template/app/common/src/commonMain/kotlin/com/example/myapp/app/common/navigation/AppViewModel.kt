@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 class AppViewModel(
-    settingsRepository: SettingsRepository
+    settingsRepository: SettingsRepository,
 ) : ViewModel() {
     val uiState: StateFlow<AppUiState> = settingsRepository.observeSettings()
         .map { AppUiState(theme = it.theme) }
