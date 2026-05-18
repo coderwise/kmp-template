@@ -24,10 +24,10 @@ This document provides instructions and context for AI agents working on this Ko
 5. **UI-ViewModel Pattern**: Use a unidirectional data flow (UDF) pattern. ViewModels should expose a single `UiState` StateFlow and handle user interactions through a sealed interface `UiEvent` via an `onEvent` method. Use `_uiState.update { it.copy(...) }` for atomic state transitions. Screen content composables should be decoupled from ViewModels, receiving `UiState` and the `onEvent` handler as parameters. `UiState` and `UiEvent` should be defined in separate files from the ViewModel (e.g., `SettingsUiState.kt`, `SettingsUiEvent.kt`).
 6. **Compose Previews**:
     - **Placement**: Always add the Preview at the bottom of the file.
-    - **Theme**: Wrap previews in `MapsOnTheme` to ensure consistent styling.
+    - **Theme**: Wrap previews in `MyAppTheme` to ensure consistent styling.
     - **Sample Data**: Reuse existing sample data (look for "sample", "fake", or "mock" in the project) or create appropriate mock data for the preview.
     - **ViewModel handling**: If a Composable uses a ViewModel, extract the UI logic into a "Content" Composable that takes state and event callbacks. The Preview should then target this "Content" Composable.
-    - **Dark Mode**: Always include a dark mode preview using `MapsOnTheme(darkTheme = true)`.
+    - **Dark Mode**: Always include a dark mode preview using `MyAppTheme(darkTheme = true)`.
     - **Dependencies**: Ensure `libs.compose.preview` is added to the module's `build.gradle.kts` to enable preview support.
 
 7. **Resources & Localization**:
@@ -47,6 +47,8 @@ This document provides instructions and context for AI agents working on this Ko
     - **Naming**: Use backticks (e.g., `` `test name` ``) for descriptive test names in Kotlin. This makes test reports much more readable.
     - **Framework**: Use `kotlin.test` for assertions and `kotlinx.coroutines.test` for coroutine-based tests.
 
-11. **Component Extraction**: Extract complex or reusable UI elements (charts, complex labels, groups of controls) into standalone files within the feature's `ui/components` package. This improves readability and maintainability of main screen files.
+11. **Component Extraction**: Actively look for opportunities to simplify files by extracting UI elements.
+    - **Feature-specific**: Extract complex or reusable elements (charts, complex labels, groups of controls) into standalone files within the feature's `ui/components` package. This improves readability and maintainability of main screen files.
+    - **Global**: If a component (like a custom TopBar, Button, or Card style) is used in multiple features or is a branded version of a Material component, extract it to `core:ui` (e.g., `core:ui:components` or `core:ui:layouts`).
 
 12. **Feature Flags**: Wrap new or experimental UI components and logic in feature flags defined in `core:domain:model:FeatureFlags.kt`. This allows for safer releases and easier toggling of in-progress work.
