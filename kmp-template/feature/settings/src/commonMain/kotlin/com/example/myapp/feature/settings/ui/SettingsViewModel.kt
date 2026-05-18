@@ -2,7 +2,8 @@ package com.example.myapp.feature.settings.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.ui.navigation.Navigator
+import com.example.myapp.core.ui.navigation.GlobalNavEvent
+import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.settings.domain.usecase.GetSettingsUseCase
 import com.example.myapp.feature.settings.domain.usecase.UpdateThemeUseCase
 import com.example.myapp.libs.version.appVersion
@@ -15,7 +16,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(
     private val getSettingsUseCase: GetSettingsUseCase,
     private val updateThemeUseCase: UpdateThemeUseCase,
-    private val navigator: Navigator
+    private val navEventHandler: NavEventHandler
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = getSettingsUseCase()
@@ -38,7 +39,7 @@ class SettingsViewModel(
                     updateThemeUseCase(event.theme)
                 }
             }
-            is SettingsUiEvent.NavigateBack -> navigator.navigateUp()
+            is SettingsUiEvent.NavigateBack -> navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }
 }

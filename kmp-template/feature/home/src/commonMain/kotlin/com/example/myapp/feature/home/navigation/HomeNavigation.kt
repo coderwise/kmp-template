@@ -7,6 +7,7 @@ import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
@@ -35,6 +36,7 @@ fun HomeNavigation(
 ) {
     val navigator = rememberNavigator(HomeNavDestination.Root, homeNavConfig) { event ->
         when (event) {
+            GlobalNavEvent.Back, HomeNavEvent.Back -> pop()
             is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
@@ -46,10 +48,7 @@ fun HomeNavigation(
                     )
                 )
             }
-
-            HomeNavEvent.Back -> pop()
-
-            else -> appNavigator.navigate(event)
+            else -> appNavigator.onEvent(event)
         }
     }
 
@@ -57,7 +56,7 @@ fun HomeNavigation(
 
     NavDisplay(
         backStack = navigator.backStack,
-        onBack = { navigator.pop() },
+        onBack = { navigator.navigateUp() },
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {
             entry<HomeNavDestination.Root> {
@@ -65,11 +64,11 @@ fun HomeNavigation(
             }
             entry<HomeNavDestination.AddItem>(
                 metadata = BottomSheetSceneStrategy.bottomSheet(
-                    onDismiss = { navigator.pop() }
+                    onDismiss = { navigator.navigateUp() }
                 )
             ) {
                 HomeItemSheet(
-                    onDismiss = { navigator.pop() },
+                    onDismiss = { navigator.navigateUp() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(HomeUiEvent.AddItem(title, description))
                     }
@@ -77,13 +76,13 @@ fun HomeNavigation(
             }
             entry<HomeNavDestination.EditItem>(
                 metadata = BottomSheetSceneStrategy.bottomSheet(
-                    onDismiss = { navigator.pop() }
+                    onDismiss = { navigator.navigateUp() }
                 )
             ) { destination ->
                 HomeItemSheet(
                     initialTitle = destination.title,
                     initialDescription = destination.description,
-                    onDismiss = { navigator.pop() },
+                    onDismiss = { navigator.navigateUp() },
                     onConfirm = { title, description ->
                         viewModel.onEvent(
                             HomeUiEvent.UpdateItem(

@@ -8,14 +8,19 @@ import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 
+@Stable
 class NavigatorImpl(
     val backStack: NavBackStack<NavKey>,
-    private val onEvent: NavigatorImpl.(Any) -> Unit
+    private val eventHandler: NavigatorImpl.(Any) -> Unit
 ) : Navigator {
+    override val currentBackStack: NavBackStack<NavKey> get() = backStack
     fun push(destination: NavKey) = backStack.push(destination)
+    override fun navigate(key: NavKey) = push(key)
+    override fun switchRoot(key: NavKey) { /* Not supported for single stack */ }
+    override fun onEvent(event: Any) = eventHandler(event)
+    override fun navigateUp() = onEvent(GlobalNavEvent.Back)
+    
     fun pop() { if (backStack.size > 1) backStack.pop() }
-    override fun navigate(event: Any) = onEvent(event)
-    override fun navigateUp() = pop()
 }
 
 @Composable
@@ -25,44 +30,52 @@ fun rememberNavigator(
     onEvent: NavigatorImpl.(Any) -> Unit = {}
 ): NavigatorImpl {
     val backStack = rememberNavBackStack(configuration, startDestination)
-    return remember(backStack, onEvent) { NavigatorImpl(backStack, onEvent) }
-}
-
-class MultiStackNavigatorImpl(
-    val stacks: MutableMap<NavKey, NavBackStack<NavKey>>,
-    val currentKey: MutableState<NavKey>,
-    val startKey: NavKey,
-    private val onEvent: MultiStackNavigatorImpl.(Any) -> Unit
-) : Navigator {
-    val currentBackStack get() = stacks.getOrPut(currentKey.value) { NavBackStack(currentKey.value) }
-
-    fun push(destination: NavKey) = currentBackStack.push(destination)
-
-    fun pop() {
-        if (currentBackStack.size > 1) {
-            currentBackStack.pop()
-        } else if (currentKey.value != startKey) {
-            switchTab(startKey)
+    val currentOnEvent by rememberUpdatedState(onEvent)
+    return remember(backStack) { 
+        NavigatorImpl(backStack) { event ->
+            currentOnEvent(event)
         }
     }
+}
 
-    fun switchTab(tab: NavKey) {
-        stacks.getOrPut(tab) { NavBackStack(tab) }
-        currentKey.value = tab
+@Stable
+class NavigationStateNavigator(
+    val state: NavigationState,
+    private val eventHandler: NavigationStateNavigator.(Any) -> Unit
+) : Navigator {
+    override val currentBackStack: NavBackStack<NavKey>
+        get() = state.currentBackStack
+
+    override fun navigate(key: NavKey) {
+        state.push(key)
     }
 
-    override fun navigate(event: Any) = onEvent(event)
-    override fun navigateUp() = pop()
+    override fun switchRoot(key: NavKey) {
+        state.switchRoot(key)
+    }
+
+    override fun onEvent(event: Any) {
+        eventHandler(event)
+    }
+
+    override fun navigateUp() = onEvent(GlobalNavEvent.Back)
+    
+    fun pop() {
+        state.pop()
+    }
 }
 
 @Composable
-fun rememberMultiStackNavigator(
-    startKey: NavKey,
-    onEvent: MultiStackNavigatorImpl.(Any) -> Unit = {}
-): MultiStackNavigatorImpl {
-    val stacks = remember { mutableStateMapOf(startKey to NavBackStack(startKey)) }
-    val currentKey = remember { mutableStateOf(startKey) }
-    return remember(stacks, currentKey, startKey, onEvent) {
-        MultiStackNavigatorImpl(stacks, currentKey, startKey, onEvent)
+fun rememberAppNavigator(
+    startRoot: NavKey,
+    onEvent: NavigationStateNavigator.(Any) -> Unit = {}
+): NavigationStateNavigator {
+    val state = rememberNavigationState(startRoot)
+    val currentOnEvent by rememberUpdatedState(onEvent)
+    
+    return remember(state) {
+        NavigationStateNavigator(state) { event ->
+            currentOnEvent(event)
+        }
     }
 }

@@ -6,7 +6,7 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onLoading
 import com.example.myapp.core.domain.model.onSuccess
-import com.example.myapp.core.ui.navigation.Navigator
+import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
@@ -26,7 +26,7 @@ class HomeViewModel(
     private val removeHomeItemUseCase: RemoveHomeItemUseCase,
     private val updateHomeItemUseCase: UpdateHomeItemUseCase,
     private val syncHomeItemsUseCase: SyncHomeItemsUseCase,
-    private val navigator: Navigator,
+    private val navEventHandler: NavEventHandler,
     appVersion: String
 ) : ViewModel() {
 
@@ -44,10 +44,10 @@ class HomeViewModel(
             is HomeUiEvent.AddItem -> addItem(event.title, event.description)
             is HomeUiEvent.DeleteItem -> removeItem(event.id)
             is HomeUiEvent.UpdateItem -> updateItem(event.item)
-            is HomeUiEvent.NavigateToWeather -> navigator.navigate(HomeNavEvent.ToWeather)
-            is HomeUiEvent.NavigateToSettings -> navigator.navigate(HomeNavEvent.ToSettings)
-            is HomeUiEvent.NavigateToAddItem -> navigator.navigate(HomeNavEvent.ToAddItem)
-            is HomeUiEvent.NavigateToEditItem -> navigator.navigate(HomeNavEvent.ToEditItem(event.item))
+            is HomeUiEvent.NavigateToWeather -> navEventHandler.onEvent(HomeNavEvent.ToWeather)
+            is HomeUiEvent.NavigateToSettings -> navEventHandler.onEvent(HomeNavEvent.ToSettings)
+            is HomeUiEvent.NavigateToAddItem -> navEventHandler.onEvent(HomeNavEvent.ToAddItem)
+            is HomeUiEvent.NavigateToEditItem -> navEventHandler.onEvent(HomeNavEvent.ToEditItem(event.item))
         }
     }
 
@@ -81,7 +81,7 @@ class HomeViewModel(
                 description = description
             )
             addHomeItemUseCase(newItem)
-            navigator.navigate(HomeNavEvent.Back)
+            navEventHandler.onEvent(HomeNavEvent.Back)
         }
     }
 
@@ -94,7 +94,7 @@ class HomeViewModel(
     private fun updateItem(item: HomeItem) {
         viewModelScope.launch {
             updateHomeItemUseCase(item)
-            navigator.navigate(HomeNavEvent.Back)
+            navEventHandler.onEvent(HomeNavEvent.Back)
         }
     }
 }

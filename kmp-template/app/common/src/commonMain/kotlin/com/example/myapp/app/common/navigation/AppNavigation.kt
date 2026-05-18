@@ -14,7 +14,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.navigation.rememberMultiStackNavigator
+import com.example.myapp.core.ui.navigation.GlobalNavEvent
+import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigation
@@ -34,10 +35,11 @@ fun AppNavigation() {
         ThemeType.SYSTEM -> isSystemInDarkTheme()
     }
 
-    val navigator = rememberMultiStackNavigator(startKey = HomeDestination) { event ->
+    val navigator = rememberAppNavigator(startRoot = HomeDestination) { event ->
         when (event) {
-            is HomeNavEvent.ToWeather -> switchTab(WeatherDestination)
-            is HomeNavEvent.ToSettings -> switchTab(SettingsDestination)
+            GlobalNavEvent.Back -> pop()
+            is HomeNavEvent.ToWeather -> switchRoot(WeatherDestination)
+            is HomeNavEvent.ToSettings -> switchRoot(SettingsDestination)
         }
     }
 
@@ -45,7 +47,7 @@ fun AppNavigation() {
         PlatformColors(darkTheme)
         NavDisplay(
             backStack = navigator.currentBackStack,
-            onBack = { navigator.pop() },
+            onBack = { navigator.navigateUp() },
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
                 rememberViewModelStoreNavEntryDecorator()
