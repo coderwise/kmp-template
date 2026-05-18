@@ -17,7 +17,6 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeNavigation() {
     val viewModel: HomeViewModel = koinViewModel()
     val navigator = rememberChildNavigator(HomeNavDestination.Root) { event ->
-        // Handle child specific events if any
         when(event) {
             is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {

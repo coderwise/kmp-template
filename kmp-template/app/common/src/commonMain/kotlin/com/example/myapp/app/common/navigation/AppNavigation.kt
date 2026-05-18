@@ -13,7 +13,6 @@ import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
-import com.example.myapp.feature.home.navigation.HomeNavDestination
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.navigation.HomeNavigation
 import com.example.myapp.feature.settings.ui.SettingsScreen
