@@ -1,12 +1,38 @@
 package com.example.myapp.core.ui.navigation
 
 import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
+
+@Stable
+internal class NavBridge : ViewModel(), Navigator {
+    var target by mutableStateOf<Navigator?>(null)
+
+    override val currentBackStack: NavBackStack<NavKey>
+        get() = target?.currentBackStack ?: NavBackStack()
+
+    override fun navigate(key: NavKey) {
+        target?.navigate(key)
+    }
+
+    override fun switchRoot(key: NavKey) {
+        target?.switchRoot(key)
+    }
+
+    override fun navigateUp() {
+        target?.navigateUp()
+    }
+
+    override fun onEvent(event: Any) {
+        target?.onEvent(event)
+    }
+}
 
 @Stable
 class NavigatorImpl(
@@ -28,14 +54,20 @@ fun rememberNavigator(
     startDestination: NavKey,
     configuration: SavedStateConfiguration,
     onEvent: NavigatorImpl.(Any) -> Unit = {}
-): NavigatorImpl {
+): Navigator {
     val backStack = rememberNavBackStack(configuration, startDestination)
     val currentOnEvent by rememberUpdatedState(onEvent)
-    return remember(backStack) { 
+    
+    val bridge = viewModel { NavBridge() }
+    
+    val activeNavigator = remember(backStack) { 
         NavigatorImpl(backStack) { event ->
             currentOnEvent(event)
         }
     }
+    
+    bridge.target = activeNavigator
+    return bridge
 }
 
 @Stable
@@ -69,13 +101,18 @@ class NavigationStateNavigator(
 fun rememberAppNavigator(
     startRoot: NavKey,
     onEvent: NavigationStateNavigator.(Any) -> Unit = {}
-): NavigationStateNavigator {
+): Navigator {
     val state = rememberNavigationState(startRoot)
     val currentOnEvent by rememberUpdatedState(onEvent)
     
-    return remember(state) {
+    val bridge = viewModel { NavBridge() }
+    
+    val activeNavigator = remember(state) {
         NavigationStateNavigator(state) { event ->
             currentOnEvent(event)
         }
     }
+    
+    bridge.target = activeNavigator
+    return bridge
 }

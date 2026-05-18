@@ -6,6 +6,7 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onLoading
 import com.example.myapp.core.domain.model.onSuccess
+import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
@@ -81,7 +82,7 @@ class HomeViewModel(
                 description = description
             )
             addHomeItemUseCase(newItem)
-            navEventHandler.onEvent(HomeNavEvent.Back)
+            navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }
 
@@ -94,7 +95,7 @@ class HomeViewModel(
     private fun updateItem(item: HomeItem) {
         viewModelScope.launch {
             updateHomeItemUseCase(item)
-            navEventHandler.onEvent(HomeNavEvent.Back)
+            navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }
 }

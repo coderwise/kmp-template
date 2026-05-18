@@ -27,6 +27,8 @@ kotlin {
             implementation(libs.compose.components.resources)
             implementation(libs.navigation3.runtime)
             implementation(libs.navigation3.ui)
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
         }
     }
 }

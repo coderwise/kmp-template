@@ -36,7 +36,7 @@ fun HomeNavigation(
 ) {
     val navigator = rememberNavigator(HomeNavDestination.Root, homeNavConfig) { event ->
         when (event) {
-            GlobalNavEvent.Back, HomeNavEvent.Back -> pop()
+            is GlobalNavEvent.Back -> pop()
             is HomeNavEvent.ToAddItem -> push(HomeNavDestination.AddItem())
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
@@ -55,7 +55,7 @@ fun HomeNavigation(
     val viewModel: HomeViewModel = koinViewModel { parametersOf(navigator) }
 
     NavDisplay(
-        backStack = navigator.backStack,
+        backStack = navigator.currentBackStack,
         onBack = { navigator.navigateUp() },
         sceneStrategies = listOf(BottomSheetSceneStrategy(), SinglePaneSceneStrategy()),
         entryProvider = entryProvider {

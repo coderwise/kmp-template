@@ -37,7 +37,7 @@ fun AppNavigation() {
 
     val navigator = rememberAppNavigator(startRoot = HomeDestination) { event ->
         when (event) {
-            GlobalNavEvent.Back -> pop()
+            is GlobalNavEvent.Back -> pop()
             is HomeNavEvent.ToWeather -> switchRoot(WeatherDestination)
             is HomeNavEvent.ToSettings -> switchRoot(SettingsDestination)
         }
