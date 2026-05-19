@@ -15,8 +15,6 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,6 +27,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.components.AppDivider
+import com.example.myapp.core.ui.components.AppIcon
+import com.example.myapp.core.ui.components.AppIconButton
 import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.layouts.SearchBar
 import com.example.myapp.core.ui.screens.EmptyState
@@ -95,7 +95,9 @@ fun WeatherScreenContent(
                 },
                 placeholder = stringResource(Res.string.weather_search_placeholder),
                 trailingIcon = {
-                    IconButton(
+                    AppIconButton(
+                        icon = Icons.Default.MyLocation,
+                        contentDescription = stringResource(Res.string.weather_use_current_location),
                         onClick = {
                             if (permissionState.status.isGranted) {
                                 onEvent(WeatherUiEvent.OnCurrentLocationClick)
@@ -107,12 +109,7 @@ fun WeatherScreenContent(
                                 }
                             }
                         }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.MyLocation,
-                            contentDescription = stringResource(Res.string.weather_use_current_location)
-                        )
-                    }
+                    )
                 }
             )
 
@@ -129,7 +126,7 @@ fun WeatherScreenContent(
                                 Text("${location.admin1 ?: ""}, ${location.country ?: ""}")
                             },
                             leadingContent = {
-                                Icon(Icons.Default.LocationOn, contentDescription = null)
+                                AppIcon(Icons.Default.LocationOn, contentDescription = null)
                             },
                             modifier = Modifier.clickable {
                                 onEvent(WeatherUiEvent.OnLocationSelected(location))

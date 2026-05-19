@@ -9,8 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.components.AppIconButton
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res
@@ -50,18 +49,16 @@ fun HomeItemCard(
                     modifier = Modifier.weight(1f)
                 )
                 Row {
-                    IconButton(onClick = onEditClick) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = stringResource(Res.string.home_edit_content_description)
-                        )
-                    }
-                    IconButton(onClick = onDeleteClick) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = stringResource(Res.string.home_delete_content_description)
-                        )
-                    }
+                    AppIconButton(
+                        icon = Icons.Default.Edit,
+                        contentDescription = stringResource(Res.string.home_edit_content_description),
+                        onClick = onEditClick
+                    )
+                    AppIconButton(
+                        icon = Icons.Default.Delete,
+                        contentDescription = stringResource(Res.string.home_delete_content_description),
+                        onClick = onDeleteClick
+                    )
                 }
             }
             Text(

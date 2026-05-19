@@ -10,10 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,8 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.myapp.core.ui.components.AppIcon
+import com.example.myapp.core.ui.components.AppIconButton
 import com.example.myapp.core.ui.layouts.AppTopBar
+import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_refresh_content_description
@@ -31,43 +31,29 @@ import myapp.feature.home.generated.resources.home_title
 import myapp.feature.home.generated.resources.home_weather_temp
 import org.jetbrains.compose.resources.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopBar(
     isRefreshing: Boolean,
     onRefreshClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onWeatherClick: () -> Unit
+    onWeatherClick: () -> Unit,
 ) {
     AppTopBar(
         title = stringResource(Res.string.home_title),
         actions = {
-            IconButton(
+            AppIconButton(
+                icon = Icons.Default.Refresh,
+                contentDescription = stringResource(Res.string.home_refresh_content_description),
                 onClick = onRefreshClick,
-                enabled = !isRefreshing
-            ) {
-                if (isRefreshing) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.padding(MaterialTheme.spacing.base),
-                        strokeWidth = 2.dp
-                    )
-                } else {
-                    Icon(
-                        Icons.Default.Refresh,
-                        contentDescription = stringResource(Res.string.home_refresh_content_description)
-                    )
-                }
-            }
-            IconButton(
-                onClick = onSettingsClick
-            ) {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = stringResource(Res.string.home_settings_content_description)
-                )
-            }
+                isLoading = isRefreshing,
+            )
+            AppIconButton(
+                icon = Icons.Default.Settings,
+                contentDescription = stringResource(Res.string.home_settings_content_description),
+                onClick = onSettingsClick,
+            )
             WeatherPill(onClick = onWeatherClick)
-        }
+        },
     )
 }
 
@@ -86,7 +72,7 @@ fun WeatherPill(onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.base)
         ) {
-            Icon(
+            AppIcon(
                 imageVector = Icons.Default.Cloud,
                 contentDescription = null,
                 modifier = Modifier.height(18.dp)
@@ -96,5 +82,41 @@ fun WeatherPill(onClick: () -> Unit) {
                 style = MaterialTheme.typography.labelLarge
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeTopBarPreview() {
+    MyAppTheme {
+        HomeTopBar(
+            isRefreshing = false,
+            onRefreshClick = {},
+            onSettingsClick = {},
+        ) {}
+    }
+}
+
+@Preview
+@Composable
+private fun HomeTopBarRefreshingPreview() {
+    MyAppTheme {
+        HomeTopBar(
+            isRefreshing = true,
+            onRefreshClick = {},
+            onSettingsClick = {},
+        ) {}
+    }
+}
+
+@Preview
+@Composable
+private fun HomeTopBarDarkModePreview() {
+    MyAppTheme(darkTheme = true) {
+        HomeTopBar(
+            isRefreshing = false,
+            onRefreshClick = {},
+            onSettingsClick = {},
+        ) {}
     }
 }
