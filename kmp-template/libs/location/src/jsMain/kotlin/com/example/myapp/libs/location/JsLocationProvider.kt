@@ -22,7 +22,7 @@ class JsLocationProvider : LocationProvider {
             }
             val onSuccess: (dynamic) -> Unit = { position ->
                 if (cont.isActive) {
-                    cont.resume(LocationResult.Success(position.toGpsLocation()))
+                    cont.resume(LocationResult.Success(toGpsLocation(position)))
                 }
             }
             val onError: (dynamic) -> Unit = { error ->
@@ -48,7 +48,7 @@ class JsLocationProvider : LocationProvider {
         }
         return callbackFlow {
             val onSuccess: (dynamic) -> Unit = { position ->
-                trySend(LocationResult.Success(position.toGpsLocation()))
+                trySend(LocationResult.Success(toGpsLocation(position)))
             }
             val onError: (dynamic) -> Unit = { error ->
                 val message = error.message as? String
@@ -62,8 +62,8 @@ class JsLocationProvider : LocationProvider {
     }
 }
 
-private fun dynamic.toGpsLocation(): GpsLocation {
-    val coords = this.coords
+private fun toGpsLocation(position: dynamic): GpsLocation {
+    val coords = position.coords
     val rawHeading = coords.heading
     val rawAltitude = coords.altitude
     val rawSpeed = coords.speed
@@ -77,7 +77,7 @@ private fun dynamic.toGpsLocation(): GpsLocation {
         elevation = if (rawAltitude != null && rawAltitude != undefined) {
             (rawAltitude as Number).toDouble()
         } else null,
-        time = (this.timestamp as Number).toLong(),
+        time = (position.timestamp as Number).toLong(),
         accuracy = (coords.accuracy as Number).toFloat(),
         speed = if (rawSpeed != null && rawSpeed != undefined) {
             val f = (rawSpeed as Number).toFloat()
