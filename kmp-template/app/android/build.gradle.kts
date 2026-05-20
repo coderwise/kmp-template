@@ -13,7 +13,7 @@ apply(from = "$rootDir/gradle/git-utils.gradle.kts")
 val getGitVersionName: () -> String by extra
 val getGitCommitCount: () -> Int by extra
 
-val keystorePropertiesFile: File = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("secrets/keystore.properties")
 val keystoreProperties = Properties()
 try {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))

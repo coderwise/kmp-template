@@ -73,7 +73,6 @@ dist/
 /kotlin-js-store/
 
 # Distribution / Packaging
-/keystore.properties
 /app/android/upload.keystore
 /secrets/
 /gradle/gradle-daemon-jvm.properties

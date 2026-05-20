@@ -5,7 +5,8 @@
 set -e
 
 KEYSTORE_PATH="app/android/upload.keystore"
-PROPERTIES_FILE="keystore.properties"
+SECRETS_DIR="secrets"
+PROPERTIES_FILE="${SECRETS_DIR}/keystore.properties"
 KEY_ALIAS="upload"
 VALIDITY_DAYS=9125  # 25 years (Google Play minimum)
 
@@ -128,6 +129,7 @@ echo "Keystore created."
 
 # ── Update keystore.properties ───────────────────────────────────────────────
 
+mkdir -p "$SECRETS_DIR"
 cat > "$PROPERTIES_FILE" <<EOF
 storePassword=${STORE_PASSWORD}
 keyAlias=${KEY_ALIAS}
@@ -135,15 +137,18 @@ EOF
 
 echo "Updated $PROPERTIES_FILE"
 
-# ── Print base64 for GitHub Actions secret ───────────────────────────────────
+# ── Write base64 to secrets/ ─────────────────────────────────────────────────
+
+BASE64_FILE="${SECRETS_DIR}/keystore.base64"
+
+base64 < "$KEYSTORE_PATH" > "$BASE64_FILE"
+echo "Base64 keystore written to $BASE64_FILE"
+
+# ── Print GitHub Actions secrets summary ─────────────────────────────────────
 
 echo ""
-echo "=== GitHub Actions secret ==="
-echo "Add the following value as the KEYSTORE_FILE_BASE64 secret:"
-echo ""
-base64 < "$KEYSTORE_PATH"
-echo ""
-echo "Also add these secrets:"
+echo "=== GitHub Actions secrets ==="
+echo "  KEYSTORE_FILE_BASE64   = (contents of $BASE64_FILE)"
 echo "  SIGNING_STORE_PASSWORD = ${STORE_PASSWORD}"
 echo "  SIGNING_KEY_ALIAS      = ${KEY_ALIAS}"
 echo ""
