@@ -2,6 +2,7 @@ package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.*
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -25,6 +26,7 @@ class HomeViewModelTest {
     private val removeHomeItemUseCase = mock<RemoveHomeItemUseCase>()
     private val updateHomeItemUseCase = mock<UpdateHomeItemUseCase>()
     private val syncHomeItemsUseCase = mock<SyncHomeItemsUseCase>()
+    private val navEventHandler = mock<NavEventHandler>()
 
     private val testDispatcher = StandardTestDispatcher()
 
@@ -50,6 +52,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
@@ -73,6 +76,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
@@ -94,6 +98,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
@@ -115,6 +120,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
@@ -137,6 +143,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
@@ -157,6 +164,7 @@ class HomeViewModelTest {
             removeHomeItemUseCase,
             updateHomeItemUseCase,
             syncHomeItemsUseCase,
+            navEventHandler,
             "1.0.0"
         )
 
