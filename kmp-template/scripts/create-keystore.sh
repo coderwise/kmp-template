@@ -71,13 +71,27 @@ if [ "${#STORE_PASSWORD}" -lt 6 ]; then
 fi
 
 echo ""
-echo "Certificate distinguished name (press Enter to skip optional fields):"
-FIRST_LAST=$(prompt     "  First and last name")
-ORG_UNIT=$(prompt_default "  Organizational unit" "")
-ORG=$(prompt_default    "  Organization" "")
-CITY=$(prompt_default   "  City / Locality" "")
-STATE=$(prompt_default  "  State / Province" "")
-COUNTRY=$(prompt_default "  Two-letter country code" "US")
+printf "Certificate distinguished name — press Enter to skip, or S to set fields: "
+read -r dn_choice
+
+case "$dn_choice" in
+  [sS]*)
+    FIRST_LAST=$(prompt_default "  First and last name" "Unknown")
+    ORG_UNIT=$(prompt_default   "  Organizational unit" "")
+    ORG=$(prompt_default        "  Organization" "")
+    CITY=$(prompt_default       "  City / Locality" "")
+    STATE=$(prompt_default      "  State / Province" "")
+    COUNTRY=$(prompt_default    "  Two-letter country code" "US")
+    ;;
+  *)
+    FIRST_LAST="Unknown"
+    COUNTRY="US"
+    ORG_UNIT=""
+    ORG=""
+    CITY=""
+    STATE=""
+    ;;
+esac
 
 DNAME="CN=${FIRST_LAST}"
 [ -n "$ORG_UNIT" ] && DNAME="${DNAME}, OU=${ORG_UNIT}"
