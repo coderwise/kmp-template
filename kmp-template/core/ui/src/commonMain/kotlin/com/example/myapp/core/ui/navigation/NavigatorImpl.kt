@@ -10,16 +10,8 @@ import org.koin.compose.koinInject
 
 
 @Composable
-fun rememberChildNavigator(
-    startDestination: NavKey,
-    onEvent: Navigator.(Any) -> Unit = {}
-): Navigator {
+private fun rememberNavigator(onEvent: Navigator.(Any) -> Unit): NavigationState {
     val navigator = koinInject<NavigationState>()
-    val backStack = navigator.currentBackStack
-    if (backStack.isEmpty()) {
-        backStack.add(startDestination)
-    }
-
     val currentOnEvent by rememberUpdatedState(onEvent)
     DisposableEffect(navigator, currentOnEvent) {
         navigator.addEventHandler(currentOnEvent)
@@ -27,7 +19,18 @@ fun rememberChildNavigator(
             navigator.removeEventHandler(currentOnEvent)
         }
     }
+    return navigator
+}
 
+@Composable
+fun rememberChildNavigator(
+    startDestination: NavKey,
+    onEvent: Navigator.(Any) -> Unit = {}
+): Navigator {
+    val navigator = rememberNavigator(onEvent)
+    if (navigator.currentBackStack.isEmpty()) {
+        navigator.currentBackStack.add(startDestination)
+    }
     return navigator
 }
 
@@ -36,19 +39,9 @@ fun rememberAppNavigator(
     startRoot: NavKey,
     onEvent: Navigator.(Any) -> Unit = {}
 ): Navigator {
-    val navigator = koinInject<NavigationState>()
-
+    val navigator = rememberNavigator(onEvent)
     remember(navigator, startRoot) {
         navigator.onStart(startRoot)
     }
-
-    val currentOnEvent by rememberUpdatedState(onEvent)
-    DisposableEffect(navigator, currentOnEvent) {
-        navigator.addEventHandler(currentOnEvent)
-        onDispose {
-            navigator.removeEventHandler(currentOnEvent)
-        }
-    }
-
     return navigator
 }
