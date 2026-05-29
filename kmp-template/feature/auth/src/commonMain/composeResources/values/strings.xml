@@ -1,0 +1,11 @@
+<resources>
+    <string name="auth_sign_in_title">Sign In</string>
+    <string name="auth_sign_up_title">Create Account</string>
+    <string name="auth_email_label">Email</string>
+    <string name="auth_password_label">Password</string>
+    <string name="auth_confirm_password_label">Confirm Password</string>
+    <string name="auth_sign_in">Sign In</string>
+    <string name="auth_sign_up">Create Account</string>
+    <string name="auth_no_account">Don\'t have an account?</string>
+    <string name="auth_error_label">%1$s</string>
+</resources>

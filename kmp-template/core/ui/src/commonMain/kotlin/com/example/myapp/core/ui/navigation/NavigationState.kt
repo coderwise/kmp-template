@@ -40,6 +40,11 @@ class NavigationState : Navigator {
         rootBackStack.push(key)
     }
 
+    override fun replaceRoot(key: NavKey) {
+        rootBackStack.clear()
+        rootBackStack.push(key)
+    }
+
     override fun switchRoot(key: NavKey) {
         if (currentRootKey == key) {
             while (currentBackStack.size > 1) {

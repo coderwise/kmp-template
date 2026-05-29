@@ -17,6 +17,7 @@ interface Navigator : NavEventHandler {
     val currentBackStack: NavBackStack<NavKey>
     fun navigate(key: NavKey)
     fun navigateRoot(key: NavKey)
+    fun replaceRoot(key: NavKey)
     fun switchRoot(key: NavKey)
     fun navigateUp()
 

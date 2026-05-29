@@ -5,6 +5,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.theme.MyAppTheme
 
@@ -15,7 +17,8 @@ fun AppTextField(
     label: String,
     modifier: Modifier = Modifier,
     singleLine: Boolean = false,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isPassword: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,
@@ -23,7 +26,8 @@ fun AppTextField(
         label = { Text(label) },
         modifier = modifier.fillMaxWidth(),
         singleLine = singleLine,
-        enabled = enabled
+        enabled = enabled,
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
     )
 }
 

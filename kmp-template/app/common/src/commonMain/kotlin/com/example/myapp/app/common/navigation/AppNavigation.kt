@@ -13,6 +13,8 @@ import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.feature.auth.navigation.AuthNavEvent
+import com.example.myapp.feature.auth.navigation.AuthNavigation
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
 import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
@@ -25,14 +27,20 @@ fun AppNavigation() {
     val viewModel: AppViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val isAuthenticated = uiState.isAuthenticated ?: return
+
     val darkTheme = when (uiState.theme) {
         ThemeType.LIGHT -> false
         ThemeType.DARK -> true
         ThemeType.SYSTEM -> isSystemInDarkTheme()
     }
 
-    val navigator = rememberAppNavigator(startRoot = HomeGroupDestination) { event ->
+    val startRoot = if (isAuthenticated) HomeGroupDestination else AuthDestination
+
+    val navigator = rememberAppNavigator(startRoot = startRoot) { event ->
         when (event) {
+            is AuthNavEvent.Authenticated -> replaceRoot(HomeGroupDestination)
+            is AuthNavEvent.SignedOut -> replaceRoot(AuthDestination)
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
                 navigateRoot(EditItemDestination(item.id, item.title, item.description))
@@ -68,6 +76,9 @@ private fun AppNavigationContent(
                 slideInPopTransform()
             },
             entryProvider = entryProvider {
+                entry<AuthDestination> {
+                    AuthNavigation()
+                }
                 entry<HomeGroupDestination> {
                     HomeGroup()
                 }

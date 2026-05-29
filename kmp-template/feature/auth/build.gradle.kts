@@ -8,17 +8,12 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.example.myapp.app.common"
+        namespace = "com.example.myapp.feature.auth"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
+        androidResources.enable = true
     }
-    listOf(iosArm64(), iosSimulatorArm64()).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-            isStatic = true
-            linkerOpts("-lsqlite3")
-        }
-    }
+    iosArm64(); iosSimulatorArm64()
     js { browser() }
     jvm("desktop")
 
@@ -26,30 +21,28 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:ui"))
-            implementation(project(":core:data"))
-            implementation(project(":feature:auth"))
-            implementation(project(":feature:home"))
-            implementation(project(":feature:weather"))
-            implementation(project(":feature:settings"))
-            implementation(project(":libs:settings"))
-            implementation(project(":libs:location"))
-            implementation(project(":libs:utils"))
 
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.lifecycle.viewmodel)
+            implementation(libs.lifecycle.viewmodel.compose)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
             implementation(libs.compose.icons.extended)
-
-            implementation(libs.koin.compose)
-            implementation(libs.koin.compose.viewmodel)
             implementation(libs.navigation3.runtime)
             implementation(libs.navigation3.ui)
             implementation(libs.lifecycle.viewmodel.navigation3)
+            implementation(libs.compose.preview)
+            implementation(libs.compose.components.resources)
             implementation(libs.kotlinx.serialization.json)
         }
     }
 }
 
-compose.resources {
-    packageOfResClass = "com.example.myapp.app.common"
+dependencies {
+    "androidRuntimeClasspath"(libs.compose.tooling)
 }

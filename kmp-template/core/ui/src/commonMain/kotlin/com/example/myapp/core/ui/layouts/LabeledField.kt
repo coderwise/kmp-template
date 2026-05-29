@@ -17,14 +17,16 @@ fun LabeledField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     hint: String = "",
-    singleLine: Boolean = false
+    singleLine: Boolean = false,
+    isPassword: Boolean = false,
 ) {
     Column(modifier = modifier) {
         AppTextField(
             value = value,
             onValueChange = onValueChange,
             label = label,
-            singleLine = singleLine
+            singleLine = singleLine,
+            isPassword = isPassword,
         )
         if (hint.isNotBlank()) {
             Spacer(modifier = Modifier.height(MaterialTheme.spacing.xs))

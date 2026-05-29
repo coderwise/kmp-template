@@ -6,6 +6,9 @@ import kotlinx.serialization.Serializable
 interface AppDestination : NavKey
 
 @Serializable
+data object AuthDestination : AppDestination
+
+@Serializable
 data object HomeGroupDestination : AppDestination
 
 @Serializable
