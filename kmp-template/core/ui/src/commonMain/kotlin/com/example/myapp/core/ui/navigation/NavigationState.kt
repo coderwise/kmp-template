@@ -14,6 +14,12 @@ class NavigationState : Navigator {
 
     val childBackStacks = mutableStateMapOf<NavKey, NavBackStack<NavKey>>()
 
+    fun getBackStack(rootKey: NavKey): NavBackStack<NavKey> {
+        return childBackStacks.getOrPut(rootKey) {
+            NavBackStack()
+        }
+    }
+
     fun onStart(startRoot: NavKey) {
         if (_rootBackStack == null) {
             _rootBackStack = NavBackStack<NavKey>().apply { add(startRoot) }
@@ -24,9 +30,7 @@ class NavigationState : Navigator {
         get() = rootBackStack.last()
 
     override val currentBackStack: NavBackStack<NavKey>
-        get() = childBackStacks.getOrPut(currentRootKey) {
-            NavBackStack()
-        }
+        get() = getBackStack(currentRootKey)
 
     override fun navigate(key: NavKey) {
         currentBackStack.push(key)
@@ -46,8 +50,13 @@ class NavigationState : Navigator {
     }
 
     override fun navigateUp() {
-        if (currentBackStack.size > 1) {
-            currentBackStack.pop()
+        navigateUp(currentRootKey)
+    }
+
+    fun navigateUp(rootKey: NavKey) {
+        val backStack = getBackStack(rootKey)
+        if (backStack.size > 1) {
+            backStack.pop()
         } else if (rootBackStack.size > 1) {
             rootBackStack.pop()
         }
