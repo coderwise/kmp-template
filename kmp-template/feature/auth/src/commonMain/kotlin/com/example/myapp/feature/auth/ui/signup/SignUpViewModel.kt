@@ -3,11 +3,9 @@ package com.example.myapp.feature.auth.ui.signup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
-import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.usecase.SignUpUseCase
-import com.example.myapp.feature.auth.navigation.AuthNavEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,8 +38,9 @@ class SignUpViewModel(
         }
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
+            // On success the auth-state flow flips isAuthenticated; AppNavigation
+            // observes it and switches the root. No navigation event needed here.
             signUpUseCase(state.email, state.password)
-                .onSuccess { navEventHandler.onEvent(AuthNavEvent.Authenticated) }
                 .onError { _, message ->
                     _uiState.update { it.copy(isLoading = false, error = message) }
                 }

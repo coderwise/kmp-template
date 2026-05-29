@@ -14,5 +14,5 @@ import org.koin.dsl.module
 
 val appModule = module {
     includes(dataModule, uiModule, authModule, homeModule, weatherModule, settingsModule, featureSettingsModule, locationModule)
-    viewModel { AppViewModel(get(), get(), get(), get()) }
+    viewModel { AppViewModel(get(), get(), get()) }
 }

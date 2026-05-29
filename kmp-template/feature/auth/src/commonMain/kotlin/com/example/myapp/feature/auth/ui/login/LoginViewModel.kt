@@ -3,7 +3,6 @@ package com.example.myapp.feature.auth.ui.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
-import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.usecase.SignInUseCase
 import com.example.myapp.feature.auth.navigation.AuthNavEvent
@@ -34,8 +33,9 @@ class LoginViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             val state = _uiState.value
+            // On success the auth-state flow flips isAuthenticated; AppNavigation
+            // observes it and switches the root. No navigation event needed here.
             signInUseCase(state.email, state.password)
-                .onSuccess { navEventHandler.onEvent(AuthNavEvent.Authenticated) }
                 .onError { _, message ->
                     _uiState.update { it.copy(isLoading = false, error = message) }
                 }

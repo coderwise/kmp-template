@@ -3,11 +3,9 @@ package com.example.myapp.app.common.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.model.AuthState
 import com.example.myapp.feature.auth.domain.usecase.ObserveAuthStateUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignOutUseCase
-import com.example.myapp.feature.auth.navigation.AuthNavEvent
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -18,7 +16,6 @@ class AppViewModel(
     settingsRepository: SettingsRepository,
     observeAuthStateUseCase: ObserveAuthStateUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val navEventHandler: NavEventHandler,
 ) : ViewModel() {
 
     val uiState: StateFlow<AppUiState> = combine(
@@ -38,7 +35,6 @@ class AppViewModel(
     fun signOut() {
         viewModelScope.launch {
             signOutUseCase()
-            navEventHandler.onEvent(AuthNavEvent.SignedOut)
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.myapp.app.common.navigation
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
@@ -13,7 +14,6 @@ import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
-import com.example.myapp.feature.auth.navigation.AuthNavEvent
 import com.example.myapp.feature.auth.navigation.AuthNavigation
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
@@ -40,13 +40,20 @@ fun AppNavigation() {
 
     val navigator = rememberAppNavigator(startRoot = startRoot) { event ->
         when (event) {
-            is AuthNavEvent.Authenticated -> replaceRoot(HomeGroupDestination)
-            is AuthNavEvent.SignedOut -> replaceRoot(AuthDestination)
             is SettingsNavEvent.SignOut -> viewModel.signOut()
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
                 navigateRoot(EditItemDestination(item.id, item.title, item.description))
             }
+        }
+    }
+
+    // Auth state is the single source of truth for the root destination:
+    // signing in/out flips isAuthenticated, which switches the root here.
+    LaunchedEffect(isAuthenticated) {
+        val target = if (isAuthenticated) HomeGroupDestination else AuthDestination
+        if ((navigator as NavigationState).currentRootKey != target) {
+            navigator.replaceRoot(target)
         }
     }
 
