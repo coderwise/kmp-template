@@ -4,14 +4,16 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.navigation.rememberChildNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
+import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
+import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun HomeNavigation() {
@@ -52,27 +54,11 @@ fun HomeNavigation() {
                     }
                 )
             }
-            entry<HomeNavDestination.EditItem>(
-                metadata = BottomSheetSceneStrategy.bottomSheet(
-                    onDismiss = { navigator.navigateUp() }
-                )
-            ) { destination ->
-                HomeItemSheet(
-                    initialTitle = destination.title,
-                    initialDescription = destination.description,
-                    onDismiss = { navigator.navigateUp() },
-                    onConfirm = { title, description ->
-                        viewModel.onEvent(
-                            HomeUiEvent.UpdateItem(
-                                HomeItem(
-                                    id = destination.id,
-                                    title = title,
-                                    description = description
-                                )
-                            )
-                        )
-                    }
-                )
+            entry<HomeNavDestination.EditItem> { destination ->
+                val editViewModel: HomeItemEditViewModel = koinViewModel {
+                    parametersOf(destination.id, destination.title, destination.description)
+                }
+                HomeItemEditScreen(viewModel = editViewModel)
             }
         }
     )

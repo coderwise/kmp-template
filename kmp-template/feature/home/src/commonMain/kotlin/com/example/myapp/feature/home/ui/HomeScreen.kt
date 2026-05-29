@@ -58,8 +58,6 @@ fun HomeScreenContent(
             HomeTopBar(
                 isRefreshing = uiState.isRefreshing,
                 onRefreshClick = { onEvent(HomeUiEvent.Refresh) },
-                onSettingsClick = { onEvent(HomeUiEvent.NavigateToSettings) },
-                onWeatherClick = { onEvent(HomeUiEvent.NavigateToWeather) }
             )
         },
         floatingActionButton = {

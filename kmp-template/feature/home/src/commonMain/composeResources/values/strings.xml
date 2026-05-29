@@ -10,6 +10,7 @@
     <string name="home_dialog_description_label">Description</string>
     <string name="home_dialog_confirm">Confirm</string>
     <string name="home_dialog_cancel">Cancel</string>
+    <string name="home_edit_save">Save</string>
     <string name="home_error">Error: %1$s</string>
     <string name="home_app_version">v%1$s</string>
     <string name="home_weather_temp">72°F</string>

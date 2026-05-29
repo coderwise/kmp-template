@@ -12,7 +12,6 @@ import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
-import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,7 +24,6 @@ class HomeViewModel(
     private val getHomeItemsUseCase: GetHomeItemsUseCase,
     private val addHomeItemUseCase: AddHomeItemUseCase,
     private val removeHomeItemUseCase: RemoveHomeItemUseCase,
-    private val updateHomeItemUseCase: UpdateHomeItemUseCase,
     private val syncHomeItemsUseCase: SyncHomeItemsUseCase,
     private val navEventHandler: NavEventHandler,
     appVersion: String
@@ -44,9 +42,6 @@ class HomeViewModel(
             HomeUiEvent.Refresh -> refresh()
             is HomeUiEvent.AddItem -> addItem(event.title, event.description)
             is HomeUiEvent.DeleteItem -> removeItem(event.id)
-            is HomeUiEvent.UpdateItem -> updateItem(event.item)
-            is HomeUiEvent.NavigateToWeather -> navEventHandler.onEvent(HomeNavEvent.ToWeather)
-            is HomeUiEvent.NavigateToSettings -> navEventHandler.onEvent(HomeNavEvent.ToSettings)
             is HomeUiEvent.NavigateToAddItem -> navEventHandler.onEvent(HomeNavEvent.ToAddItem)
             is HomeUiEvent.NavigateToEditItem -> navEventHandler.onEvent(HomeNavEvent.ToEditItem(event.item))
         }
@@ -89,13 +84,6 @@ class HomeViewModel(
     private fun removeItem(id: String) {
         viewModelScope.launch {
             removeHomeItemUseCase(id)
-        }
-    }
-
-    private fun updateItem(item: HomeItem) {
-        viewModelScope.launch {
-            updateHomeItemUseCase(item)
-            navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }
 }

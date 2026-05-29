@@ -1,0 +1,104 @@
+package com.example.myapp.feature.home.ui.edit
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.myapp.core.ui.components.AppButton
+import com.example.myapp.core.ui.layouts.AppTopBar
+import com.example.myapp.core.ui.layouts.LabeledField
+import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.theme.spacing
+import myapp.feature.home.generated.resources.Res
+import myapp.feature.home.generated.resources.home_dialog_description_label
+import myapp.feature.home.generated.resources.home_dialog_edit_title
+import myapp.feature.home.generated.resources.home_dialog_title_label
+import myapp.feature.home.generated.resources.home_edit_save
+import org.jetbrains.compose.resources.stringResource
+
+@Composable
+fun HomeItemEditScreen(viewModel: HomeItemEditViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+    HomeItemEditScreenContent(uiState = uiState, onEvent = viewModel::onEvent)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeItemEditScreenContent(
+    uiState: HomeItemEditUiState,
+    onEvent: (HomeItemEditUiEvent) -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            AppTopBar(
+                title = stringResource(Res.string.home_dialog_edit_title),
+                onBackClick = { onEvent(HomeItemEditUiEvent.NavigateBack) },
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(MaterialTheme.spacing.gutter),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.base),
+        ) {
+            LabeledField(
+                label = stringResource(Res.string.home_dialog_title_label),
+                value = uiState.title,
+                onValueChange = { onEvent(HomeItemEditUiEvent.TitleChanged(it)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+            LabeledField(
+                label = stringResource(Res.string.home_dialog_description_label),
+                value = uiState.description,
+                onValueChange = { onEvent(HomeItemEditUiEvent.DescriptionChanged(it)) },
+                modifier = Modifier.fillMaxWidth(),
+            )
+            AppButton(
+                text = stringResource(Res.string.home_edit_save),
+                onClick = { onEvent(HomeItemEditUiEvent.Save) },
+                enabled = uiState.title.isNotBlank(),
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemEditScreenPreview() {
+    MyAppTheme {
+        HomeItemEditScreenContent(
+            uiState = HomeItemEditUiState(
+                title = "Sample Item",
+                description = "This is a sample description.",
+            ),
+            onEvent = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun HomeItemEditScreenDarkPreview() {
+    MyAppTheme(darkTheme = true) {
+        HomeItemEditScreenContent(
+            uiState = HomeItemEditUiState(
+                title = "Sample Item",
+                description = "This is a sample description.",
+            ),
+            onEvent = {},
+        )
+    }
+}
