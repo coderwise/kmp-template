@@ -41,6 +41,9 @@ class NavigationState : Navigator {
     }
 
     override fun replaceRoot(key: NavKey) {
+        // Full reset: drop all child back stacks so the new root starts fresh
+        // (e.g. signing out returns to Login, not a stale Sign Up screen).
+        childBackStacks.clear()
         rootBackStack.clear()
         rootBackStack.push(key)
     }
