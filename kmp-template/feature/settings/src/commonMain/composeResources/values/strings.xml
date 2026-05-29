@@ -5,4 +5,5 @@
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
     <string name="settings_version">Version %1$s</string>
+    <string name="settings_sign_out">Sign Out</string>
 </resources>

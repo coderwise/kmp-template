@@ -1,12 +1,17 @@
 package com.example.myapp.feature.settings.ui
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -23,6 +28,7 @@ import com.example.myapp.core.ui.layouts.AppTopBar
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import myapp.feature.settings.generated.resources.Res
+import myapp.feature.settings.generated.resources.settings_sign_out
 import myapp.feature.settings.generated.resources.settings_theme_dark
 import myapp.feature.settings.generated.resources.settings_theme_light
 import myapp.feature.settings.generated.resources.settings_theme_selection
@@ -85,6 +91,19 @@ fun SettingsScreenContent(
             }
 
             Spacer(modifier = Modifier.weight(1f))
+
+            OutlinedButton(
+                onClick = { onEvent(SettingsUiEvent.SignOut) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    contentColor = MaterialTheme.colorScheme.error,
+                ),
+                border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.error),
+            ) {
+                Text(stringResource(Res.string.settings_sign_out))
+            }
+
+            Spacer(modifier = Modifier.padding(bottom = MaterialTheme.spacing.base))
 
             Text(
                 text = stringResource(Res.string.settings_version, uiState.appVersion),
