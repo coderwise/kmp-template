@@ -1,6 +1,7 @@
 package com.example.myapp.app.common.navigation
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -31,6 +32,7 @@ fun HomeGroup() {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             AppBottomBar(
                 items = homeGroupTabs,
