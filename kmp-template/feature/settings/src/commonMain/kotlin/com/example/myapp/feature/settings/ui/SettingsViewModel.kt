@@ -34,10 +34,8 @@ class SettingsViewModel(
 
     fun onEvent(event: SettingsUiEvent) {
         when (event) {
-            is SettingsUiEvent.ThemeChanged -> {
-                viewModelScope.launch {
-                    updateThemeUseCase(event.theme)
-                }
+            is SettingsUiEvent.ThemeChanged -> viewModelScope.launch {
+                updateThemeUseCase(event.theme)
             }
             SettingsUiEvent.SignOut -> navEventHandler.onEvent(SettingsNavEvent.SignOut)
         }

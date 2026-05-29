@@ -3,10 +3,8 @@ package com.example.myapp.app.common.navigation
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import kotlinx.coroutines.launch
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
@@ -15,15 +13,13 @@ import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
-import com.example.myapp.feature.auth.domain.usecase.SignOutUseCase
 import com.example.myapp.feature.auth.navigation.AuthNavEvent
 import com.example.myapp.feature.auth.navigation.AuthNavigation
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
-import com.example.myapp.feature.settings.navigation.SettingsNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
+import com.example.myapp.feature.settings.navigation.SettingsNavEvent
 import com.example.myapp.libs.utils.PlatformColors
-import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -41,20 +37,12 @@ fun AppNavigation() {
     }
 
     val startRoot = if (isAuthenticated) HomeGroupDestination else AuthDestination
-    val coroutineScope = rememberCoroutineScope()
-    val signOutUseCase: SignOutUseCase = koinInject()
 
     val navigator = rememberAppNavigator(startRoot = startRoot) { event ->
         when (event) {
             is AuthNavEvent.Authenticated -> replaceRoot(HomeGroupDestination)
             is AuthNavEvent.SignedOut -> replaceRoot(AuthDestination)
-            is SettingsNavEvent.SignOut -> {
-                val nav = this
-                coroutineScope.launch {
-                    signOutUseCase()
-                    nav.replaceRoot(AuthDestination)
-                }
-            }
+            is SettingsNavEvent.SignOut -> viewModel.signOut()
             is HomeNavEvent.ToEditItem -> {
                 val item = event.item
                 navigateRoot(EditItemDestination(item.id, item.title, item.description))
