@@ -6,8 +6,6 @@ import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.navigation.GlobalNavEvent
-import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
@@ -27,7 +25,6 @@ class WeatherViewModel(
     private val reverseGeocodeUseCase: ReverseGeocodeUseCase,
     private val settingsRepository: SettingsRepository,
     private val locationProvider: LocationProvider,
-    private val navEventHandler: NavEventHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WeatherUiState())
@@ -56,7 +53,6 @@ class WeatherViewModel(
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             is WeatherUiEvent.OnSearchClick -> onSearchClick()
             is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
-            is WeatherUiEvent.OnBackClick -> navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }
 

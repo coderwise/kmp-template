@@ -10,5 +10,5 @@ import org.koin.dsl.module
 val featureSettingsModule = module {
     factoryOf(::GetSettingsUseCase)
     factoryOf(::UpdateThemeUseCase)
-    viewModel { SettingsViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get()) }
 }

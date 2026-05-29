@@ -23,7 +23,6 @@ val weatherModule = module {
             reverseGeocodeUseCase = get(),
             settingsRepository = get(),
             locationProvider = get(),
-            navEventHandler = get()
         )
     }
 }

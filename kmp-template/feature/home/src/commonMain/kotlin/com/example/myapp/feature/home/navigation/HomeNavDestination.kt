@@ -10,7 +10,4 @@ sealed interface HomeNavDestination : NavKey {
 
     @Serializable
     data class AddItem(val title: String = "", val description: String = "") : HomeNavDestination
-
-    @Serializable
-    data class EditItem(val id: String, val title: String, val description: String) : HomeNavDestination
 }

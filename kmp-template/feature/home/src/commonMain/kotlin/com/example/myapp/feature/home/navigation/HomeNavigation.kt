@@ -9,28 +9,15 @@ import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
 import com.example.myapp.feature.home.ui.HomeViewModel
-import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
-import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @Composable
 fun HomeNavigation() {
     val viewModel: HomeViewModel = koinViewModel()
     val navigator = rememberChildNavigator(HomeNavDestination.Root) { event ->
-        when(event) {
+        when (event) {
             is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
-            is HomeNavEvent.ToEditItem -> {
-                val item = event.item
-                navigate(
-                    HomeNavDestination.EditItem(
-                        item.id,
-                        item.title,
-                        item.description
-                    )
-                )
-            }
         }
     }
 
@@ -53,12 +40,6 @@ fun HomeNavigation() {
                         viewModel.onEvent(HomeUiEvent.AddItem(title, description))
                     }
                 )
-            }
-            entry<HomeNavDestination.EditItem> { destination ->
-                val editViewModel: HomeItemEditViewModel = koinViewModel {
-                    parametersOf(destination.id, destination.title, destination.description)
-                }
-                HomeItemEditScreen(viewModel = editViewModel)
             }
         }
     )

@@ -6,10 +6,11 @@ import kotlinx.serialization.Serializable
 interface AppDestination : NavKey
 
 @Serializable
-data object HomeDestination : AppDestination
+data object HomeGroupDestination : AppDestination
 
 @Serializable
-data object WeatherDestination : AppDestination
-
-@Serializable
-data object SettingsDestination : AppDestination
+data class EditItemDestination(
+    val id: String,
+    val title: String,
+    val description: String,
+) : AppDestination

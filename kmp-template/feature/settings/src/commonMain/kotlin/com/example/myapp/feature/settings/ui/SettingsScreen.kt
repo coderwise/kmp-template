@@ -51,10 +51,7 @@ fun SettingsScreenContent(
 ) {
     Scaffold(
         topBar = {
-            AppTopBar(
-                title = stringResource(Res.string.settings_title),
-                onBackClick = { onEvent(SettingsUiEvent.NavigateBack) }
-            )
+            AppTopBar(title = stringResource(Res.string.settings_title))
         }
     ) { padding ->
         Column(

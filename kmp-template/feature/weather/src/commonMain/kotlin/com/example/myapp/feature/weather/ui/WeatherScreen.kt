@@ -38,7 +38,6 @@ import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.libs.permissions.isGranted
 import com.example.myapp.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
-import myapp.feature.weather.generated.resources.weather_back_content_description
 import myapp.feature.weather.generated.resources.weather_coordinates
 import myapp.feature.weather.generated.resources.weather_error
 import myapp.feature.weather.generated.resources.weather_search_placeholder
@@ -72,11 +71,7 @@ fun WeatherScreenContent(
     val permissionState = rememberLocationPermissionState()
     Scaffold(
         topBar = {
-            AppTopBar(
-                title = stringResource(Res.string.weather_title),
-                onBackClick = { onEvent(WeatherUiEvent.OnBackClick) },
-                backContentDescription = stringResource(Res.string.weather_back_content_description)
-            )
+            AppTopBar(title = stringResource(Res.string.weather_title))
         }
     ) { padding ->
         Column(

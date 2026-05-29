@@ -7,5 +7,4 @@ sealed interface WeatherUiEvent {
     data class OnLocationSelected(val location: Location) : WeatherUiEvent
     data object OnSearchClick : WeatherUiEvent
     data object OnCurrentLocationClick : WeatherUiEvent
-    data object OnBackClick : WeatherUiEvent
 }
