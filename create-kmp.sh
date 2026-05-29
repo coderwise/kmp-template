@@ -106,6 +106,9 @@ find "$DEST" -type f \( \
     -name "*.html" -o \
     -name "*.md" -o \
     -name "*.plist" -o \
+    -name "*.pbxproj" -o \
+    -name "*.xcscheme" -o \
+    -name "*.xcworkspacedata" -o \
     -name "*.sq" -o \
     -name ".gitignore" -o \
     -name "gradlew" -o \
@@ -179,6 +182,27 @@ if [[ "$APP_PACKAGE_PATH" != "$PACKAGE_PATH" ]]; then
             mv "$OLD_SUBDIR" "$NEW_SUBDIR"
             find "$DEST/app/$mod" -type d -empty -delete 2>/dev/null || true
         fi
+    done
+fi
+
+# ── Rename files and directories containing TMPL_NAME in their names ─────────
+if [[ "$TMPL_NAME" != "$APP_NAME" ]]; then
+    echo "-> Renaming files and directories containing '$TMPL_NAME'..."
+
+    # Rename files first (deepest paths first to avoid path invalidation)
+    find "$DEST" -type f -name "*${TMPL_NAME}*" | awk '{ print length, $0 }' | sort -rn | cut -d' ' -f2- | while IFS= read -r old_file; do
+        dir="$(dirname "$old_file")"
+        base="$(basename "$old_file")"
+        new_base="${base//${TMPL_NAME}/${APP_NAME}}"
+        [[ "$base" != "$new_base" ]] && mv "$old_file" "$dir/$new_base"
+    done
+
+    # Rename directories (deepest first)
+    find "$DEST" -type d -name "*${TMPL_NAME}*" | awk '{ print length, $0 }' | sort -rn | cut -d' ' -f2- | while IFS= read -r old_dir; do
+        parent="$(dirname "$old_dir")"
+        base="$(basename "$old_dir")"
+        new_base="${base//${TMPL_NAME}/${APP_NAME}}"
+        [[ "$base" != "$new_base" && -d "$old_dir" ]] && mv "$old_dir" "$parent/$new_base"
     done
 fi
 
