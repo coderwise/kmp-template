@@ -44,8 +44,7 @@ class HomeViewModelTest {
         addHomeItemUseCase,
         removeHomeItemUseCase,
         syncHomeItemsUseCase,
-        navEventHandler,
-        "1.0.0"
+        navEventHandler
     )
 
     @Test
@@ -60,7 +59,10 @@ class HomeViewModelTest {
 
         assertEquals(items, viewModel.uiState.value.items)
         assertFalse(viewModel.uiState.value.isLoading)
-        verify { getHomeItemsUseCase() }
+        verify {
+            @Suppress("UnusedFlow")
+            getHomeItemsUseCase()
+        }
         verifySuspend { syncHomeItemsUseCase() }
     }
 

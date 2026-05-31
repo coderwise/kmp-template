@@ -13,9 +13,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,12 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.screens.EmptyState
-import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.home.ui.layouts.HomeItemCard
 import com.example.myapp.feature.home.ui.layouts.HomeTopBar
 import myapp.feature.home.generated.resources.Res
 import myapp.feature.home.generated.resources.home_add_item_content_description
-import myapp.feature.home.generated.resources.home_app_version
 import myapp.feature.home.generated.resources.home_error
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -98,17 +94,6 @@ fun HomeScreenContent(
                         }
                     }
                 }
-            }
-
-            if (uiState.appVersion.isNotBlank()) {
-                Text(
-                    text = stringResource(Res.string.home_app_version, uiState.appVersion),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(bottom = MaterialTheme.spacing.base)
-                )
             }
         }
     }

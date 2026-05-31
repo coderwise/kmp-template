@@ -8,8 +8,7 @@ data class HomeUiState(
     override val isLoading: Boolean = false,
     override val isError: Boolean = false,
     override val errorMessage: String? = null,
-    val isRefreshing: Boolean = false,
-    val appVersion: String = ""
+    val isRefreshing: Boolean = false
 ) : LoadableState<HomeUiState> {
     override fun copyLoadState(isLoading: Boolean, isError: Boolean, errorMessage: String?) =
         copy(isLoading = isLoading, isError = isError, errorMessage = errorMessage)

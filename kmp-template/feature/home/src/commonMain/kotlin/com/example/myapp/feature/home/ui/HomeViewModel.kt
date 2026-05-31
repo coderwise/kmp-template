@@ -25,11 +25,10 @@ class HomeViewModel(
     private val addHomeItemUseCase: AddHomeItemUseCase,
     private val removeHomeItemUseCase: RemoveHomeItemUseCase,
     private val syncHomeItemsUseCase: SyncHomeItemsUseCase,
-    private val navEventHandler: NavEventHandler,
-    appVersion: String
+    private val navEventHandler: NavEventHandler
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState(appVersion = appVersion))
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
