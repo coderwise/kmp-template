@@ -7,6 +7,7 @@ import org.koin.core.context.startKoin
 import org.koin.core.error.KoinApplicationAlreadyStartedException
 import platform.UIKit.UIViewController
 
+@Suppress("FunctionNaming")
 fun MainViewController(): UIViewController {
     try {
         startKoin { modules(appModule) }

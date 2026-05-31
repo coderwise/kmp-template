@@ -1,11 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>NewLineAtEndOfFile:HomeNavDestination.kt$com.example.myapp.feature.home.navigation.HomeNavDestination.kt</ID>
-    <ID>WildcardImport:HomeModule.kt$import com.example.myapp.feature.home.domain.usecase.*</ID>
-    <ID>WildcardImport:HomeViewModelTest.kt$import com.example.myapp.feature.home.domain.usecase.*</ID>
-    <ID>WildcardImport:HomeViewModelTest.kt$import kotlin.test.*</ID>
-    <ID>WildcardImport:HomeViewModelTest.kt$import kotlinx.coroutines.test.*</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

@@ -5,6 +5,7 @@ import com.example.myapp.core.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 
+@Suppress("TooGenericExceptionCaught")
 class WeatherRepositoryImpl(
     private val api: OpenMeteoApi
 ) : WeatherRepository {

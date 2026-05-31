@@ -1,12 +1,14 @@
 package com.example.myapp.core.ui.navigation
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 import com.example.myapp.core.ui.util.pop
 import com.example.myapp.core.ui.util.push
 
 @Stable
+@Suppress("TooManyFunctions")
 class NavigationState : Navigator {
     private var _rootBackStack: NavBackStack<NavKey>? = null
     val rootBackStack: NavBackStack<NavKey>

@@ -1,13 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>MagicNumber:NavTransitions.kt$400</ID>
-    <ID>MatchingDeclarationName:AppBottomBar.kt$BottomBarItem</ID>
-    <ID>MatchingDeclarationName:Shape.kt$Radii</ID>
-    <ID>MatchingDeclarationName:StatusChip.kt$ChipStatus</ID>
-    <ID>ReturnCount:BottomSheetSceneStrategy.kt$BottomSheetSceneStrategy$override fun SceneStrategyScope&lt;T&gt;.calculateScene(entries: List&lt;NavEntry&lt;T&gt;&gt;): BottomSheetScene&lt;T&gt;?</ID>
-    <ID>TooManyFunctions:NavigationState.kt$NavigationState : Navigator</ID>
-    <ID>WildcardImport:NavigationState.kt$import androidx.compose.runtime.*</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

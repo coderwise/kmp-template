@@ -30,6 +30,8 @@ private val homeItems = mutableListOf(
     HomeItemApi("2", "Server Item 2", "Another one from server")
 )
 
+private const val DEFAULT_TEMPERATURE = 20
+
 fun Application.module() {
     install(ContentNegotiation) {
         json(Json { ignoreUnknownKeys = true })
@@ -44,7 +46,7 @@ fun Application.module() {
         get<Weather.City> { resource ->
             call.respond(mapOf(
                 "city" to resource.city,
-                "temperature" to 20,
+                "temperature" to DEFAULT_TEMPERATURE,
                 "condition" to "Cloudy"
             ))
         }

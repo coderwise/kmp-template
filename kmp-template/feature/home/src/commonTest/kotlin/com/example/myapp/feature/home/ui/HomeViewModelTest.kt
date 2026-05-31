@@ -2,7 +2,10 @@ package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.navigation.NavEventHandler
-import com.example.myapp.feature.home.domain.usecase.*
+import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
+import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
+import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
+import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
@@ -14,8 +17,17 @@ import dev.mokkery.verifySuspend
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.*
-import kotlin.test.*
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {

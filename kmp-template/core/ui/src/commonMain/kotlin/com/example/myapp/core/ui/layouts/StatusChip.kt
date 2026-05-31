@@ -7,8 +7,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
-enum class ChipStatus { Default, Success, Warning, Error }
-
 @Composable
 fun StatusChip(
     label: String,
@@ -28,3 +26,5 @@ fun StatusChip(
         colors = SuggestionChipDefaults.suggestionChipColors(containerColor = containerColor)
     )
 }
+
+enum class ChipStatus { Default, Success, Warning, Error }

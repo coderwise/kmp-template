@@ -4,4 +4,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 actual fun PlatformColors(darkTheme: Boolean) {
+    // No-op on desktop
 }

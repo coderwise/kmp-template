@@ -25,75 +25,87 @@ class AndroidLocationProvider(
 
     @SuppressLint("MissingPermission")
     override suspend fun getCurrentLocation(): Result<GpsLocation> {
-        if (!hasPermission()) {
-            return Result.failure(SecurityException("Location permission not granted"))
-        }
         val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: return Result.failure(IllegalStateException("LocationManager unavailable"))
-        val provider = pickProvider(manager)
-            ?: return Result.failure(IllegalStateException("No enabled location provider"))
+        val provider = manager?.let { pickProvider(it) }
 
-        val android = suspendCancellableCoroutine<AndroidLocation?> { cont ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val signal = CancellationSignal()
-                cont.invokeOnCancellation { signal.cancel() }
-                manager.getCurrentLocation(
-                    provider,
-                    signal,
-                    ContextCompat.getMainExecutor(context)
-                ) { loc -> cont.resume(loc) }
-            } else {
-                val listener = object : LocationListener {
-                    override fun onLocationChanged(location: AndroidLocation) {
-                        manager.removeUpdates(this)
-                        if (cont.isActive) cont.resume(location)
+        return when {
+            !hasPermission() -> Result.failure(SecurityException("Location permission not granted"))
+            manager == null -> Result.failure(IllegalStateException("LocationManager unavailable"))
+            provider == null -> Result.failure(IllegalStateException("No enabled location provider"))
+            else -> {
+                val android = suspendCancellableCoroutine<AndroidLocation?> { cont ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        val signal = CancellationSignal()
+                        cont.invokeOnCancellation { signal.cancel() }
+                        manager.getCurrentLocation(
+                            provider,
+                            signal,
+                            ContextCompat.getMainExecutor(context)
+                        ) { loc -> cont.resume(loc) }
+                    } else {
+                        val listener = object : LocationListener {
+                            override fun onLocationChanged(location: AndroidLocation) {
+                                manager.removeUpdates(this)
+                                if (cont.isActive) cont.resume(location)
+                            }
+                            override fun onProviderDisabled(provider: String) {
+                                // Not used
+                            }
+                            override fun onProviderEnabled(provider: String) {
+                                // Not used
+                            }
+                            @Deprecated("Deprecated in API 29")
+                            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                                // Not used
+                            }
+                        }
+                        cont.invokeOnCancellation { manager.removeUpdates(listener) }
+                        manager.requestSingleUpdate(provider, listener, Looper.getMainLooper())
                     }
-                    override fun onProviderDisabled(provider: String) {}
-                    override fun onProviderEnabled(provider: String) {}
-                    @Deprecated("Deprecated in API 29")
-                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
                 }
-                cont.invokeOnCancellation { manager.removeUpdates(listener) }
-                manager.requestSingleUpdate(provider, listener, Looper.getMainLooper())
+
+                android?.let {
+                    Result.success(it.toGpsLocation())
+                } ?: Result.failure(IllegalStateException("Location unavailable"))
             }
         }
-
-        return android?.let {
-            Result.success(it.toGpsLocation())
-        } ?: Result.failure(IllegalStateException("Location unavailable"))
     }
 
     @SuppressLint("MissingPermission")
     override fun locationUpdates(): Flow<Result<GpsLocation>> {
-        if (!hasPermission()) {
-            return flowOf(
-                Result.failure(SecurityException("Location permission not granted"))
-            )
-        }
         val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: return flowOf(Result.failure(IllegalStateException("LocationManager unavailable")))
-        val provider = pickProvider(manager)
-            ?: return flowOf(Result.failure(IllegalStateException("No enabled location provider")))
+        val provider = manager?.let { pickProvider(it) }
 
-        return callbackFlow {
-            val listener = object : LocationListener {
-                override fun onLocationChanged(location: AndroidLocation) {
-                    trySend(Result.success(location.toGpsLocation()))
+        return when {
+            !hasPermission() -> flowOf(Result.failure(SecurityException("Location permission not granted")))
+            manager == null -> flowOf(Result.failure(IllegalStateException("LocationManager unavailable")))
+            provider == null -> flowOf(Result.failure(IllegalStateException("No enabled location provider")))
+            else -> callbackFlow {
+                val listener = object : LocationListener {
+                    override fun onLocationChanged(location: AndroidLocation) {
+                        trySend(Result.success(location.toGpsLocation()))
+                    }
+
+                    override fun onProviderDisabled(provider: String) {
+                        // Not used
+                    }
+                    override fun onProviderEnabled(provider: String) {
+                        // Not used
+                    }
+                    @Deprecated("Deprecated in API 29")
+                    override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                        // Not used
+                    }
                 }
-
-                override fun onProviderDisabled(provider: String) {}
-                override fun onProviderEnabled(provider: String) {}
-                @Deprecated("Deprecated in API 29")
-                override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {}
+                manager.requestLocationUpdates(
+                    provider,
+                    MIN_UPDATE_INTERVAL_MS,
+                    MIN_UPDATE_DISTANCE_M,
+                    listener,
+                    Looper.getMainLooper()
+                )
+                awaitClose { manager.removeUpdates(listener) }
             }
-            manager.requestLocationUpdates(
-                provider,
-                MIN_UPDATE_INTERVAL_MS,
-                MIN_UPDATE_DISTANCE_M,
-                listener,
-                Looper.getMainLooper()
-            )
-            awaitClose { manager.removeUpdates(listener) }
         }
     }
 

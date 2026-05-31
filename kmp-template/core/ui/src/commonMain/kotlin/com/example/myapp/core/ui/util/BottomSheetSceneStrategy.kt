@@ -19,15 +19,18 @@ private object OnDismissKey : NavMetadataKey<() -> Unit>
 class BottomSheetSceneStrategy<T : Any> : SceneStrategy<T> {
 
     override fun SceneStrategyScope<T>.calculateScene(entries: List<NavEntry<T>>): BottomSheetScene<T>? {
-        val lastEntry = entries.lastOrNull() ?: return null
-        if (lastEntry.metadata[BottomSheetKey] == null) return null
-        return BottomSheetScene(
-            key = lastEntry.contentKey,
-            entry = lastEntry,
-            previousEntries = entries.dropLast(1),
-            overlaidEntries = entries.dropLast(1),
-            onBack = onBack,
-        )
+        val lastEntry = entries.lastOrNull()
+        return if (lastEntry != null && lastEntry.metadata[BottomSheetKey] != null) {
+            BottomSheetScene(
+                key = lastEntry.contentKey,
+                entry = lastEntry,
+                previousEntries = entries.dropLast(1),
+                overlaidEntries = entries.dropLast(1),
+                onBack = onBack,
+            )
+        } else {
+            null
+        }
     }
 
     companion object {

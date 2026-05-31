@@ -141,7 +141,10 @@ fun WeatherScreenContent(
                         CircularProgressIndicator()
                     } else if (uiState.isError && uiState.weatherInfo == null) {
                         EmptyState(
-                            message = stringResource(Res.string.weather_error, uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error))
+                            message = stringResource(
+                                Res.string.weather_error,
+                                uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error)
+                            )
                         )
                     } else if (uiState.weatherInfo != null) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -160,7 +163,11 @@ fun WeatherScreenContent(
                             )
                             Spacer(modifier = Modifier.height(MaterialTheme.spacing.base))
                             Text(
-                                text = stringResource(Res.string.weather_coordinates, uiState.weatherInfo.latitude, uiState.weatherInfo.longitude),
+                                text = stringResource(
+                                    Res.string.weather_coordinates,
+                                    uiState.weatherInfo.latitude,
+                                    uiState.weatherInfo.longitude
+                                ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

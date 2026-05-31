@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.map
  * Writes are offline-first: the local store is updated even when the remote
  * call fails, but failures are logged rather than silently swallowed.
  */
+@Suppress("TooGenericExceptionCaught")
 class HomeRepositoryImpl(
     private val localDataSource: HomeLocalDataSource,
     private val remoteDataSource: HomeRemoteDataSource

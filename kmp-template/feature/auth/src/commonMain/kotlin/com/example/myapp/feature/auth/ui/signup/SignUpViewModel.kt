@@ -23,7 +23,9 @@ class SignUpViewModel(
         when (event) {
             is SignUpUiEvent.EmailChanged -> _uiState.update { it.copy(email = event.email, error = null) }
             is SignUpUiEvent.PasswordChanged -> _uiState.update { it.copy(password = event.password, error = null) }
-            is SignUpUiEvent.ConfirmPasswordChanged -> _uiState.update { it.copy(confirmPassword = event.confirmPassword, error = null) }
+            is SignUpUiEvent.ConfirmPasswordChanged -> _uiState.update {
+                it.copy(confirmPassword = event.confirmPassword, error = null)
+            }
             SignUpUiEvent.Submit -> signUp()
             SignUpUiEvent.NavigateBack -> navEventHandler.onEvent(GlobalNavEvent.Back)
         }

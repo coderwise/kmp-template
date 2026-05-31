@@ -1,9 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues/>
-  <CurrentIssues>
-    <ID>EmptyFunctionBlock:AndroidLocationProvider.kt$AndroidLocationProvider.&lt;no name provided&gt;${}</ID>
-    <ID>ReturnCount:AndroidLocationProvider.kt$AndroidLocationProvider$@SuppressLint("MissingPermission") override fun locationUpdates(): Flow&lt;Result&lt;GpsLocation&gt;&gt;</ID>
-    <ID>ReturnCount:AndroidLocationProvider.kt$AndroidLocationProvider$@SuppressLint("MissingPermission") override suspend fun getCurrentLocation(): Result&lt;GpsLocation&gt;</ID>
-  </CurrentIssues>
+  <CurrentIssues/>
 </SmellBaseline>

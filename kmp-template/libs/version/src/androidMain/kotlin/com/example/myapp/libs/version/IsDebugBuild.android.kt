@@ -1,5 +1,7 @@
 package com.example.myapp.libs.version
 
+actual val isDebugBuild: Boolean get() = AndroidBuildInfo.isDebug
+
 /**
  * This KMP library module has no `BuildConfig` of its own, so the Android app
  * pushes its `BuildConfig.DEBUG` in once at startup (see `MainApplication`).
@@ -8,5 +10,3 @@ package com.example.myapp.libs.version
 object AndroidBuildInfo {
     var isDebug: Boolean = false
 }
-
-actual val isDebugBuild: Boolean get() = AndroidBuildInfo.isDebug

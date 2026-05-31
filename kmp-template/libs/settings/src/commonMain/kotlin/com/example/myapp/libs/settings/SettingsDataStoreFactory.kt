@@ -11,3 +11,4 @@ expect class SettingsDataStoreFactory {
         serializer: KSerializer<T>
     ): SettingsDataStore<T>
 }
+
