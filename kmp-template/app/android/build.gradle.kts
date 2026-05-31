@@ -64,6 +64,7 @@ android {
 
 dependencies {
     implementation(project(":app:common"))
+    implementation(project(":libs:version"))
     implementation(libs.androidx.activity.compose)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.koin.android)

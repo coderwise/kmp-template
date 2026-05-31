@@ -88,6 +88,15 @@ fun LoginScreenContent(
                 enabled = uiState.email.isNotBlank() && uiState.password.isNotBlank() && !uiState.isLoading,
                 modifier = Modifier.fillMaxWidth(),
             )
+            if (uiState.isBypassEnabled) {
+                TextButton(
+                    onClick = { onEvent(LoginUiEvent.DebugBypass) },
+                    enabled = !uiState.isLoading,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                ) {
+                    Text("⚠ Skip login (debug)")
+                }
+            }
             Spacer(modifier = Modifier.weight(1f))
             Row(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -132,5 +141,13 @@ private fun LoginScreenErrorPreview() {
 private fun LoginScreenDarkPreview() {
     MyAppTheme(darkTheme = true) {
         LoginScreenContent(uiState = LoginUiState(), onEvent = {})
+    }
+}
+
+@Preview
+@Composable
+private fun LoginScreenBypassPreview() {
+    MyAppTheme {
+        LoginScreenContent(uiState = LoginUiState(isBypassEnabled = true), onEvent = {})
     }
 }
