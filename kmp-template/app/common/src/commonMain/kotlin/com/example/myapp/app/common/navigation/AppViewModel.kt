@@ -3,6 +3,7 @@ package com.example.myapp.app.common.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.repository.SettingsRepository
+import com.example.myapp.core.ui.state.StateConfig
 import com.example.myapp.feature.auth.domain.model.AuthState
 import com.example.myapp.feature.auth.domain.usecase.ObserveAuthStateUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignOutUseCase
@@ -28,7 +29,7 @@ class AppViewModel(
         )
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(StateConfig.SubscriptionTimeoutMs),
         initialValue = AppUiState(),
     )
 

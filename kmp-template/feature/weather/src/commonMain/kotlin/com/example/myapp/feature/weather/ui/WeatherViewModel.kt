@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.domain.model.Location
+import com.example.myapp.core.ui.state.error
+import com.example.myapp.core.ui.state.loading
 import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.GetSelectedLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
@@ -17,6 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
@@ -39,12 +42,8 @@ class WeatherViewModel(
     private fun loadSavedLocation() {
         viewModelScope.launch {
             val savedLocation = getSelectedLocationUseCase().firstOrNull()
-            if (savedLocation != null) {
-                fetchWeather(savedLocation.latitude, savedLocation.longitude, savedLocation.name)
-            } else {
-                // Default location
-                fetchWeather(51.5074, -0.1278, "London")
-            }
+            val location = savedLocation ?: DEFAULT_LOCATION
+            fetchWeather(location.latitude, location.longitude, location.name)
         }
     }
 
@@ -85,7 +84,7 @@ class WeatherViewModel(
 
     private fun onSearchQueryChange(query: String) {
         _uiState.update { it.copy(searchQuery = query) }
-        if (query.length >= 2) {
+        if (query.length >= MIN_SEARCH_QUERY_LENGTH) {
             searchLocations(query.trim())
         } else {
             searchJob?.cancel()
@@ -96,6 +95,9 @@ class WeatherViewModel(
     private fun searchLocations(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
+            // Debounce: a new keystroke cancels this job before the delay elapses,
+            // so we only hit the network once the user pauses typing.
+            delay(SEARCH_DEBOUNCE_MS)
             searchLocationsUseCase(query).onSuccess { data ->
                 if (_uiState.value.searchQuery == query) {
                     _uiState.update { it.copy(searchResults = data) }
@@ -137,12 +139,10 @@ class WeatherViewModel(
                 }
         }
     }
+
+    private companion object {
+        val DEFAULT_LOCATION = Location(name = "London", latitude = 51.5074, longitude = -0.1278)
+        const val MIN_SEARCH_QUERY_LENGTH = 2
+        const val SEARCH_DEBOUNCE_MS = 300L
+    }
 }
-
-private fun WeatherUiState.loading() = copy(
-    isLoading = true, isError = false
-)
-
-private fun WeatherUiState.error(message: String?) = copy(
-    isLoading = false, isError = true, errorMessage = message
-)

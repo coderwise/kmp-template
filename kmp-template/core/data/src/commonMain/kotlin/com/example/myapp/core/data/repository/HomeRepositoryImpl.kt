@@ -7,17 +7,25 @@ import com.example.myapp.core.database.HomeItemEntity
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.repository.HomeRepository
+import com.example.myapp.core.domain.util.AppLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 /**
  * Coordinates the remote and local data sources and maps between the
  * network/persistence models and the domain model.
+ *
+ * Writes are offline-first: the local store is updated even when the remote
+ * call fails, but failures are logged rather than silently swallowed.
  */
 class HomeRepositoryImpl(
     private val localDataSource: HomeLocalDataSource,
     private val remoteDataSource: HomeRemoteDataSource
 ) : HomeRepository {
+
+    private companion object {
+        const val TAG = "HomeRepository"
+    }
 
     override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
         localDataSource.observeItems().map { entities ->
@@ -36,7 +44,7 @@ class HomeRepositoryImpl(
         try {
             remoteDataSource.addItem(item.toApi())
         } catch (e: Exception) {
-            // Handle or log error
+            AppLogger.warn(TAG, "Remote add failed for item ${item.id}; persisting locally only", e)
         }
         localDataSource.insert(item.toEntity())
     }
@@ -47,7 +55,9 @@ class HomeRepositoryImpl(
                 localDataSource.delete(id)
             }
         } catch (e: Exception) {
-            // In a real app, you might want to mark for deletion later
+            // Offline fallback: remove locally now; a real app would queue the
+            // deletion for a later retry against the server.
+            AppLogger.warn(TAG, "Remote delete failed for item $id; deleting locally", e)
             localDataSource.delete(id)
         }
     }
@@ -56,7 +66,7 @@ class HomeRepositoryImpl(
         try {
             remoteDataSource.updateItem(item.toApi())
         } catch (e: Exception) {
-            // Handle error
+            AppLogger.warn(TAG, "Remote update failed for item ${item.id}; persisting locally only", e)
         }
         localDataSource.update(item.toEntity())
     }

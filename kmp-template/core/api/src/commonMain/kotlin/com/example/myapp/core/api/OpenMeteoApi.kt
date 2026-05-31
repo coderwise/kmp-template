@@ -5,13 +5,22 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 class OpenMeteoApi(
     private val httpClient: HttpClient
 ) {
+    private companion object {
+        const val FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
+        const val GEOCODING_URL = "https://geocoding-api.open-meteo.com/v1/search"
+        const val REVERSE_GEOCODE_URL = "https://nominatim.openstreetmap.org/reverse"
+        const val SEARCH_RESULT_LIMIT = 10
+        const val USER_AGENT = "MyApp"
+    }
+
     suspend fun getWeather(latitude: Double, longitude: Double): OpenMeteoResponse {
-        return httpClient.get("https://api.open-meteo.com/v1/forecast") {
+        return httpClient.get(FORECAST_URL) {
             parameter("latitude", latitude)
             parameter("longitude", longitude)
             parameter("current_weather", true)
@@ -19,33 +28,33 @@ class OpenMeteoApi(
     }
 
     suspend fun searchLocations(query: String): GeocodingResponse {
-        return httpClient.get("https://geocoding-api.open-meteo.com/v1/search") {
+        return httpClient.get(GEOCODING_URL) {
             parameter("name", query)
-            parameter("count", 10)
+            parameter("count", SEARCH_RESULT_LIMIT)
             parameter("language", "en")
             parameter("format", "json")
         }.body()
     }
 
     suspend fun reverseGeocode(latitude: Double, longitude: Double): NominatimResponse {
-        return httpClient.get("https://nominatim.openstreetmap.org/reverse") {
+        return httpClient.get(REVERSE_GEOCODE_URL) {
             parameter("lat", latitude)
             parameter("lon", longitude)
             parameter("format", "json")
-            header("User-Agent", "MyApp")
+            header("User-Agent", USER_AGENT)
         }.body()
     }
 }
 
 @Serializable
 data class OpenMeteoResponse(
-    val current_weather: CurrentWeather
+    @SerialName("current_weather") val currentWeather: CurrentWeather
 )
 
 @Serializable
 data class CurrentWeather(
     val temperature: Double,
-    val weathercode: Int
+    @SerialName("weathercode") val weatherCode: Int
 )
 
 @Serializable
@@ -64,7 +73,7 @@ data class GeocodingResult(
 
 @Serializable
 data class NominatimResponse(
-    val display_name: String,
+    @SerialName("display_name") val displayName: String,
     val name: String? = null,
     val address: NominatimAddress? = null
 )

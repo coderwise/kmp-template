@@ -15,8 +15,8 @@ class WeatherRepositoryImpl(
 
             Result.Success(
                 WeatherInfo(
-                    temperature = response.current_weather.temperature,
-                    condition = "Clear", // Simplified for this example
+                    temperature = response.currentWeather.temperature,
+                    condition = weatherCodeToCondition(response.currentWeather.weatherCode),
                     city = city,
                     latitude = latitude,
                     longitude = longitude
@@ -52,7 +52,7 @@ class WeatherRepositoryImpl(
             val response = api.reverseGeocode(latitude, longitude)
             val name = response.address?.let {
                 it.city ?: it.town ?: it.village ?: it.hamlet ?: it.suburb ?: response.name
-            } ?: response.display_name
+            } ?: response.displayName
 
             Result.Success(
                 Location(

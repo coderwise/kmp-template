@@ -7,6 +7,8 @@ import com.example.myapp.core.domain.model.onLoading
 import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.example.myapp.core.ui.state.error
+import com.example.myapp.core.ui.state.loading
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase
@@ -80,11 +82,3 @@ class HomeViewModel(
         }
     }
 }
-
-private fun HomeUiState.loading() = copy(
-    isLoading = true, isError = false
-)
-
-private fun HomeUiState.error(message: String?) = copy(
-    isLoading = false, isError = true, errorMessage = message
-)

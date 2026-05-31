@@ -3,6 +3,7 @@ package com.example.myapp.feature.settings.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.example.myapp.core.ui.state.StateConfig
 import com.example.myapp.feature.settings.domain.usecase.GetSettingsUseCase
 import com.example.myapp.feature.settings.domain.usecase.UpdateThemeUseCase
 import com.example.myapp.feature.settings.navigation.SettingsNavEvent
@@ -28,7 +29,7 @@ class SettingsViewModel(
         }
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
+            started = SharingStarted.WhileSubscribed(StateConfig.SubscriptionTimeoutMs),
             initialValue = SettingsUiState(isLoading = true)
         )
 
