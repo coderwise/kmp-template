@@ -1,6 +1,5 @@
 package com.example.myapp.feature.weather.data.repository
 
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.api.OpenMeteoApi
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
@@ -13,7 +12,7 @@ class WeatherRepositoryImpl(
         return try {
             val response = api.getWeather(latitude, longitude)
 
-            Result.Success(
+            Result.success(
                 WeatherInfo(
                     temperature = response.currentWeather.temperature,
                     condition = weatherCodeToCondition(response.currentWeather.weatherCode),
@@ -23,7 +22,7 @@ class WeatherRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.failure(e)
         }
     }
 
@@ -31,7 +30,7 @@ class WeatherRepositoryImpl(
         return try {
             val response = api.searchLocations(query)
 
-            Result.Success(
+            Result.success(
                 response.results?.map {
                     Location(
                         name = it.name,
@@ -43,7 +42,7 @@ class WeatherRepositoryImpl(
                 } ?: emptyList()
             )
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.failure(e)
         }
     }
 
@@ -54,7 +53,7 @@ class WeatherRepositoryImpl(
                 it.city ?: it.town ?: it.village ?: it.hamlet ?: it.suburb ?: response.name
             } ?: response.displayName
 
-            Result.Success(
+            Result.success(
                 Location(
                     name = name,
                     latitude = latitude,
@@ -64,7 +63,7 @@ class WeatherRepositoryImpl(
                 )
             )
         } catch (e: Exception) {
-            Result.Error(e)
+            Result.failure(e)
         }
     }
 }

@@ -8,52 +8,46 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
 class JsLocationProvider : LocationProvider {
-    override suspend fun getCurrentLocation(): LocationResult<GpsLocation> =
+    override suspend fun getCurrentLocation(): Result<GpsLocation> =
         suspendCancellableCoroutine { cont ->
             val geolocation = js("navigator.geolocation")
             if (geolocation == null || geolocation == undefined) {
                 cont.resume(
-                    LocationResult.Error(
-                        IllegalStateException("Geolocation unavailable"),
-                        "Geolocation unavailable"
-                    )
+                    Result.failure(IllegalStateException("Geolocation unavailable"))
                 )
                 return@suspendCancellableCoroutine
             }
             val onSuccess: (dynamic) -> Unit = { position ->
                 if (cont.isActive) {
-                    cont.resume(LocationResult.Success(toGpsLocation(position)))
+                    cont.resume(Result.success(toGpsLocation(position)))
                 }
             }
             val onError: (dynamic) -> Unit = { error ->
                 if (cont.isActive) {
                     val message = error.message as? String
                     cont.resume(
-                        LocationResult.Error(RuntimeException(message ?: "Geolocation error"), message)
+                        Result.failure(RuntimeException(message ?: "Geolocation error"))
                     )
                 }
             }
             geolocation.getCurrentPosition(onSuccess, onError)
         }
 
-    override fun locationUpdates(): Flow<LocationResult<GpsLocation>> {
+    override fun locationUpdates(): Flow<Result<GpsLocation>> {
         val geolocation = js("navigator.geolocation")
         if (geolocation == null || geolocation == undefined) {
             return flowOf(
-                LocationResult.Error(
-                    IllegalStateException("Geolocation unavailable"),
-                    "Geolocation unavailable"
-                )
+                Result.failure(IllegalStateException("Geolocation unavailable"))
             )
         }
         return callbackFlow {
             val onSuccess: (dynamic) -> Unit = { position ->
-                trySend(LocationResult.Success(toGpsLocation(position)))
+                trySend(Result.success(toGpsLocation(position)))
             }
             val onError: (dynamic) -> Unit = { error ->
                 val message = error.message as? String
                 trySend(
-                    LocationResult.Error(RuntimeException(message ?: "Geolocation error"), message)
+                    Result.failure(RuntimeException(message ?: "Geolocation error"))
                 )
             }
             val watchId = geolocation.watchPosition(onSuccess, onError)

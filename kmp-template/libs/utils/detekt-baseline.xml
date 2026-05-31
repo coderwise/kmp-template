@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>EmptyFunctionBlock:PlatformColors.desktop.kt${ }</ID>
+    <ID>EmptyFunctionBlock:PlatformColors.ios.kt${ }</ID>
+    <ID>EmptyFunctionBlock:PlatformColors.js.kt${ }</ID>
+    <ID>FunctionNaming:PlatformColors.android.kt$@Composable actual fun PlatformColors(darkTheme: Boolean)</ID>
+    <ID>FunctionNaming:PlatformColors.desktop.kt$@Composable actual fun PlatformColors(darkTheme: Boolean)</ID>
+    <ID>FunctionNaming:PlatformColors.ios.kt$@Composable actual fun PlatformColors(darkTheme: Boolean)</ID>
+    <ID>FunctionNaming:PlatformColors.js.kt$@Composable actual fun PlatformColors(darkTheme: Boolean)</ID>
+    <ID>FunctionNaming:PlatformColors.kt$@Composable expect fun PlatformColors(darkTheme: Boolean)</ID>
+  </CurrentIssues>
+</SmellBaseline>

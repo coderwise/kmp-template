@@ -30,17 +30,50 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
+      - name: Static analysis (detekt)
+        run: ./gradlew detekt --stacktrace
+
       - name: Build all modules
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --continue --stacktrace
+      - name: Run unit tests (Android + Desktop/JVM)
+        run: ./gradlew testDebugUnitTest desktopTest --continue --stacktrace
 
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
+          path: '**/build/reports/tests/'
+          retention-days: 7
+
+  ios-test:
+    name: iOS Tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Run iOS simulator tests
+        run: ./gradlew iosSimulatorArm64Test --continue --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-test-reports
           path: '**/build/reports/tests/'
           retention-days: 7
 

@@ -1,6 +1,5 @@
 package com.example.myapp.feature.home.domain.usecase
 
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.CoroutineDispatcher

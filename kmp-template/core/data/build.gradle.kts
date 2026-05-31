@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kmp.android.library)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -24,6 +25,7 @@ kotlin {
             implementation(project(":libs:network"))
             implementation(project(":libs:database"))
             implementation(project(":libs:settings"))
+            implementation(project(":libs:logger"))
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
@@ -32,6 +34,11 @@ kotlin {
 
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.resources)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

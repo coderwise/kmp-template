@@ -17,7 +17,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(project(":libs:version"))
             api(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)

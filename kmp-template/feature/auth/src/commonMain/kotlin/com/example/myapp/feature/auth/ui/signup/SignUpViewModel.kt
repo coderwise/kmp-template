@@ -2,7 +2,6 @@ package com.example.myapp.feature.auth.ui.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.ui.navigation.GlobalNavEvent
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.usecase.SignUpUseCase
@@ -41,8 +40,8 @@ class SignUpViewModel(
             // On success the auth-state flow flips isAuthenticated; AppNavigation
             // observes it and switches the root. No navigation event needed here.
             signUpUseCase(state.email, state.password)
-                .onError { _, message ->
-                    _uiState.update { it.copy(isLoading = false, error = message) }
+                .onFailure { throwable ->
+                    _uiState.update { it.copy(isLoading = false, error = throwable.message) }
                 }
         }
     }

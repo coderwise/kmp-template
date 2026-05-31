@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionNaming:AppNavigation.kt$@Composable fun AppNavigation()</ID>
+    <ID>FunctionNaming:AppNavigation.kt$@Composable private fun AppNavigationContent( darkTheme: Boolean, navigator: Navigator, )</ID>
+    <ID>FunctionNaming:HomeGroup.kt$@Composable fun HomeGroup()</ID>
+    <ID>FunctionNaming:MainViewController.kt$fun MainViewController(): UIViewController</ID>
+    <ID>MagicNumber:NavTransitions.kt$700</ID>
+    <ID>MaxLineLength:AppModule.kt$includes(dataModule, uiModule, authModule, homeModule, weatherModule, settingsModule, featureSettingsModule, locationModule)</ID>
+  </CurrentIssues>
+</SmellBaseline>

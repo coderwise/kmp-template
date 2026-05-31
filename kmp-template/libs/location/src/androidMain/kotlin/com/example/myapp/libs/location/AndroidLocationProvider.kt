@@ -24,17 +24,14 @@ class AndroidLocationProvider(
 ) : LocationProvider {
 
     @SuppressLint("MissingPermission")
-    override suspend fun getCurrentLocation(): LocationResult<GpsLocation> {
+    override suspend fun getCurrentLocation(): Result<GpsLocation> {
         if (!hasPermission()) {
-            return LocationResult.Error(
-                SecurityException("Location permission not granted"),
-                "Location permission not granted"
-            )
+            return Result.failure(SecurityException("Location permission not granted"))
         }
         val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: return LocationResult.Error(IllegalStateException("LocationManager unavailable"))
+            ?: return Result.failure(IllegalStateException("LocationManager unavailable"))
         val provider = pickProvider(manager)
-            ?: return LocationResult.Error(IllegalStateException("No enabled location provider"))
+            ?: return Result.failure(IllegalStateException("No enabled location provider"))
 
         val android = suspendCancellableCoroutine<AndroidLocation?> { cont ->
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -62,29 +59,26 @@ class AndroidLocationProvider(
         }
 
         return android?.let {
-            LocationResult.Success(it.toGpsLocation())
-        } ?: LocationResult.Error(IllegalStateException("Location unavailable"))
+            Result.success(it.toGpsLocation())
+        } ?: Result.failure(IllegalStateException("Location unavailable"))
     }
 
     @SuppressLint("MissingPermission")
-    override fun locationUpdates(): Flow<LocationResult<GpsLocation>> {
+    override fun locationUpdates(): Flow<Result<GpsLocation>> {
         if (!hasPermission()) {
             return flowOf(
-                LocationResult.Error(
-                    SecurityException("Location permission not granted"),
-                    "Location permission not granted"
-                )
+                Result.failure(SecurityException("Location permission not granted"))
             )
         }
         val manager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager
-            ?: return flowOf(LocationResult.Error(IllegalStateException("LocationManager unavailable")))
+            ?: return flowOf(Result.failure(IllegalStateException("LocationManager unavailable")))
         val provider = pickProvider(manager)
-            ?: return flowOf(LocationResult.Error(IllegalStateException("No enabled location provider")))
+            ?: return flowOf(Result.failure(IllegalStateException("No enabled location provider")))
 
         return callbackFlow {
             val listener = object : LocationListener {
                 override fun onLocationChanged(location: AndroidLocation) {
-                    trySend(LocationResult.Success(location.toGpsLocation()))
+                    trySend(Result.success(location.toGpsLocation()))
                 }
 
                 override fun onProviderDisabled(provider: String) {}

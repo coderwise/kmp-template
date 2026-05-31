@@ -1,9 +1,7 @@
 package com.example.myapp.feature.weather.domain.usecase
 
 import com.example.myapp.core.domain.model.Location
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.libs.location.LocationProvider
-import com.example.myapp.libs.location.LocationResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,15 +16,8 @@ class GetCurrentLocationUseCase(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
     suspend operator fun invoke(): Result<Location> = withContext(dispatcher) {
-        when (val result = locationProvider.getCurrentLocation()) {
-            is LocationResult.Success -> Result.Success(
-                Location(
-                    name = "",
-                    latitude = result.data.latitude,
-                    longitude = result.data.longitude
-                )
-            )
-            is LocationResult.Error -> Result.Error(result.exception, result.message)
+        locationProvider.getCurrentLocation().map { gps ->
+            Location(name = "", latitude = gps.latitude, longitude = gps.longitude)
         }
     }
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionNaming:SettingsScreen.kt$@Composable fun SettingsScreen( viewModel: SettingsViewModel = koinViewModel() )</ID>
+    <ID>FunctionNaming:SettingsScreen.kt$@Composable fun SettingsScreenContent( uiState: SettingsUiState, onEvent: (SettingsUiEvent) -&gt; Unit )</ID>
+    <ID>FunctionNaming:SettingsScreen.kt$@Composable private fun ThemeOption( text: String, selected: Boolean, onClick: () -&gt; Unit )</ID>
+    <ID>FunctionNaming:SettingsScreen.kt$@Preview @Composable private fun SettingsScreenDarkPreview()</ID>
+    <ID>FunctionNaming:SettingsScreen.kt$@Preview @Composable private fun SettingsScreenPreview()</ID>
+    <ID>UnusedPrivateMember:SettingsScreen.kt$@Preview @Composable private fun SettingsScreenDarkPreview()</ID>
+    <ID>UnusedPrivateMember:SettingsScreen.kt$@Preview @Composable private fun SettingsScreenPreview()</ID>
+  </CurrentIssues>
+</SmellBaseline>

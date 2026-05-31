@@ -2,8 +2,8 @@ package com.example.myapp.feature.auth.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.example.myapp.feature.auth.domain.usecase.SignInAsDebugUserUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignInUseCase
 import com.example.myapp.feature.auth.navigation.AuthNavEvent
 import com.example.myapp.libs.version.isDebugBuild
@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val signInUseCase: SignInUseCase,
+    private val signInAsDebugUserUseCase: SignInAsDebugUserUseCase,
     private val navEventHandler: NavEventHandler,
 ) : ViewModel() {
 
@@ -39,8 +40,8 @@ class LoginViewModel(
             // On success the auth-state flow flips isAuthenticated; AppNavigation
             // observes it and switches the root. No navigation event needed here.
             signInUseCase(email, password)
-                .onError { _, message ->
-                    _uiState.update { it.copy(isLoading = false, error = message) }
+                .onFailure { throwable ->
+                    _uiState.update { it.copy(isLoading = false, error = throwable.message) }
                 }
         }
     }
@@ -49,11 +50,12 @@ class LoginViewModel(
         // Defense-in-depth: the button is hidden in release builds, but never
         // honor the event unless this really is a debug build.
         if (!isDebugBuild) return
-        signIn(DEBUG_EMAIL, DEBUG_PASSWORD)
-    }
-
-    private companion object {
-        const val DEBUG_EMAIL = "debug@bypass.local"
-        const val DEBUG_PASSWORD = "debug"
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            signInAsDebugUserUseCase()
+                .onFailure { throwable ->
+                    _uiState.update { it.copy(isLoading = false, error = throwable.message) }
+                }
+        }
     }
 }

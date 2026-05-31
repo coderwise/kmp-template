@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>FunctionNaming:HomeItemCard.kt$@Composable fun HomeItemCard( title: String, description: String, onDeleteClick: () -&gt; Unit, onEditClick: () -&gt; Unit, modifier: Modifier = Modifier )</ID>
+    <ID>FunctionNaming:HomeItemCard.kt$@Preview @Composable private fun HomeItemCardDarkModePreview()</ID>
+    <ID>FunctionNaming:HomeItemCard.kt$@Preview @Composable private fun HomeItemCardPreview()</ID>
+    <ID>FunctionNaming:HomeItemEditScreen.kt$@Composable fun HomeItemEditScreen(viewModel: HomeItemEditViewModel)</ID>
+    <ID>FunctionNaming:HomeItemEditScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun HomeItemEditScreenContent( uiState: HomeItemEditUiState, onEvent: (HomeItemEditUiEvent) -&gt; Unit, )</ID>
+    <ID>FunctionNaming:HomeItemEditScreen.kt$@Preview @Composable private fun HomeItemEditScreenDarkPreview()</ID>
+    <ID>FunctionNaming:HomeItemEditScreen.kt$@Preview @Composable private fun HomeItemEditScreenPreview()</ID>
+    <ID>FunctionNaming:HomeItemSheet.kt$@Composable fun HomeItemSheet( initialTitle: String = "", initialDescription: String = "", onDismiss: () -&gt; Unit, onConfirm: (String, String) -&gt; Unit, )</ID>
+    <ID>FunctionNaming:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetAddPreview()</ID>
+    <ID>FunctionNaming:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetDarkModePreview()</ID>
+    <ID>FunctionNaming:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetEditPreview()</ID>
+    <ID>FunctionNaming:HomeNavigation.kt$@Composable fun HomeNavigation()</ID>
+    <ID>FunctionNaming:HomeScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun HomeScreen( viewModel: HomeViewModel = koinViewModel() )</ID>
+    <ID>FunctionNaming:HomeScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun HomeScreenContent( uiState: HomeUiState, onEvent: (HomeUiEvent) -&gt; Unit )</ID>
+    <ID>FunctionNaming:HomeScreen.kt$@Preview @Composable private fun HomeScreenPreview()</ID>
+    <ID>FunctionNaming:HomeTopBar.kt$@Composable fun HomeTopBar( isRefreshing: Boolean, onRefreshClick: () -&gt; Unit, )</ID>
+    <ID>FunctionNaming:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarDarkModePreview()</ID>
+    <ID>FunctionNaming:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarPreview()</ID>
+    <ID>FunctionNaming:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarRefreshingPreview()</ID>
+    <ID>NewLineAtEndOfFile:HomeNavDestination.kt$com.example.myapp.feature.home.navigation.HomeNavDestination.kt</ID>
+    <ID>UnusedPrivateMember:HomeItemCard.kt$@Preview @Composable private fun HomeItemCardDarkModePreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemCard.kt$@Preview @Composable private fun HomeItemCardPreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemEditScreen.kt$@Preview @Composable private fun HomeItemEditScreenDarkPreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemEditScreen.kt$@Preview @Composable private fun HomeItemEditScreenPreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetAddPreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetDarkModePreview()</ID>
+    <ID>UnusedPrivateMember:HomeItemSheet.kt$@Preview @Composable private fun HomeItemSheetEditPreview()</ID>
+    <ID>UnusedPrivateMember:HomeScreen.kt$@Preview @Composable private fun HomeScreenPreview()</ID>
+    <ID>UnusedPrivateMember:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarDarkModePreview()</ID>
+    <ID>UnusedPrivateMember:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarPreview()</ID>
+    <ID>UnusedPrivateMember:HomeTopBar.kt$@Preview @Composable private fun HomeTopBarRefreshingPreview()</ID>
+    <ID>WildcardImport:HomeModule.kt$import com.example.myapp.feature.home.domain.usecase.*</ID>
+    <ID>WildcardImport:HomeViewModelTest.kt$import com.example.myapp.feature.home.domain.usecase.*</ID>
+    <ID>WildcardImport:HomeViewModelTest.kt$import kotlin.test.*</ID>
+    <ID>WildcardImport:HomeViewModelTest.kt$import kotlinx.coroutines.test.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

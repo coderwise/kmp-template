@@ -1,6 +1,5 @@
 package com.example.myapp.feature.auth.data.repository
 
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.feature.auth.domain.model.AuthState
 import com.example.myapp.feature.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.Flow
@@ -8,7 +7,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * In-memory auth repository for template purposes.
- * Replace with a real implementation (e.g. Firebase, Ktor + JWT) as needed.
+ *
+ * TODO(production): This is a placeholder — it has no real authentication,
+ * token storage, or persistence, and accepts ANY non-blank credentials. Replace
+ * with a real implementation (e.g. Firebase Auth, Ktor + JWT) before shipping.
+ * The login debug bypass relies on this accept-anything behavior, so revisit
+ * [signIn] / the bypass together when you do.
  */
 class AuthRepositoryImpl : AuthRepository {
 
@@ -18,27 +22,28 @@ class AuthRepositoryImpl : AuthRepository {
 
     override suspend fun signIn(email: String, password: String): Result<Unit> {
         if (email.isBlank() || password.isBlank()) {
-            return Result.Error(
-                exception = IllegalArgumentException("Email and password are required"),
-                message = "Email and password are required",
-            )
+            return Result.failure(IllegalArgumentException("Email and password are required"))
         }
         _authState.value = AuthState.Authenticated
-        return Result.Success(Unit)
+        return Result.success(Unit)
     }
 
     override suspend fun signUp(email: String, password: String): Result<Unit> {
         if (email.isBlank() || password.isBlank()) {
-            return Result.Error(
-                exception = IllegalArgumentException("Email and password are required"),
-                message = "Email and password are required",
-            )
+            return Result.failure(IllegalArgumentException("Email and password are required"))
         }
         _authState.value = AuthState.Authenticated
-        return Result.Success(Unit)
+        return Result.success(Unit)
     }
 
     override suspend fun signOut() {
         _authState.value = AuthState.Unauthenticated
+    }
+
+    override suspend fun signInAsDebugUser(): Result<Unit> {
+        // TODO(production): make this fail or remove it once a real auth backend
+        // is in place. Callers already gate on isDebugBuild.
+        _authState.value = AuthState.Authenticated
+        return Result.success(Unit)
     }
 }

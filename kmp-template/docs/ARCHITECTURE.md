@@ -18,6 +18,7 @@ The project is divided into several top-level directories:
     - `libs:network`: Ktor-based networking.
     - `libs:database`: SQLDelight-based local storage.
     - `libs:version`: Versioning and metadata.
+    - `libs:logger`: Kermit-based logging facade (`AppLogger`).
 - **`feature/`**: Feature-specific modules (e.g., `feature:home`). Each feature is self-contained.
 
 ## Dependency Rules

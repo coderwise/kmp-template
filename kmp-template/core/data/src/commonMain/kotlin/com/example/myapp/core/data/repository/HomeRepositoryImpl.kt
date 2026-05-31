@@ -5,9 +5,8 @@ import com.example.myapp.core.data.datasource.HomeLocalDataSource
 import com.example.myapp.core.data.datasource.HomeRemoteDataSource
 import com.example.myapp.core.database.HomeItemEntity
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.repository.HomeRepository
-import com.example.myapp.core.domain.util.AppLogger
+import com.example.myapp.libs.logger.AppLogger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -29,15 +28,15 @@ class HomeRepositoryImpl(
 
     override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
         localDataSource.observeItems().map { entities ->
-            Result.Success(entities.map { it.toDomain() })
+            Result.success(entities.map { it.toDomain() })
         }
 
     override suspend fun syncHomeItems(): Result<Unit> = try {
         val items = remoteDataSource.fetchItems()
         localDataSource.replaceAll(items.map { it.toEntity() })
-        Result.Success(Unit)
+        Result.success(Unit)
     } catch (e: Exception) {
-        Result.Error(e)
+        Result.failure(e)
     }
 
     override suspend fun addHomeItem(item: HomeItem) {

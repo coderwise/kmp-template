@@ -2,8 +2,6 @@ package com.example.myapp.feature.weather.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.onError
-import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.ui.state.error
 import com.example.myapp.core.ui.state.loading
@@ -66,7 +64,7 @@ class WeatherViewModel(
 
                     reverseGeocodeUseCase(lat, lon).onSuccess { location ->
                         onLocationSelected(location)
-                    }.onError { _, _ ->
+                    }.onFailure {
                         onLocationSelected(
                             Location(
                                 name = "Current Location",
@@ -76,8 +74,8 @@ class WeatherViewModel(
                         )
                     }
                 }
-                .onError { exception, message ->
-                    _uiState.update { it.error(message ?: exception.message) }
+                .onFailure { throwable ->
+                    _uiState.update { it.error(throwable.message) }
                 }
         }
     }
@@ -134,8 +132,8 @@ class WeatherViewModel(
                         )
                     }
                 }
-                .onError { exception, message ->
-                    _uiState.update { it.error(message ?: exception.message) }
+                .onFailure { throwable ->
+                    _uiState.update { it.error(throwable.message) }
                 }
         }
     }

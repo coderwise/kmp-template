@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.mokkery)
 }
 
 kotlin {
@@ -40,6 +41,11 @@ kotlin {
             implementation(libs.compose.preview)
             implementation(libs.compose.components.resources)
             implementation(libs.kotlinx.serialization.json)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }

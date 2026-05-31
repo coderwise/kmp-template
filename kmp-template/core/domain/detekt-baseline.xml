@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>NewLineAtEndOfFile:Settings.kt$com.example.myapp.core.domain.model.Settings.kt</ID>
+    <ID>NewLineAtEndOfFile:SettingsRepository.kt$com.example.myapp.core.domain.repository.SettingsRepository.kt</ID>
+    <ID>NewLineAtEndOfFile:ThemeType.kt$com.example.myapp.core.domain.model.ThemeType.kt</ID>
+  </CurrentIssues>
+</SmellBaseline>

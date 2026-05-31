@@ -1,12 +1,19 @@
 package com.example.myapp.feature.home.data.repository
 
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 
+/**
+ * In-memory [HomeRepository] used on the web target, where the SQLDelight web
+ * worker driver needs extra WASM/webpack setup.
+ *
+ * TODO(production): data here is not persisted and resets on reload. Wire up the
+ * SQLDelight web driver (or another web-capable store) before relying on web
+ * persistence; until then web behavior intentionally diverges from other targets.
+ */
 class InMemoryHomeRepository : HomeRepository {
     private val items = MutableStateFlow(
         listOf(
@@ -16,9 +23,9 @@ class InMemoryHomeRepository : HomeRepository {
     )
 
     override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
-        items.map { Result.Success(it) }
+        items.map { Result.success(it) }
 
-    override suspend fun syncHomeItems(): Result<Unit> = Result.Success(Unit)
+    override suspend fun syncHomeItems(): Result<Unit> = Result.success(Unit)
 
     override suspend fun addHomeItem(item: HomeItem) {
         items.value += item

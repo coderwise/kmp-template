@@ -1,6 +1,5 @@
 package com.example.myapp.feature.home.ui
 
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.*
@@ -50,8 +49,8 @@ class HomeViewModelTest {
     @Test
     fun `init should load items and refresh`() = runTest {
         val items = listOf(HomeItem("1", "Title", "Desc"))
-        every { getHomeItemsUseCase() } returns flowOf(Result.Success(items))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
+        every { getHomeItemsUseCase() } returns flowOf(Result.success(items))
+        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
@@ -69,8 +68,8 @@ class HomeViewModelTest {
     @Test
     fun `loadItems should show error when it fails`() = runTest {
         val errorMessage = "Error loading items"
-        every { getHomeItemsUseCase() } returns flowOf(Result.Error(Exception(errorMessage)))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
+        every { getHomeItemsUseCase() } returns flowOf(Result.failure(Exception(errorMessage)))
+        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
@@ -82,8 +81,8 @@ class HomeViewModelTest {
 
     @Test
     fun `addItem should call addHomeItemUseCase`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
+        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
+        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
         everySuspend { addHomeItemUseCase(any(), any()) } returns Unit
         every { navEventHandler.onEvent(any()) } returns Unit
 
@@ -97,8 +96,8 @@ class HomeViewModelTest {
 
     @Test
     fun `removeItem should call removeHomeItemUseCase`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
+        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
+        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
         everySuspend { removeHomeItemUseCase(any()) } returns Unit
 
         val viewModel = createViewModel()
@@ -111,8 +110,8 @@ class HomeViewModelTest {
 
     @Test
     fun `refresh should update isRefreshing state`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
+        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
+        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 

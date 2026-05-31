@@ -17,7 +17,7 @@ import kotlin.coroutines.resume
 @OptIn(ExperimentalForeignApi::class)
 class IosLocationProvider : LocationProvider {
 
-    override suspend fun getCurrentLocation(): LocationResult<GpsLocation> {
+    override suspend fun getCurrentLocation(): Result<GpsLocation> {
         return suspendCancellableCoroutine { cont ->
             val manager = CLLocationManager()
             val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
@@ -29,9 +29,9 @@ class IosLocationProvider : LocationProvider {
                     val loc = didUpdateLocations.lastOrNull() as? CLLocation
                     if (!cont.isActive) return
                     if (loc != null) {
-                        cont.resume(LocationResult.Success(loc.toGpsLocation()))
+                        cont.resume(Result.success(loc.toGpsLocation()))
                     } else {
-                        cont.resume(LocationResult.Error(IllegalStateException("No location received")))
+                        cont.resume(Result.failure(IllegalStateException("No location received")))
                     }
                 }
 
@@ -42,10 +42,7 @@ class IosLocationProvider : LocationProvider {
                     manager.stopUpdatingLocation()
                     if (cont.isActive) {
                         cont.resume(
-                            LocationResult.Error(
-                                RuntimeException(didFailWithError.localizedDescription),
-                                didFailWithError.localizedDescription
-                            )
+                            Result.failure(RuntimeException(didFailWithError.localizedDescription))
                         )
                     }
                 }
@@ -60,7 +57,7 @@ class IosLocationProvider : LocationProvider {
         }
     }
 
-    override fun locationUpdates(): Flow<LocationResult<GpsLocation>> = callbackFlow {
+    override fun locationUpdates(): Flow<Result<GpsLocation>> = callbackFlow {
         val manager = CLLocationManager()
         val delegate = object : NSObject(), CLLocationManagerDelegateProtocol {
             override fun locationManager(
@@ -68,7 +65,7 @@ class IosLocationProvider : LocationProvider {
                 didUpdateLocations: List<*>
             ) {
                 val loc = didUpdateLocations.lastOrNull() as? CLLocation ?: return
-                trySend(LocationResult.Success(loc.toGpsLocation()))
+                trySend(Result.success(loc.toGpsLocation()))
             }
 
             override fun locationManager(
@@ -76,10 +73,7 @@ class IosLocationProvider : LocationProvider {
                 didFailWithError: NSError
             ) {
                 trySend(
-                    LocationResult.Error(
-                        RuntimeException(didFailWithError.localizedDescription),
-                        didFailWithError.localizedDescription
-                    )
+                    Result.failure(RuntimeException(didFailWithError.localizedDescription))
                 )
             }
         }
