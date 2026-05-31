@@ -3,10 +3,6 @@
   <ManuallySuppressedIssues/>
   <CurrentIssues>
     <ID>CyclomaticComplexMethod:WeatherCodeMapper.kt$internal fun weatherCodeToCondition(code: Int): String</ID>
-    <ID>FunctionNaming:WeatherScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun WeatherScreen( viewModel: WeatherViewModel = koinViewModel() )</ID>
-    <ID>FunctionNaming:WeatherScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun WeatherScreenContent( uiState: WeatherUiState, onEvent: (WeatherUiEvent) -&gt; Unit )</ID>
-    <ID>FunctionNaming:WeatherScreen.kt$@Preview @Composable private fun WeatherScreenPreview()</ID>
-    <ID>LongMethod:WeatherScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun WeatherScreenContent( uiState: WeatherUiState, onEvent: (WeatherUiEvent) -&gt; Unit )</ID>
     <ID>MagicNumber:WeatherCodeMapper.kt$3</ID>
     <ID>MagicNumber:WeatherCodeMapper.kt$45</ID>
     <ID>MagicNumber:WeatherCodeMapper.kt$48</ID>
@@ -35,6 +31,5 @@
     <ID>MaxLineLength:WeatherScreen.kt$message = stringResource(Res.string.weather_error, uiState.errorMessage ?: stringResource(Res.string.weather_unknown_error))</ID>
     <ID>MaxLineLength:WeatherScreen.kt$text = stringResource(Res.string.weather_coordinates, uiState.weatherInfo.latitude, uiState.weatherInfo.longitude)</ID>
     <ID>TooGenericExceptionCaught:WeatherRepositoryImpl.kt$WeatherRepositoryImpl$e: Exception</ID>
-    <ID>UnusedPrivateMember:WeatherScreen.kt$@Preview @Composable private fun WeatherScreenPreview()</ID>
   </CurrentIssues>
 </SmellBaseline>

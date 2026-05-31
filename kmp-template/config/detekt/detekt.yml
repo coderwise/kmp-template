@@ -1,0 +1,25 @@
+# Compose-aware overrides layered on top of detekt's default config
+# (buildUponDefaultConfig = true). Only deviations from the defaults go here.
+#
+# `ignoreAnnotated` is a universal rule option: it skips any element annotated
+# with the listed annotations. Compose uses PascalCase @Composable functions,
+# private @Preview functions the IDE invokes, and inline dp/sp/color literals —
+# all of which detekt's general-purpose defaults flag as false positives.
+
+complexity:
+  LongParameterList:
+    ignoreAnnotated: ['Composable']
+  LongMethod:
+    ignoreAnnotated: ['Composable']
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable']
+
+style:
+  MagicNumber:
+    ignoreAnnotated: ['Composable']
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Composable', 'Preview']

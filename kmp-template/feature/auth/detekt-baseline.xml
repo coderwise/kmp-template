@@ -2,27 +2,6 @@
 <SmellBaseline>
   <ManuallySuppressedIssues/>
   <CurrentIssues>
-    <ID>FunctionNaming:AuthNavigation.kt$@Composable fun AuthNavigation()</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@Composable fun LoginScreen(viewModel: LoginViewModel = koinViewModel())</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun LoginScreenContent( uiState: LoginUiState, onEvent: (LoginUiEvent) -&gt; Unit, )</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@Preview @Composable private fun LoginScreenBypassPreview()</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@Preview @Composable private fun LoginScreenDarkPreview()</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@Preview @Composable private fun LoginScreenErrorPreview()</ID>
-    <ID>FunctionNaming:LoginScreen.kt$@Preview @Composable private fun LoginScreenPreview()</ID>
-    <ID>FunctionNaming:SignUpScreen.kt$@Composable fun SignUpScreen(viewModel: SignUpViewModel = koinViewModel())</ID>
-    <ID>FunctionNaming:SignUpScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun SignUpScreenContent( uiState: SignUpUiState, onEvent: (SignUpUiEvent) -&gt; Unit, )</ID>
-    <ID>FunctionNaming:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenDarkPreview()</ID>
-    <ID>FunctionNaming:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenErrorPreview()</ID>
-    <ID>FunctionNaming:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenPreview()</ID>
-    <ID>LongMethod:LoginScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun LoginScreenContent( uiState: LoginUiState, onEvent: (LoginUiEvent) -&gt; Unit, )</ID>
-    <ID>LongMethod:SignUpScreen.kt$@OptIn(ExperimentalMaterial3Api::class) @Composable fun SignUpScreenContent( uiState: SignUpUiState, onEvent: (SignUpUiEvent) -&gt; Unit, )</ID>
     <ID>MaxLineLength:SignUpViewModel.kt$SignUpViewModel$is SignUpUiEvent.ConfirmPasswordChanged -&gt; _uiState.update { it.copy(confirmPassword = event.confirmPassword, error = null) }</ID>
-    <ID>UnusedPrivateMember:LoginScreen.kt$@Preview @Composable private fun LoginScreenBypassPreview()</ID>
-    <ID>UnusedPrivateMember:LoginScreen.kt$@Preview @Composable private fun LoginScreenDarkPreview()</ID>
-    <ID>UnusedPrivateMember:LoginScreen.kt$@Preview @Composable private fun LoginScreenErrorPreview()</ID>
-    <ID>UnusedPrivateMember:LoginScreen.kt$@Preview @Composable private fun LoginScreenPreview()</ID>
-    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenDarkPreview()</ID>
-    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenErrorPreview()</ID>
-    <ID>UnusedPrivateMember:SignUpScreen.kt$@Preview @Composable private fun SignUpScreenPreview()</ID>
   </CurrentIssues>
 </SmellBaseline>

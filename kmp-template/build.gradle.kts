@@ -26,6 +26,7 @@ subprojects {
     extensions.configure<DetektExtension>("detekt") {
         buildUponDefaultConfig = true
         parallel = true
+        config.setFrom(rootProject.files("config/detekt/detekt.yml"))
         source.setFrom(files("src"))
         baseline = file("detekt-baseline.xml")
     }
