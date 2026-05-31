@@ -1,99 +1,64 @@
 package com.example.myapp.core.data.repository
 
-import app.cash.sqldelight.coroutines.asFlow
-import app.cash.sqldelight.coroutines.mapToList
-import com.example.myapp.core.api.resources.Home
 import com.example.myapp.core.api.model.HomeItemApi
-import com.example.myapp.core.database.AppDatabase
+import com.example.myapp.core.data.datasource.HomeLocalDataSource
+import com.example.myapp.core.data.datasource.HomeRemoteDataSource
 import com.example.myapp.core.database.HomeItemEntity
-import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.domain.model.Result
 import com.example.myapp.core.domain.repository.HomeRepository
-import io.ktor.client.HttpClient
-import io.ktor.client.call.body
-import io.ktor.client.plugins.resources.delete
-import io.ktor.client.plugins.resources.get
-import io.ktor.client.plugins.resources.post
-import io.ktor.client.plugins.resources.put
-import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.contentType
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
+/**
+ * Coordinates the remote and local data sources and maps between the
+ * network/persistence models and the domain model.
+ */
 class HomeRepositoryImpl(
-    private val database: AppDatabase,
-    private val httpClient: HttpClient
+    private val localDataSource: HomeLocalDataSource,
+    private val remoteDataSource: HomeRemoteDataSource
 ) : HomeRepository {
-    override fun getHomeItems(): Flow<Result<List<HomeItem>>> {
-        return database.homeItemQueries.selectAll()
-            .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { entities ->
-                Result.Success(
-                    entities.map { it.toDomain() }
-                )
-            }
-    }
 
-    override suspend fun syncHomeItems(): Result<Unit> = withContext(Dispatchers.Default) {
-        try {
-            val items = httpClient.get(Home.Items()).body<List<HomeItemApi>>()
-            database.homeItemQueries.transaction {
-                database.homeItemQueries.deleteAll()
-                items.forEach { item ->
-                    database.homeItemQueries.insert(item.id, item.title, item.description)
-                }
-            }
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            Result.Error(e)
+    override fun getHomeItems(): Flow<Result<List<HomeItem>>> =
+        localDataSource.observeItems().map { entities ->
+            Result.Success(entities.map { it.toDomain() })
         }
+
+    override suspend fun syncHomeItems(): Result<Unit> = try {
+        val items = remoteDataSource.fetchItems()
+        localDataSource.replaceAll(items.map { it.toEntity() })
+        Result.Success(Unit)
+    } catch (e: Exception) {
+        Result.Error(e)
     }
 
     override suspend fun addHomeItem(item: HomeItem) {
-        withContext(Dispatchers.Default) {
-            try {
-                httpClient.post(Home.Items()) {
-                    contentType(ContentType.Application.Json)
-                    setBody(item.toApi())
-                }
-            } catch (e: Exception) {
-                // Handle or log error
-            }
-            database.homeItemQueries.insert(item.id, item.title, item.description)
+        try {
+            remoteDataSource.addItem(item.toApi())
+        } catch (e: Exception) {
+            // Handle or log error
         }
+        localDataSource.insert(item.toEntity())
     }
 
     override suspend fun removeHomeItem(id: String) {
-        withContext(Dispatchers.Default) {
-            try {
-                val response = httpClient.delete(Home.Items.Id(id = id))
-                if (response.status == HttpStatusCode.OK) {
-                    database.homeItemQueries.delete(id)
-                }
-            } catch (e: Exception) {
-                // In a real app, you might want to mark for deletion later
-                database.homeItemQueries.delete(id)
+        try {
+            if (remoteDataSource.deleteItem(id)) {
+                localDataSource.delete(id)
             }
+        } catch (e: Exception) {
+            // In a real app, you might want to mark for deletion later
+            localDataSource.delete(id)
         }
     }
 
     override suspend fun updateHomeItem(item: HomeItem) {
-        withContext(Dispatchers.Default) {
-            try {
-                httpClient.put(Home.Items.Id(id = item.id)) {
-                    contentType(ContentType.Application.Json)
-                    setBody(item.toApi())
-                }
-            } catch (e: Exception) {
-                // Handle error
-            }
-            database.homeItemQueries.update(item.id, item.title, item.description)
+        try {
+            remoteDataSource.updateItem(item.toApi())
+        } catch (e: Exception) {
+            // Handle error
         }
+        localDataSource.update(item.toEntity())
     }
 }
 
@@ -103,7 +68,13 @@ private fun HomeItem.toApi() = HomeItemApi(
     description = description
 )
 
-private fun HomeItemApi.toDomain() = HomeItem(
+private fun HomeItem.toEntity() = HomeItemEntity(
+    id = id,
+    title = title,
+    description = description
+)
+
+private fun HomeItemApi.toEntity() = HomeItemEntity(
     id = id,
     title = title,
     description = description

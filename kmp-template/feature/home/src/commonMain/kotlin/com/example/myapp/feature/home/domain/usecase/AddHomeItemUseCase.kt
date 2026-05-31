@@ -5,16 +5,24 @@ import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 interface AddHomeItemUseCase {
-    suspend operator fun invoke(item: HomeItem)
+    suspend operator fun invoke(title: String, description: String)
 }
 
 class AddHomeItemUseCaseImpl(
     private val repository: HomeRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : AddHomeItemUseCase {
-    override suspend operator fun invoke(item: HomeItem) = withContext(dispatcher) {
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend operator fun invoke(title: String, description: String) = withContext(dispatcher) {
+        val item = HomeItem(
+            id = Uuid.random().toString(),
+            title = title,
+            description = description
+        )
         repository.addHomeItem(item)
     }
 }

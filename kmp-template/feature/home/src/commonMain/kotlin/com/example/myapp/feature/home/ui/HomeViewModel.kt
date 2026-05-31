@@ -2,7 +2,6 @@ package com.example.myapp.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onLoading
 import com.example.myapp.core.domain.model.onSuccess
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.time.Clock
 
 class HomeViewModel(
     private val getHomeItemsUseCase: GetHomeItemsUseCase,
@@ -71,12 +69,7 @@ class HomeViewModel(
 
     private fun addItem(title: String, description: String) {
         viewModelScope.launch {
-            val newItem = HomeItem(
-                id = Clock.System.now().toEpochMilliseconds().toString(),
-                title = title,
-                description = description
-            )
-            addHomeItemUseCase(newItem)
+            addHomeItemUseCase(title, description)
             navEventHandler.onEvent(GlobalNavEvent.Back)
         }
     }

@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.onError
 import com.example.myapp.core.domain.model.onSuccess
 import com.example.myapp.core.domain.model.Location
-import com.example.myapp.core.domain.repository.SettingsRepository
+import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCase
+import com.example.myapp.feature.weather.domain.usecase.GetSelectedLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
 import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCase
+import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
-import com.example.myapp.libs.location.LocationProvider
-import com.example.myapp.libs.location.LocationResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,8 +23,9 @@ class WeatherViewModel(
     private val getWeatherUseCase: GetWeatherUseCase,
     private val searchLocationsUseCase: SearchLocationsUseCase,
     private val reverseGeocodeUseCase: ReverseGeocodeUseCase,
-    private val settingsRepository: SettingsRepository,
-    private val locationProvider: LocationProvider,
+    private val getSelectedLocationUseCase: GetSelectedLocationUseCase,
+    private val saveSelectedLocationUseCase: SaveSelectedLocationUseCase,
+    private val getCurrentLocationUseCase: GetCurrentLocationUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WeatherUiState())
@@ -37,7 +38,7 @@ class WeatherViewModel(
 
     private fun loadSavedLocation() {
         viewModelScope.launch {
-            val savedLocation = settingsRepository.getSelectedLocation().firstOrNull()
+            val savedLocation = getSelectedLocationUseCase().firstOrNull()
             if (savedLocation != null) {
                 fetchWeather(savedLocation.latitude, savedLocation.longitude, savedLocation.name)
             } else {
@@ -59,11 +60,11 @@ class WeatherViewModel(
     private fun onCurrentLocationClick() {
         viewModelScope.launch {
             _uiState.update { it.loading() }
-            when (val result = locationProvider.getCurrentLocation()) {
-                is LocationResult.Success -> {
-                    val lat = result.data.latitude
-                    val lon = result.data.longitude
-                    
+            getCurrentLocationUseCase()
+                .onSuccess { current ->
+                    val lat = current.latitude
+                    val lon = current.longitude
+
                     reverseGeocodeUseCase(lat, lon).onSuccess { location ->
                         onLocationSelected(location)
                     }.onError { _, _ ->
@@ -76,10 +77,9 @@ class WeatherViewModel(
                         )
                     }
                 }
-                is LocationResult.Error -> {
-                    _uiState.update { it.error(result.message ?: result.exception.message) }
+                .onError { exception, message ->
+                    _uiState.update { it.error(message ?: exception.message) }
                 }
-            }
         }
     }
 
@@ -107,7 +107,7 @@ class WeatherViewModel(
     private fun onLocationSelected(location: Location) {
         _uiState.update { it.copy(searchResults = emptyList()) }
         viewModelScope.launch {
-            settingsRepository.saveSelectedLocation(location)
+            saveSelectedLocationUseCase(location)
         }
         fetchWeather(location.latitude, location.longitude, location.name)
     }

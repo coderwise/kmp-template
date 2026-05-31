@@ -24,7 +24,6 @@ class HomeViewModelTest {
     private val getHomeItemsUseCase = mock<GetHomeItemsUseCase>()
     private val addHomeItemUseCase = mock<AddHomeItemUseCase>()
     private val removeHomeItemUseCase = mock<RemoveHomeItemUseCase>()
-    private val updateHomeItemUseCase = mock<UpdateHomeItemUseCase>()
     private val syncHomeItemsUseCase = mock<SyncHomeItemsUseCase>()
     private val navEventHandler = mock<NavEventHandler>()
 
@@ -40,21 +39,22 @@ class HomeViewModelTest {
         Dispatchers.resetMain()
     }
 
+    private fun createViewModel() = HomeViewModel(
+        getHomeItemsUseCase,
+        addHomeItemUseCase,
+        removeHomeItemUseCase,
+        syncHomeItemsUseCase,
+        navEventHandler,
+        "1.0.0"
+    )
+
     @Test
     fun `init should load items and refresh`() = runTest {
         val items = listOf(HomeItem("1", "Title", "Desc"))
         every { getHomeItemsUseCase() } returns flowOf(Result.Success(items))
         everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
 
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
+        val viewModel = createViewModel()
 
         advanceUntilIdle()
 
@@ -70,15 +70,7 @@ class HomeViewModelTest {
         every { getHomeItemsUseCase() } returns flowOf(Result.Error(Exception(errorMessage)))
         everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
 
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
+        val viewModel = createViewModel()
 
         advanceUntilIdle()
 
@@ -90,22 +82,15 @@ class HomeViewModelTest {
     fun `addItem should call addHomeItemUseCase`() = runTest {
         every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
         everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
-        everySuspend { addHomeItemUseCase(any()) } returns Unit
+        everySuspend { addHomeItemUseCase(any(), any()) } returns Unit
+        every { navEventHandler.onEvent(any()) } returns Unit
 
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
+        val viewModel = createViewModel()
 
         viewModel.onEvent(HomeUiEvent.AddItem("New Item", "Description"))
         advanceUntilIdle()
 
-        verifySuspend { addHomeItemUseCase(any()) }
+        verifySuspend { addHomeItemUseCase("New Item", "Description") }
     }
 
     @Test
@@ -114,15 +99,7 @@ class HomeViewModelTest {
         everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
         everySuspend { removeHomeItemUseCase(any()) } returns Unit
 
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
+        val viewModel = createViewModel()
 
         viewModel.onEvent(HomeUiEvent.DeleteItem("1"))
         advanceUntilIdle()
@@ -131,42 +108,11 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `updateItem should call updateHomeItemUseCase`() = runTest {
-        val item = HomeItem("1", "Title", "Desc")
-        every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
-        everySuspend { updateHomeItemUseCase(any()) } returns Unit
-
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
-
-        viewModel.onEvent(HomeUiEvent.UpdateItem(item))
-        advanceUntilIdle()
-
-        verifySuspend { updateHomeItemUseCase(item) }
-    }
-
-    @Test
     fun `refresh should update isRefreshing state`() = runTest {
         every { getHomeItemsUseCase() } returns flowOf(Result.Success(emptyList()))
         everySuspend { syncHomeItemsUseCase() } returns Result.Success(Unit)
 
-        val viewModel = HomeViewModel(
-            getHomeItemsUseCase,
-            addHomeItemUseCase,
-            removeHomeItemUseCase,
-            updateHomeItemUseCase,
-            syncHomeItemsUseCase,
-            navEventHandler,
-            "1.0.0"
-        )
+        val viewModel = createViewModel()
 
         // Initial refresh from init
         advanceUntilIdle()
