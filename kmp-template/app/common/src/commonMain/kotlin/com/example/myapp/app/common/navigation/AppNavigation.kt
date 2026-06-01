@@ -1,6 +1,15 @@
 package com.example.myapp.app.common.navigation
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -60,6 +69,9 @@ fun AppNavigation() {
     AppNavigationContent(
         darkTheme = darkTheme,
         navigator = navigator,
+        uiState = uiState,
+        viewModel = viewModel,
+        onTabSelected = viewModel::setTab,
     )
 }
 
@@ -67,37 +79,97 @@ fun AppNavigation() {
 private fun AppNavigationContent(
     darkTheme: Boolean,
     navigator: Navigator,
+    uiState: AppUiState,
+    viewModel: AppViewModel,
+    onTabSelected: (Int) -> Unit,
 ) {
     val navigationState = navigator as NavigationState
+
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
-        NavDisplay(
-            backStack = navigationState.rootBackStack,
-            onBack = { navigator.navigateUp() },
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator(),
-            ),
-            popTransitionSpec = {
-                slideInPopTransform()
-            },
-            predictivePopTransitionSpec = { _ ->
-                slideInPopTransform()
-            },
-            entryProvider = entryProvider {
-                entry<AuthDestination> {
-                    AuthNavigation()
+
+        val showNavigationSuite = uiState.isAuthenticated == true
+
+        if (showNavigationSuite) {
+            BoxWithConstraints {
+                val layoutType = if (maxWidth > maxHeight) {
+                    NavigationSuiteType.NavigationRail
+                } else {
+                    NavigationSuiteType.NavigationBar
                 }
-                entry<HomeGroupDestination> {
-                    HomeGroup()
-                }
-                entry<EditItemDestination> { destination ->
-                    val editViewModel: HomeItemEditViewModel = koinViewModel {
-                        parametersOf(destination.id, destination.title, destination.description)
+
+                NavigationSuiteScaffold(
+                    layoutType = layoutType,
+                    navigationSuiteItems = {
+                        item(
+                            label = { Text("Home") },
+                            icon = { Icon(Icons.Default.Home, contentDescription = null) },
+                            selected = uiState.selectedTab == 0,
+                            onClick = {
+                                onTabSelected(0)
+                                navigationState.switchRoot(HomeGroupDestination)
+                            },
+                        )
+                        item(
+                            label = { Text("Weather") },
+                            icon = { Icon(Icons.Default.Cloud, contentDescription = null) },
+                            selected = uiState.selectedTab == 1,
+                            onClick = {
+                                onTabSelected(1)
+                                navigationState.switchRoot(HomeGroupDestination)
+                            },
+                        )
+                        item(
+                            label = { Text("Settings") },
+                            icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+                            selected = uiState.selectedTab == 2,
+                            onClick = {
+                                onTabSelected(2)
+                                navigationState.switchRoot(HomeGroupDestination)
+                            },
+                        )
                     }
-                    HomeItemEditScreen(viewModel = editViewModel)
+                ) {
+                    AppNavDisplay(navigationState, viewModel)
                 }
             }
-        )
+        } else {
+            AppNavDisplay(navigationState, viewModel)
+        }
     }
+}
+
+@Composable
+private fun AppNavDisplay(
+    navigationState: NavigationState,
+    viewModel: AppViewModel,
+) {
+    NavDisplay(
+        backStack = navigationState.rootBackStack,
+        onBack = { navigationState.navigateUp() },
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator(),
+        ),
+        popTransitionSpec = {
+            slideInPopTransform()
+        },
+        predictivePopTransitionSpec = { _ ->
+            slideInPopTransform()
+        },
+        entryProvider = entryProvider {
+            entry<AuthDestination> {
+                AuthNavigation()
+            }
+            entry<HomeGroupDestination> {
+                HomeGroup(viewModel = viewModel)
+            }
+            entry<EditItemDestination> { destination ->
+                val editViewModel: HomeItemEditViewModel = koinViewModel {
+                    parametersOf(destination.id, destination.title, destination.description)
+                }
+                HomeItemEditScreen(viewModel = editViewModel)
+            }
+        }
+    )
 }

@@ -5,4 +5,5 @@ import com.example.myapp.core.domain.model.ThemeType
 data class AppUiState(
     val theme: ThemeType = ThemeType.SYSTEM,
     val isAuthenticated: Boolean? = null,
+    val selectedTab: Int = 0,
 )
