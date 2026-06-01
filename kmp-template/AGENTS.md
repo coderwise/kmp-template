@@ -52,3 +52,5 @@ This document provides instructions and context for AI agents working on this Ko
     - **Global**: If a component (like a custom TopBar, Button, or Card style) is used in multiple features or is a branded version of a Material component, extract it to `core:ui` (e.g., `core:ui:components` or `core:ui:layouts`).
 
 12. **Feature Flags**: Wrap new or experimental UI components and logic in feature flags defined in `core:domain:model:FeatureFlags.kt`. This allows for safer releases and easier toggling of in-progress work.
+
+13. **Forms & Input Screens**: Ensure all screens with text inputs or forms are wrapped in a scrollable container (e.g., `Modifier.verticalScroll(rememberScrollState())`) and include `Modifier.imePadding()`. This prevents the software keyboard from obscuring input fields or action buttons.

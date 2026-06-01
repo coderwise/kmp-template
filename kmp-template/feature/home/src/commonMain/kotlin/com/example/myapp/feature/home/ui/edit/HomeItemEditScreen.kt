@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -37,6 +40,7 @@ fun HomeItemEditScreenContent(
     uiState: HomeItemEditUiState,
     onEvent: (HomeItemEditUiEvent) -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Scaffold(
         topBar = {
             AppTopBar(
@@ -49,7 +53,9 @@ fun HomeItemEditScreenContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(MaterialTheme.spacing.gutter),
+                .padding(MaterialTheme.spacing.gutter)
+                .imePadding()
+                .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(MaterialTheme.spacing.base),
         ) {
             LabeledField(
