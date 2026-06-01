@@ -1,7 +1,6 @@
 package com.example.myapp.app.common.navigation
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.Home
@@ -13,22 +12,32 @@ import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.example.myapp.app.common.Res
+import com.example.myapp.app.common.nav_home
+import com.example.myapp.app.common.nav_settings
+import com.example.myapp.app.common.nav_weather
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.ui.navigation.NavigationState
 import com.example.myapp.core.ui.navigation.Navigator
 import com.example.myapp.core.ui.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
+import com.example.myapp.core.ui.util.windowInfo
 import com.example.myapp.feature.auth.navigation.AuthNavigation
 import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
 import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
 import com.example.myapp.feature.settings.navigation.SettingsNavEvent
 import com.example.myapp.libs.utils.PlatformColors
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -84,6 +93,13 @@ private fun AppNavigationContent(
     onTabSelected: (Int) -> Unit,
 ) {
     val navigationState = navigator as NavigationState
+    val tabs = remember {
+        listOf(
+            AppTab(Res.string.nav_home, Icons.Default.Home),
+            AppTab(Res.string.nav_weather, Icons.Default.Cloud),
+            AppTab(Res.string.nav_settings, Icons.Default.Settings),
+        )
+    }
 
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
@@ -91,53 +107,40 @@ private fun AppNavigationContent(
         val showNavigationSuite = uiState.isAuthenticated == true
 
         if (showNavigationSuite) {
-            BoxWithConstraints {
-                val layoutType = if (maxWidth > maxHeight) {
-                    NavigationSuiteType.NavigationRail
-                } else {
-                    NavigationSuiteType.NavigationBar
-                }
+            val layoutType = if (windowInfo.isLandscape) {
+                NavigationSuiteType.NavigationRail
+            } else {
+                NavigationSuiteType.NavigationBar
+            }
 
-                NavigationSuiteScaffold(
-                    layoutType = layoutType,
-                    navigationSuiteItems = {
+            NavigationSuiteScaffold(
+                layoutType = layoutType,
+                navigationSuiteItems = {
+                    tabs.fastForEachIndexed { index, tab ->
                         item(
-                            label = { Text("Home") },
-                            icon = { Icon(Icons.Default.Home, contentDescription = null) },
-                            selected = uiState.selectedTab == 0,
+                            label = { Text(stringResource(tab.title)) },
+                            icon = { Icon(tab.icon, contentDescription = null) },
+                            selected = uiState.selectedTab == index,
                             onClick = {
-                                onTabSelected(0)
-                                navigationState.switchRoot(HomeGroupDestination)
-                            },
-                        )
-                        item(
-                            label = { Text("Weather") },
-                            icon = { Icon(Icons.Default.Cloud, contentDescription = null) },
-                            selected = uiState.selectedTab == 1,
-                            onClick = {
-                                onTabSelected(1)
-                                navigationState.switchRoot(HomeGroupDestination)
-                            },
-                        )
-                        item(
-                            label = { Text("Settings") },
-                            icon = { Icon(Icons.Default.Settings, contentDescription = null) },
-                            selected = uiState.selectedTab == 2,
-                            onClick = {
-                                onTabSelected(2)
+                                onTabSelected(index)
                                 navigationState.switchRoot(HomeGroupDestination)
                             },
                         )
                     }
-                ) {
-                    AppNavDisplay(navigationState, viewModel)
                 }
+            ) {
+                AppNavDisplay(navigationState, viewModel)
             }
         } else {
             AppNavDisplay(navigationState, viewModel)
         }
     }
 }
+
+private data class AppTab(
+    val title: StringResource,
+    val icon: ImageVector,
+)
 
 @Composable
 private fun AppNavDisplay(
