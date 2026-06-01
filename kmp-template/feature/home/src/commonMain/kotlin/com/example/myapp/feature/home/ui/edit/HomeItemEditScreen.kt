@@ -12,8 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapp.core.ui.components.AppButton
@@ -30,7 +30,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeItemEditScreen(viewModel: HomeItemEditViewModel) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     HomeItemEditScreenContent(uiState = uiState, onEvent = viewModel::onEvent)
 }
 

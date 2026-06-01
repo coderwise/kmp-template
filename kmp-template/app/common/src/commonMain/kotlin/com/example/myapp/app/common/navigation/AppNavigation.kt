@@ -69,8 +69,10 @@ fun AppNavigation() {
     // Auth state is the single source of truth for the root destination:
     // signing in/out flips isAuthenticated, which switches the root here.
     LaunchedEffect(isAuthenticated) {
-        val target = if (isAuthenticated) HomeGroupDestination else AuthDestination
-        if ((navigator as NavigationState).currentRootKey != target) {
+        val currentRoot = (navigator as NavigationState).currentRootKey
+        val isCurrentAuthenticated = currentRoot != AuthDestination
+        if (isAuthenticated != isCurrentAuthenticated) {
+            val target = if (isAuthenticated) HomeGroupDestination else AuthDestination
             navigator.replaceRoot(target)
         }
     }
