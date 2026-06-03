@@ -6,7 +6,7 @@ minSdk = "26"
 # Plugins
 agp = "9.2.1"
 kotlin = "2.3.21"
-compose-multiplatform = "1.11.0"
+compose-multiplatform = "1.11.1"
 mokkery = "3.3.0"
 
 # Libraries
@@ -24,7 +24,7 @@ navigation3 = "1.1.2"
 navigation3-ui = "1.1.1"
 serialization = "1.11.0"
 sqldelight = "2.3.2"
-logback = "1.5.32"
+logback = "1.5.34"
 firebaseBom = "34.14.0"
 datastore = "1.2.1"
 okio = "3.17.0"

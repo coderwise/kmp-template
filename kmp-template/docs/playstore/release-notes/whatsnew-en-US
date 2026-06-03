@@ -1,3 +1,6 @@
 - Add current location support with reverse geocoding
 - Add location request button to the forecast screen
 - Show "Today" label for the current day in the 7-day forecast
+- Add theme settings: light, dark, or follow the system
+- Add tablet and landscape support
+- Refresh the layout with edge-to-edge display
