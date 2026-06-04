@@ -6,11 +6,14 @@ plugins {
 
 dependencies {
     implementation(project(":app:common"))
+    implementation(project(":core:ui"))
+    implementation(project(":libs:version"))
     implementation(compose.desktop.currentOs)
     implementation(libs.kotlinx.coroutines.swing)
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     implementation(libs.logback.classic)
+    implementation(libs.compose.material3)
     implementation(libs.compose.icons.extended)
     implementation(libs.compose.components.resources)
 }
