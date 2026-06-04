@@ -11,6 +11,8 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     implementation(libs.logback.classic)
+    implementation(libs.compose.icons.extended)
+    implementation(libs.compose.components.resources)
 }
 
 compose.desktop {
@@ -18,6 +20,24 @@ compose.desktop {
         mainClass = "com.example.myapp.desktop.MainKt"
 
         nativeDistributions {
+            targetFormats(
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
+            )
+            packageName = "MyApp"
+            packageVersion = "1.0.0"
+
+            macOS {
+                iconFile.set(project.file("src/main/resources/icon.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/main/resources/icon.ico"))
+            }
+            linux {
+                iconFile.set(project.file("src/main/resources/icon.png"))
+            }
+
             jvmArgs(
                 "-Dapple.awt.application.appearance=system"
             )
