@@ -4,12 +4,12 @@ import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.repository.LocationPreferencesRepository
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
-import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCase
-import com.example.myapp.feature.weather.domain.usecase.GetSelectedLocationUseCase
-import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase
-import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCase
-import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseCase
-import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
+import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCaseImpl
+import com.example.myapp.feature.weather.domain.usecase.GetSelectedLocationUseCaseImpl
+import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCaseImpl
+import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCaseImpl
+import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseCaseImpl
+import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCaseImpl
 import com.example.myapp.libs.location.LocationProvider
 import dev.mokkery.answering.returns
 import dev.mokkery.every
@@ -53,12 +53,12 @@ class WeatherViewModelTest {
     // Real use cases over mocked repositories; the test dispatcher keeps the
     // use cases' withContext deterministic under runTest.
     private fun createViewModel() = WeatherViewModel(
-        GetWeatherUseCase(weatherRepository, testDispatcher),
-        SearchLocationsUseCase(weatherRepository, testDispatcher),
-        ReverseGeocodeUseCase(weatherRepository, testDispatcher),
-        GetSelectedLocationUseCase(locationPreferences),
-        SaveSelectedLocationUseCase(locationPreferences, testDispatcher),
-        GetCurrentLocationUseCase(locationProvider, testDispatcher),
+        GetWeatherUseCaseImpl(weatherRepository, testDispatcher),
+        SearchLocationsUseCaseImpl(weatherRepository, testDispatcher),
+        ReverseGeocodeUseCaseImpl(weatherRepository, testDispatcher),
+        GetSelectedLocationUseCaseImpl(locationPreferences),
+        SaveSelectedLocationUseCaseImpl(locationPreferences, testDispatcher),
+        GetCurrentLocationUseCaseImpl(locationProvider, testDispatcher),
     )
 
     private val weather = WeatherInfo(

@@ -6,13 +6,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SearchLocationsUseCase(
+interface SearchLocationsUseCase {
+    suspend operator fun invoke(query: String): Result<List<Location>>
+}
+
+class SearchLocationsUseCaseImpl(
     private val repository: WeatherRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(query: String): Result<List<Location>> {
-        return withContext(dispatcher) {
+) : SearchLocationsUseCase {
+    override suspend operator fun invoke(query: String): Result<List<Location>> =
+        withContext(dispatcher) {
             repository.searchLocations(query)
         }
-    }
 }

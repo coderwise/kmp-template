@@ -11,11 +11,15 @@ import kotlinx.coroutines.withContext
  * display name — callers reverse-geocode if they need one). Wraps the
  * platform [LocationProvider] so ViewModels depend on the domain layer only.
  */
-class GetCurrentLocationUseCase(
+interface GetCurrentLocationUseCase {
+    suspend operator fun invoke(): Result<Location>
+}
+
+class GetCurrentLocationUseCaseImpl(
     private val locationProvider: LocationProvider,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(): Result<Location> = withContext(dispatcher) {
+) : GetCurrentLocationUseCase {
+    override suspend operator fun invoke(): Result<Location> = withContext(dispatcher) {
         locationProvider.getCurrentLocation().map { gps ->
             Location(name = "", latitude = gps.latitude, longitude = gps.longitude)
         }

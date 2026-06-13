@@ -6,13 +6,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class ReverseGeocodeUseCase(
+interface ReverseGeocodeUseCase {
+    suspend operator fun invoke(latitude: Double, longitude: Double): Result<Location>
+}
+
+class ReverseGeocodeUseCaseImpl(
     private val repository: WeatherRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(latitude: Double, longitude: Double): Result<Location> {
-        return withContext(dispatcher) {
+) : ReverseGeocodeUseCase {
+    override suspend operator fun invoke(latitude: Double, longitude: Double): Result<Location> =
+        withContext(dispatcher) {
             repository.reverseGeocode(latitude, longitude)
         }
-    }
 }

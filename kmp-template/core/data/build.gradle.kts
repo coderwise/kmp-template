@@ -10,6 +10,9 @@ kotlin {
         namespace = "com.example.myapp.core.data"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
     iosArm64(); iosSimulatorArm64()
     js {

@@ -39,6 +39,7 @@ import com.example.myapp.libs.permissions.isGranted
 import com.example.myapp.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_coordinates
+import myapp.feature.weather.generated.resources.weather_current_location_name
 import myapp.feature.weather.generated.resources.weather_error
 import myapp.feature.weather.generated.resources.weather_search_placeholder
 import myapp.feature.weather.generated.resources.weather_temperature
@@ -69,6 +70,7 @@ fun WeatherScreenContent(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val permissionState = rememberLocationPermissionState()
+    val currentLocationLabel = stringResource(Res.string.weather_current_location_name)
     Scaffold(
         topBar = {
             AppTopBar(title = stringResource(Res.string.weather_title))
@@ -95,11 +97,11 @@ fun WeatherScreenContent(
                         contentDescription = stringResource(Res.string.weather_use_current_location),
                         onClick = {
                             if (permissionState.status.isGranted) {
-                                onEvent(WeatherUiEvent.OnCurrentLocationClick)
+                                onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
                             } else {
                                 permissionState.launchPermissionRequest { isGranted ->
                                     if (isGranted) {
-                                        onEvent(WeatherUiEvent.OnCurrentLocationClick)
+                                        onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
                                     }
                                 }
                             }

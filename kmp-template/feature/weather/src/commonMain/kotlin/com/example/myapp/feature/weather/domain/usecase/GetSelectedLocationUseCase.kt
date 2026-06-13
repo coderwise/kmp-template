@@ -4,8 +4,12 @@ import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.repository.LocationPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 
-class GetSelectedLocationUseCase(
+interface GetSelectedLocationUseCase {
+    operator fun invoke(): Flow<Location?>
+}
+
+class GetSelectedLocationUseCaseImpl(
     private val repository: LocationPreferencesRepository
-) {
-    operator fun invoke(): Flow<Location?> = repository.getSelectedLocation()
+) : GetSelectedLocationUseCase {
+    override operator fun invoke(): Flow<Location?> = repository.getSelectedLocation()
 }

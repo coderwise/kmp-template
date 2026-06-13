@@ -6,11 +6,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class SaveSelectedLocationUseCase(
+interface SaveSelectedLocationUseCase {
+    suspend operator fun invoke(location: Location)
+}
+
+class SaveSelectedLocationUseCaseImpl(
     private val repository: LocationPreferencesRepository,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    suspend operator fun invoke(location: Location) = withContext(dispatcher) {
+) : SaveSelectedLocationUseCase {
+    override suspend operator fun invoke(location: Location) = withContext(dispatcher) {
         repository.saveSelectedLocation(location)
     }
 }

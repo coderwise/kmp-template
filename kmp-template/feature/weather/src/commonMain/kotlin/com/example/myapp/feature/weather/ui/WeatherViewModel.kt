@@ -39,8 +39,7 @@ class WeatherViewModel(
 
     private fun loadSavedLocation() {
         viewModelScope.launch {
-            val savedLocation = getSelectedLocationUseCase().firstOrNull()
-            val location = savedLocation ?: DEFAULT_LOCATION
+            val location = getSelectedLocationUseCase().firstOrNull() ?: DEFAULT_LOCATION
             fetchWeather(location.latitude, location.longitude, location.name)
         }
     }
@@ -50,11 +49,11 @@ class WeatherViewModel(
             is WeatherUiEvent.OnSearchQueryChange -> onSearchQueryChange(event.query)
             is WeatherUiEvent.OnLocationSelected -> onLocationSelected(event.location)
             is WeatherUiEvent.OnSearchClick -> onSearchClick()
-            is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick()
+            is WeatherUiEvent.OnCurrentLocationClick -> onCurrentLocationClick(event.currentLocationLabel)
         }
     }
 
-    private fun onCurrentLocationClick() {
+    private fun onCurrentLocationClick(currentLocationLabel: String) {
         viewModelScope.launch {
             _uiState.update { it.loading() }
             getCurrentLocationUseCase()
@@ -65,9 +64,11 @@ class WeatherViewModel(
                     reverseGeocodeUseCase(lat, lon).onSuccess { location ->
                         onLocationSelected(location)
                     }.onFailure {
+                        // Reverse geocoding failed; fall back to the caller-supplied
+                        // localized label rather than a hardcoded English string.
                         onLocationSelected(
                             Location(
-                                name = "Current Location",
+                                name = currentLocationLabel,
                                 latitude = lat,
                                 longitude = lon
                             )
@@ -139,6 +140,9 @@ class WeatherViewModel(
     }
 
     private companion object {
+        // Seed location shown until the user selects one. The name is a proper
+        // noun (the screen renders API place names untranslated too), so it lives
+        // here as data rather than a localized resource.
         val DEFAULT_LOCATION = Location(name = "London", latitude = 51.5074, longitude = -0.1278)
         const val MIN_SEARCH_QUERY_LENGTH = 2
         const val SEARCH_DEBOUNCE_MS = 300L
