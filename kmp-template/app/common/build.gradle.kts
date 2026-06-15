@@ -34,7 +34,7 @@ kotlin {
             implementation(project(":feature:settings"))
             implementation(project(":libs:settings"))
             implementation(project(":libs:location"))
-            implementation(project(":libs:utils"))
+            implementation(libs.coderwise.utils)
 
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

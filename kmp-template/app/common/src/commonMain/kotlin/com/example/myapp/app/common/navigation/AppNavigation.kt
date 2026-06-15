@@ -35,7 +35,7 @@ import com.example.myapp.feature.home.navigation.HomeNavEvent
 import com.example.myapp.feature.home.ui.edit.HomeItemEditScreen
 import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
 import com.example.myapp.feature.settings.navigation.SettingsNavEvent
-import com.example.myapp.libs.utils.PlatformColors
+import com.coderwise.libs.utils.PlatformColors
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
