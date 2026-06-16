@@ -16,19 +16,7 @@ plugins {
 dependencyResolutionManagement {
     repositories {
         google()
-        mavenCentral()
-        // Coderwise shared libraries (e.g. com.coderwise.libs:utils).
-        // Resolves from the local Maven cache during development; the published
-        // home is GitHub Packages (needs a read:packages token).
-        mavenLocal()
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/coderwise/maps-mobile")
-            credentials {
-                username = providers.gradleProperty("gpr.user").orNull ?: System.getenv("GITHUB_ACTOR")
-                password = providers.gradleProperty("gpr.key").orNull ?: System.getenv("GITHUB_TOKEN")
-            }
-        }
+        mavenCentral() // Coderwise shared libraries (e.g. com.coderwise.libs:utils) live here
     }
 }
 
