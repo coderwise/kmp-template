@@ -26,7 +26,7 @@ kotlin {
             implementation(project(":core:domain"))
             implementation(project(":core:api"))
             implementation(project(":libs:network"))
-            implementation(project(":libs:database"))
+            implementation(libs.coderwise.database)
             implementation(project(":libs:settings"))
             implementation(project(":libs:logger"))
 

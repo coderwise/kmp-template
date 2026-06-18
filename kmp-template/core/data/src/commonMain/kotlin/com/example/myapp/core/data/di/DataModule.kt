@@ -10,11 +10,11 @@ import com.example.myapp.core.data.repository.LocationPreferencesRepositoryImpl
 import com.example.myapp.core.data.repository.SettingsRepositoryImpl
 import com.example.myapp.core.database.AppDatabase
 import com.example.myapp.core.domain.model.Settings
-import com.example.myapp.libs.database.di.databaseModule
+import com.coderwise.libs.database.di.databaseModule
 import com.example.myapp.core.domain.repository.HomeRepository
 import com.example.myapp.core.domain.repository.LocationPreferencesRepository
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.libs.database.DatabaseDriverFactory
+import com.coderwise.libs.database.DatabaseDriverFactory
 import com.example.myapp.libs.network.di.networkModule
 import com.example.myapp.libs.settings.SettingsDataStore
 import com.example.myapp.libs.settings.SettingsDataStoreFactory
