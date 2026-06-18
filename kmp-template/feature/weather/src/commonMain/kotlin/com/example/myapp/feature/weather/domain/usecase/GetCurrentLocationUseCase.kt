@@ -1,7 +1,7 @@
 package com.example.myapp.feature.weather.domain.usecase
 
 import com.example.myapp.core.domain.model.Location
-import com.example.myapp.libs.location.LocationProvider
+import com.coderwise.libs.location.LocationProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

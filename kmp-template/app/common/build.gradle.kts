@@ -33,7 +33,7 @@ kotlin {
             implementation(project(":feature:weather"))
             implementation(project(":feature:settings"))
             implementation(libs.coderwise.settings)
-            implementation(project(":libs:location"))
+            implementation(libs.coderwise.location)
             implementation(libs.coderwise.utils)
 
             implementation(libs.compose.runtime)

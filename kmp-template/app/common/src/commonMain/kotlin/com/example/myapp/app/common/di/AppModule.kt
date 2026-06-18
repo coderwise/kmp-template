@@ -7,7 +7,7 @@ import com.example.myapp.feature.auth.di.authModule
 import com.example.myapp.feature.home.di.homeModule
 import com.example.myapp.feature.settings.di.featureSettingsModule
 import com.example.myapp.feature.weather.di.weatherModule
-import com.example.myapp.libs.location.di.locationModule
+import com.coderwise.libs.location.di.locationModule
 import com.coderwise.libs.settings.di.settingsModule
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module

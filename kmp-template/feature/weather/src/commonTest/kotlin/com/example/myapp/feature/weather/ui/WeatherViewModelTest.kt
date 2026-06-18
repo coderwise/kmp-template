@@ -10,7 +10,7 @@ import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCaseImpl
 import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCaseImpl
 import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseCaseImpl
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCaseImpl
-import com.example.myapp.libs.location.LocationProvider
+import com.coderwise.libs.location.LocationProvider
 import dev.mokkery.answering.returns
 import dev.mokkery.every
 import dev.mokkery.everySuspend
