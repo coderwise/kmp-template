@@ -35,8 +35,8 @@ import com.example.myapp.core.ui.screens.EmptyState
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
-import com.example.myapp.libs.permissions.isGranted
-import com.example.myapp.libs.permissions.rememberLocationPermissionState
+import com.coderwise.libs.permissions.isGranted
+import com.coderwise.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_coordinates
 import myapp.feature.weather.generated.resources.weather_current_location_name
@@ -99,8 +99,8 @@ fun WeatherScreenContent(
                             if (permissionState.status.isGranted) {
                                 onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
                             } else {
-                                permissionState.launchPermissionRequest { isGranted ->
-                                    if (isGranted) {
+                                permissionState.launchPermissionRequest { status ->
+                                    if (status.isGranted) {
                                         onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
                                     }
                                 }

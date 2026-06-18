@@ -24,7 +24,7 @@ kotlin {
             implementation(project(":core:ui"))
             implementation(project(":core:api"))
             implementation(project(":libs:network"))
-            implementation(project(":libs:permissions"))
+            implementation(libs.coderwise.permissions)
             implementation(project(":libs:location"))
 
             implementation(libs.koin.core)

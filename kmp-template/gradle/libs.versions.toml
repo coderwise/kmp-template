@@ -11,6 +11,7 @@ mokkery = "3.4.1"
 
 # Libraries
 coderwise-utils = "0.2.0"
+coderwise-permissions = "0.1.0"
 androidx-activity = "1.13.0"
 androidx-core-ktx = "1.19.0"
 compose-icons = "1.7.3"
@@ -35,6 +36,7 @@ detekt = "1.23.8"
 [libraries]
 # Coderwise shared libs
 coderwise-utils = { module = "com.coderwise.libs:utils", version.ref = "coderwise-utils" }
+coderwise-permissions = { module = "com.coderwise.libs:permissions", version.ref = "coderwise-permissions" }
 
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
