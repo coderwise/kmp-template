@@ -16,8 +16,8 @@ import com.example.myapp.core.domain.repository.LocationPreferencesRepository
 import com.example.myapp.core.domain.repository.SettingsRepository
 import com.coderwise.libs.database.DatabaseDriverFactory
 import com.example.myapp.libs.network.di.networkModule
-import com.example.myapp.libs.settings.SettingsDataStore
-import com.example.myapp.libs.settings.SettingsDataStoreFactory
+import com.coderwise.libs.settings.SettingsDataStore
+import com.coderwise.libs.settings.SettingsDataStoreFactory
 import org.koin.dsl.module
 
 val dataModule = module {

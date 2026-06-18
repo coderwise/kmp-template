@@ -27,7 +27,7 @@ kotlin {
             implementation(project(":core:api"))
             implementation(project(":libs:network"))
             implementation(libs.coderwise.database)
-            implementation(project(":libs:settings"))
+            implementation(libs.coderwise.settings)
             implementation(project(":libs:logger"))
 
             implementation(libs.kotlinx.coroutines.core)

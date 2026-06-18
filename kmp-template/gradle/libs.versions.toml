@@ -12,6 +12,7 @@ mokkery = "3.4.1"
 # Libraries
 coderwise-utils = "0.2.0"
 coderwise-database = "0.1.0"
+coderwise-settings = "0.1.0"
 coderwise-permissions = "0.1.0"
 androidx-activity = "1.13.0"
 androidx-core-ktx = "1.19.0"
@@ -38,6 +39,7 @@ detekt = "1.23.8"
 # Coderwise shared libs
 coderwise-utils = { module = "com.coderwise.libs:utils", version.ref = "coderwise-utils" }
 coderwise-database = { module = "com.coderwise.libs:database", version.ref = "coderwise-database" }
+coderwise-settings = { module = "com.coderwise.libs:settings", version.ref = "coderwise-settings" }
 coderwise-permissions = { module = "com.coderwise.libs:permissions", version.ref = "coderwise-permissions" }
 
 # AndroidX

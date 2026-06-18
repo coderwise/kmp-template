@@ -2,7 +2,7 @@ package com.example.myapp.core.data.repository
 
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.libs.settings.SettingsDataStore
+import com.coderwise.libs.settings.SettingsDataStore
 import kotlinx.coroutines.flow.Flow
 
 class SettingsRepositoryImpl(

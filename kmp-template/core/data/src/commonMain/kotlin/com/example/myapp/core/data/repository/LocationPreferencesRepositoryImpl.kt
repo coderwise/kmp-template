@@ -3,7 +3,7 @@ package com.example.myapp.core.data.repository
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.repository.LocationPreferencesRepository
-import com.example.myapp.libs.settings.SettingsDataStore
+import com.coderwise.libs.settings.SettingsDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
