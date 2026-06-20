@@ -10,29 +10,26 @@ compose-multiplatform = "1.11.1"
 mokkery = "3.4.1"
 
 # Libraries
-coderwise-utils = "0.2.0"
+coderwise-utils = "0.4.0"
 coderwise-database = "0.1.0"
 coderwise-location = "0.1.0"
 coderwise-settings = "0.1.0"
 coderwise-permissions = "0.1.0"
 androidx-activity = "1.13.0"
-androidx-core-ktx = "1.19.0"
 compose-icons = "1.7.3"
 compose-material3 = "1.9.0"
-compose-material3-adaptive = "1.3.0-beta01"
+compose-material3-adaptive = "1.3.0-beta02"
 coroutines = "1.11.0"
 datetime = "0.8.0"
-koin = "4.2.1"
+koin = "4.2.2"
 ktor = "3.5.0"
 lifecycle = "2.10.0"
-navigation3 = "1.1.2"
+navigation3 = "1.1.3"
 navigation3-ui = "1.1.1"
 serialization = "1.11.0"
 sqldelight = "2.3.2"
 logback = "1.5.34"
-firebaseBom = "34.14.1"
-datastore = "1.2.1"
-okio = "3.17.0"
+firebaseBom = "34.15.0"
 kermit = "2.1.0"
 detekt = "1.23.8"
 
@@ -46,10 +43,6 @@ coderwise-permissions = { module = "com.coderwise.libs:permissions", version.ref
 
 # AndroidX
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
-androidx-datastore-core = { module = "androidx.datastore:datastore-core", version.ref = "datastore" }
-androidx-datastore-core-okio = { module = "androidx.datastore:datastore-core-okio", version.ref = "datastore" }
-lifecycle-runtime-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
 lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "lifecycle" }
 lifecycle-viewmodel-compose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycle" }
@@ -110,16 +103,12 @@ navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", ver
 navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3-ui" }
 
 # SQLDelight
-sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
-sqldelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
-sqldelight-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 
 # Others
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
 [plugins]
@@ -137,6 +126,6 @@ kmp-android-library = { id = "com.android.kotlin.multiplatform.library", version
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 
-googleServices = { id = "com.google.gms.google-services", version = "4.4.4" }
+googleServices = { id = "com.google.gms.google-services", version = "4.5.0" }
 crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.7" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
