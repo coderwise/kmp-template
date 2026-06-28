@@ -20,7 +20,14 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: 'gradle'
+
+      # Replaces setup-java's `cache: gradle` (deps only, and its key is frozen on
+      # main so build outputs never persist). setup-gradle saves/restores the
+      # Gradle build cache per run, so incremental main pushes reuse compile output.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -37,10 +44,20 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
 
+      # Use the Firebase CLI directly instead of the Docker-based action, whose
+      # container image GitHub re-pulls (~2 min) on every run. Node is preinstalled.
       - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          groups: testers
-          file: app/android/build/outputs/apk/release/android-release.apk
+        run: |
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/firebase-sa.json"
+          npm install -g firebase-tools
+          # Strip any stray whitespace/newline from the secret; the current CLI
+          # strictly validates the app-id format and rejects a trailing newline.
+          APP_ID="$(printf '%s' "$FIREBASE_APP_ID" | tr -d '[:space:]')"
+          firebase appdistribution:distribute \
+            app/android/build/outputs/apk/release/android-release.apk \
+            --app "$APP_ID" \
+            --groups testers
+        env:
+          FIREBASE_SERVICE_ACCOUNT_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/firebase-sa.json
