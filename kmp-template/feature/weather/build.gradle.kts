@@ -13,6 +13,9 @@ kotlin {
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
         androidResources.enable = true
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
     iosArm64(); iosSimulatorArm64()
     js { browser() }

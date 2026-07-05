@@ -10,15 +10,15 @@ plugins {
 }
 
 apply(from = "$rootDir/gradle/git-utils.gradle.kts")
-val getGitVersionName: () -> String by extra
-val getGitCommitCount: () -> Int by extra
+@Suppress("UNCHECKED_CAST")
+val getGitVersionName = extra["getGitVersionName"] as () -> String
+@Suppress("UNCHECKED_CAST")
+val getGitCommitCount = extra["getGitCommitCount"] as () -> Int
 
 val keystorePropertiesFile: File = rootProject.file("secrets/keystore.properties")
 val keystoreProperties = Properties()
-try {
+if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-} catch (e: Exception) {
-    println("Warning: Could not load keystore properties. Error: ${e.message}")
 }
 
 android {

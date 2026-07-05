@@ -26,6 +26,6 @@ kotlin {
         androidMain.dependencies { implementation(libs.ktor.client.android) }
         iosMain.dependencies { implementation(libs.ktor.client.darwin) }
         jsMain.dependencies { implementation(libs.ktor.client.js) }
-        val desktopMain by getting { dependencies { implementation(libs.ktor.client.cio) } }
+        getByName("desktopMain") { dependencies { implementation(libs.ktor.client.cio) } }
     }
 }

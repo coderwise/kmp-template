@@ -10,7 +10,7 @@ kotlin {
         binaries.executable()
     }
     sourceSets {
-        val jsMain by getting {
+        val jsMain = getByName("jsMain") {
             dependencies {
                 implementation(project(":app:common"))
                 implementation(libs.compose.runtime)

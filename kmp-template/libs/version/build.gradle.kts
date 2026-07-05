@@ -4,8 +4,10 @@ plugins {
 }
 
 apply(from = "$rootDir/gradle/git-utils.gradle.kts")
-val getGitVersionName: () -> String by extra
-val getGitCommitCount: () -> Int by extra
+@Suppress("UNCHECKED_CAST")
+val getGitVersionName = extra["getGitVersionName"] as () -> String
+@Suppress("UNCHECKED_CAST")
+val getGitCommitCount = extra["getGitCommitCount"] as () -> Int
 
 val appVersionName: String = getGitVersionName()
 
@@ -30,7 +32,7 @@ kotlin {
 }
 
 // Generate version info for each platform
-val generateAndroidVersionSource by tasks.registering {
+val generateAndroidVersionSource = tasks.register("generateAndroidVersionSource") {
     val outputDir = layout.buildDirectory.dir("generated/version/androidMain/kotlin")
     outputs.dir(outputDir)
     doLast {
@@ -47,7 +49,7 @@ val generateAndroidVersionSource by tasks.registering {
     }
 }
 
-val generateDesktopVersionResource by tasks.registering {
+val generateDesktopVersionResource = tasks.register("generateDesktopVersionResource") {
     val outputDir = layout.buildDirectory.dir("generated/version/desktopMain/resources")
     outputs.dir(outputDir)
     doLast {
@@ -57,7 +59,7 @@ val generateDesktopVersionResource by tasks.registering {
     }
 }
 
-val generateJsVersionSource by tasks.registering {
+val generateJsVersionSource = tasks.register("generateJsVersionSource") {
     val outputDir = layout.buildDirectory.dir("generated/version/jsMain/kotlin")
     outputs.dir(outputDir)
     doLast {
