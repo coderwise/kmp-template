@@ -1,4 +1,4 @@
-package com.example.myapp.android
+package com.example.myapp
 
 import android.app.Application
 import com.example.myapp.app.common.di.appModule

@@ -22,11 +22,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.myapp.android"
+    namespace = "com.example.myapp"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.example.myapp.android"
+        applicationId = "com.example.myapp"
         minSdk = libs.versions.minSdk.get().toInt()
         versionCode = getGitCommitCount()
         versionName = getGitVersionName()
