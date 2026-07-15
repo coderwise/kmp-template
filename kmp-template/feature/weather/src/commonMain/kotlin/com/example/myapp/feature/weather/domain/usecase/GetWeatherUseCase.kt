@@ -1,21 +1,21 @@
 package com.example.myapp.feature.weather.domain.usecase
 
+import com.example.myapp.core.domain.arch.SuspendUseCase
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-interface GetWeatherUseCase {
-    suspend operator fun invoke(latitude: Double, longitude: Double, city: String): Result<WeatherInfo>
-}
-
-class GetWeatherUseCaseImpl(
+class GetWeatherUseCase(
     private val repository: WeatherRepository,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
-) : GetWeatherUseCase {
-    override suspend operator fun invoke(latitude: Double, longitude: Double, city: String): Result<WeatherInfo> =
-        withContext(dispatcher) {
-            repository.getWeather(latitude, longitude, city)
-        }
+    dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : SuspendUseCase<GetWeatherUseCase.Params, Result<WeatherInfo>>(dispatcher) {
+
+    data class Params(val latitude: Double, val longitude: Double, val city: String)
+
+    suspend operator fun invoke(latitude: Double, longitude: Double, city: String) =
+        invoke(Params(latitude, longitude, city))
+
+    override suspend fun execute(params: Params): Result<WeatherInfo> =
+        repository.getWeather(params.latitude, params.longitude, params.city)
 }

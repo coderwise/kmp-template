@@ -9,16 +9,17 @@ import com.example.myapp.feature.auth.domain.usecase.SignOutUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignUpUseCase
 import com.example.myapp.feature.auth.ui.login.LoginViewModel
 import com.example.myapp.feature.auth.ui.signup.SignUpViewModel
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val authModule = module {
     single<AuthRepository> { AuthRepositoryImpl() }
-    factory { ObserveAuthStateUseCase(get()) }
-    factory { SignInUseCase(get()) }
-    factory { SignInAsDebugUserUseCase(get()) }
-    factory { SignUpUseCase(get()) }
-    factory { SignOutUseCase(get()) }
+    factoryOf(::ObserveAuthStateUseCase)
+    factoryOf(::SignInUseCase)
+    factoryOf(::SignInAsDebugUserUseCase)
+    factoryOf(::SignUpUseCase)
+    factoryOf(::SignOutUseCase)
     viewModelOf(::LoginViewModel)
     viewModelOf(::SignUpViewModel)
 }

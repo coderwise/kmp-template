@@ -20,7 +20,7 @@ This document provides instructions and context for AI agents working on this Ko
 1. **DI Management**: When adding new dependencies, ensure they are registered in the corresponding Koin module and included in the `AppModule` if necessary.
 2. **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required.
 3. **Database**: SQLDelight schemas are located in `libs:database`. Run `./gradlew generateSqlDelightInterface` after schema changes.
-4. **Consistency**: Follow the existing architectural patterns (Domain-driven design with UseCases and Repositories).
+4. **Consistency**: Follow the existing architectural patterns (Domain-driven name with UseCases and Repositories). Use generic base abstract classes from `core:domain:arch` (e.g., `UseCase`, `SuspendUseCase`, `FlowUseCase`) when defining new UseCases to ensure a unified API across the project. These base classes handle `CoroutineDispatcher` automatically (defaulting to `Dispatchers.Default`). For UseCases with no parameters, use `ResultUseCase` variants.
 5. **UI-ViewModel Pattern**: Use a unidirectional data flow (UDF) pattern. ViewModels should expose a single `UiState` StateFlow and handle user interactions through a sealed interface `UiEvent` via an `onEvent` method. Use `_uiState.update { it.copy(...) }` for atomic state transitions. Screen content composables should be decoupled from ViewModels, receiving `UiState` and the `onEvent` handler as parameters. `UiState` and `UiEvent` should be defined in separate files from the ViewModel (e.g., `SettingsUiState.kt`, `SettingsUiEvent.kt`).
 6. **Compose Previews**:
     - **Placement**: Always add the Preview at the bottom of the file.
