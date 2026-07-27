@@ -3,6 +3,15 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--
+      While-in-use location, for the sample weather feature (rememberLocationPermissionState
+      + LocationProvider). The app declares the permissions it uses: com.coderwise.libs
+      :permissions and :location declare none, so that apps which never ask the user for
+      location don't ship it. Drop these two lines along with the weather feature.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".MainApplication"
         android:label="MyApp"
