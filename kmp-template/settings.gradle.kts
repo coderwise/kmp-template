@@ -17,7 +17,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral() // Coderwise shared libraries (e.g. com.coderwise.libs:utils) live here
-        mavenLocal() // TEMP: shared com.coderwise.libs:* served from ~/.m2 until libs-mobile publishes to Central
     }
 }
 
