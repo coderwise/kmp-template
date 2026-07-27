@@ -35,7 +35,9 @@ import com.example.myapp.core.ui.screens.EmptyState
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.theme.spacing
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
+import com.coderwise.libs.permissions.isDeadEndAfter
 import com.coderwise.libs.permissions.isGranted
+import com.coderwise.libs.permissions.rememberAppSettingsLauncher
 import com.coderwise.libs.permissions.rememberLocationPermissionState
 import myapp.feature.weather.generated.resources.Res
 import myapp.feature.weather.generated.resources.weather_coordinates
@@ -70,6 +72,7 @@ fun WeatherScreenContent(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val permissionState = rememberLocationPermissionState()
+    val appSettings = rememberAppSettingsLauncher()
     val currentLocationLabel = stringResource(Res.string.weather_current_location_name)
     Scaffold(
         topBar = {
@@ -99,9 +102,17 @@ fun WeatherScreenContent(
                             if (permissionState.status.isGranted) {
                                 onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
                             } else {
+                                val before = permissionState.status
                                 permissionState.launchPermissionRequest { status ->
-                                    if (status.isGranted) {
-                                        onEvent(WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel))
+                                    when {
+                                        status.isGranted -> onEvent(
+                                            WeatherUiEvent.OnCurrentLocationClick(currentLocationLabel)
+                                        )
+                                        // The refusal the user can't undo from here: the request
+                                        // came back unchanged, so the platform answered from a
+                                        // decision already on file without showing them anything.
+                                        // Without this the button would silently do nothing.
+                                        status.isDeadEndAfter(before) -> appSettings.launch()
                                     }
                                 }
                             }
