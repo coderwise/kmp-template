@@ -15,7 +15,13 @@ A Kotlin Multiplatform + Compose Multiplatform starter targeting **Android, iOS,
 | | `:core:api` | Ktor API clients and response models |
 | | `:core:ui` | Reusable UI components, theme, shared UI state helpers |
 | `feature/` | `:feature:auth` `:feature:home` `:feature:settings` `:feature:weather` | Self-contained features (UI + domain + data) |
-| `libs/` | `:libs:network` `:libs:database` `:libs:settings` `:libs:location` `:libs:permissions` `:libs:version` `:libs:logger` `:libs:utils` | Foundational platform services |
+| `libs/` | `:libs:network` `:libs:version` | Foundational platform services specific to this project |
+
+Foundational services that are **not** project-specific come from the shared
+[libs-mobile](https://github.com/coderwise/libs-mobile) libraries on Maven Central rather
+than from `libs/` — `com.coderwise.libs:` `utils`, `database`, `settings`, `location`,
+`permissions`, `logger`. They need only `mavenCentral()`; see
+[`gradle/libs.versions.toml`](gradle/libs.versions.toml) for the pinned versions.
 
 Dependency rules are enforced by convention — see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). In short: `libs/` never depends on `core/`/`feature/`/`app/`, and features don't depend on each other.
 
@@ -57,7 +63,7 @@ This template ships with placeholders marked `TODO(production)`:
 
 - **Auth** ([`AuthRepositoryImpl`](feature/auth/src/commonMain/kotlin/com/example/myapp/feature/auth/data/repository/AuthRepositoryImpl.kt)) is in-memory and accepts any credentials — replace with a real backend.
 - **Web home data** ([`InMemoryHomeRepository`](feature/home/src/commonMain/kotlin/com/example/myapp/feature/home/data/repository/InMemoryHomeRepository.kt)) is not persisted — wire up the SQLDelight web driver.
-- **Logging** ([`AppLogger`](core/domain/src/commonMain/kotlin/com/example/myapp/core/domain/util/AppLogger.kt)) uses Kermit's default writer — route to Crashlytics for release.
+- **Logging** (`AppLogger`, from `com.coderwise.libs:logger`) uses Kermit's default writer — route to Crashlytics for release. Kermit is `api`-scoped by that library, so the app can install its own `LogWriter` without declaring the dependency itself.
 
 ## CI
 

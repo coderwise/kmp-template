@@ -28,7 +28,7 @@ kotlin {
             implementation(project(":libs:network"))
             implementation(libs.coderwise.database)
             implementation(libs.coderwise.settings)
-            implementation(project(":libs:logger"))
+            implementation(libs.coderwise.logger)
 
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)

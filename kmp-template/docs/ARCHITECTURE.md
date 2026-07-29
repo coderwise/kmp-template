@@ -14,11 +14,15 @@ The project is divided into several top-level directories:
     - `:core:data`: Implementation of data access logic. Contains repository implementations, local data sources (e.g., Prefs), and DI configuration for data.
     - `:core:api`: Networking logic and API definitions. Contains Ktor-based API clients, API response models, and endpoint resources.
     - `:core:ui`: Contains generic, reusable UI components (e.g., SearchBar, buttons, cards) and common UI utilities.
-- **`libs/`**: Shared library modules providing foundational services.
+- **`libs/`**: Library modules providing foundational services specific to this project.
     - `libs:network`: Ktor-based networking.
-    - `libs:database`: SQLDelight-based local storage.
     - `libs:version`: Versioning and metadata.
-    - `libs:logger`: Kermit-based logging facade (`AppLogger`).
+- **`com.coderwise.libs:*`**: Foundational services that are not project-specific are
+  consumed from the shared [libs-mobile](https://github.com/coderwise/libs-mobile)
+  libraries on Maven Central instead of living in `libs/`: `database` (SQLDelight-based
+  local storage), `settings`, `location`, `permissions`, `utils`, and `logger` (the
+  Kermit-based logging facade, `AppLogger`). They obey the same dependency rules as
+  `libs/` — nothing in them knows about `core/`, `feature/`, or `app/`.
 - **`feature/`**: Feature-specific modules (e.g., `feature:home`). Each feature is self-contained.
 
 ## Dependency Rules
