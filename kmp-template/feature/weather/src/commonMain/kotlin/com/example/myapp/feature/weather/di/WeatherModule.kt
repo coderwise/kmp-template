@@ -11,26 +11,17 @@ import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseC
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
 import com.example.myapp.feature.weather.ui.WeatherViewModel
 import org.koin.core.module.dsl.factoryOf
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val weatherModule = module {
     single { OpenMeteoApi(get()) }
     single<WeatherRepository> { WeatherRepositoryImpl(get()) }
-    factoryOf(::GetWeatherUseCase)
-    factoryOf(::SearchLocationsUseCase)
-    factoryOf(::ReverseGeocodeUseCase)
+    factory { GetWeatherUseCase(get()) }
+    factory { SearchLocationsUseCase(get()) }
+    factory { ReverseGeocodeUseCase(get()) }
     factoryOf(::GetSelectedLocationUseCase)
-    factoryOf(::SaveSelectedLocationUseCase)
-    factoryOf(::GetCurrentLocationUseCase)
-    viewModel {
-        WeatherViewModel(
-            getWeatherUseCase = get(),
-            searchLocationsUseCase = get(),
-            reverseGeocodeUseCase = get(),
-            getSelectedLocationUseCase = get(),
-            saveSelectedLocationUseCase = get(),
-            getCurrentLocationUseCase = get(),
-        )
-    }
+    factory { SaveSelectedLocationUseCase(get()) }
+    factory { GetCurrentLocationUseCase(get()) }
+    viewModelOf(::WeatherViewModel)
 }
