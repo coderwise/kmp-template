@@ -4,9 +4,9 @@ compileSdk = "37"
 minSdk = "26"
 
 # Plugins
-agp = "9.3.1"
+agp = "9.3.2"
 kotlin = "2.4.10"
-compose-multiplatform = "1.11.1"
+compose-multiplatform = "1.12.0"
 mokkery = "3.4.2"
 
 # Libraries
@@ -25,12 +25,12 @@ datetime = "0.8.0"
 koin = "4.2.2"
 ktor = "3.5.2"
 lifecycle = "2.11.0"
-navigation3 = "1.1.6"
+navigation3 = "1.1.7"
 navigation3-ui = "1.1.1"
 serialization = "1.11.0"
 sqldelight = "2.3.2"
-logback = "1.6.2"
-firebaseBom = "34.17.0"
+logback = "1.6.3"
+firebaseBom = "34.18.0"
 detekt = "1.23.8"
 
 [libraries]
@@ -127,5 +127,5 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 mokkery = { id = "dev.mokkery", version.ref = "mokkery" }
 
 googleServices = { id = "com.google.gms.google-services", version = "4.5.0" }
-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.7" }
+crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.8" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
