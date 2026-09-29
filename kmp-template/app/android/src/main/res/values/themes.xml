@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Held on screen until the saved settings have loaded; see MainActivity. -->
+    <style name="Theme.MyApp.Starting" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@android:style/Theme.Material.Light.NoActionBar</item>
+    </style>
+</resources>

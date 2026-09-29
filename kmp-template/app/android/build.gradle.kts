@@ -66,6 +66,7 @@ dependencies {
     implementation(project(":app:common"))
     implementation(project(":libs:version"))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)

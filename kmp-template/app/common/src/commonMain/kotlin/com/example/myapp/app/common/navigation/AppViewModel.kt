@@ -39,6 +39,13 @@ class AppViewModel(
         initialValue = AppUiState(),
     )
 
+    /**
+     * False until the saved settings and auth state have loaded. `isAuthenticated` is the marker:
+     * it stays null until the combined flow first emits, at which point `theme` is the saved one
+     * too. The Android splash is held until then, so no frame is drawn in the wrong theme.
+     */
+    val isReady: Boolean get() = uiState.value.isAuthenticated != null
+
     fun signOut() {
         viewModelScope.launch {
             signOutUseCase()
