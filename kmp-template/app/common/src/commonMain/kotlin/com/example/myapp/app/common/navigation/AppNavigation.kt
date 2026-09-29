@@ -1,5 +1,6 @@
 package com.example.myapp.app.common.navigation
 
+import com.example.myapp.core.ui.util.slideInPopTransform
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cloud
