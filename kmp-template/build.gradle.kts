@@ -21,7 +21,7 @@ plugins {
 // Static analysis gate. Each module keeps its own detekt-baseline.xml so the
 // gate passes on existing code; regenerate with `./gradlew detektBaseline`.
 subprojects {
-    apply(plugin = "io.gitlab.arturbosch.detekt")
+    pluginManager.apply("io.gitlab.arturbosch.detekt")
 
     extensions.configure<DetektExtension>("detekt") {
         buildUponDefaultConfig = true
