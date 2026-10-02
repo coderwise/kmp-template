@@ -48,6 +48,7 @@ This document provides instructions and context for AI agents working on this Ko
     - **Framework**: Use `kotlin.test` for assertions and `kotlinx.coroutines.test` for coroutine-based tests.
 
 11. **Component Extraction**: Actively look for opportunities to simplify files by extracting UI elements.
+    - **`ui` package root**: Only `*Screen`, `*UiState`, `*UiEvent` and `*ViewModel` files live directly in a feature's `ui` package. Everything else goes in a subpackage: composables in `ui/components`, preview sample data in `ui/preview`, UI-only models, editor drafts and formatters in `ui/model`. Nothing else sits at the root, not even a small helper class. Tests mirror the same packages.
     - **Feature-specific**: Extract complex or reusable elements (charts, complex labels, groups of controls) into standalone files within the feature's `ui/components` package. This improves readability and maintainability of main screen files.
     - **Global**: If a component (like a custom TopBar, Button, or Card style) is used in multiple features or is a branded version of a Material component, extract it to `core:ui` (e.g., `core:ui:components` or `core:ui:layouts`).
 
