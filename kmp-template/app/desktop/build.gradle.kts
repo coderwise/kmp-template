@@ -10,6 +10,8 @@ dependencies {
     implementation(project(":libs:version"))
     implementation(compose.desktop.currentOs)
     implementation(libs.kotlinx.coroutines.swing)
+    implementation(libs.coderwise.database)
+    implementation(libs.coderwise.settings)
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     implementation(libs.logback.classic)

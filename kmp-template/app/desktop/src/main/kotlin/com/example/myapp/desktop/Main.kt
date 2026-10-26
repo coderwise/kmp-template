@@ -14,14 +14,27 @@ import com.example.myapp.desktop.integration.setupAboutHandler
 import com.example.myapp.desktop.integration.setupDockIcon
 import com.example.myapp.desktop.ui.components.AboutDialogContent
 import com.example.myapp.libs.version.appVersion
+import com.coderwise.libs.database.di.DATA_DIR_QUALIFIER
+import com.coderwise.libs.settings.di.SETTINGS_DIR_QUALIFIER
 import org.koin.core.context.startKoin
+import org.koin.dsl.module
+import java.io.File
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Surface
 import com.example.myapp.core.ui.theme.MyAppTheme
 
 fun main() {
     System.setProperty("apple.awt.application.name", "MyApp")
-    startKoin { modules(appModule) }
+    startKoin {
+        modules(
+            appModule,
+            // Where MyApp keeps its database and settings files on a desktop.
+            module {
+                single<File>(DATA_DIR_QUALIFIER) { File(System.getProperty("user.home"), ".myapp") }
+                single<File>(SETTINGS_DIR_QUALIFIER) { File(System.getProperty("user.home"), ".myapp") }
+            },
+        )
+    }
     application {
         var showAbout by remember { mutableStateOf(false) }
 
