@@ -1,6 +1,7 @@
 package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.model.HomeItem
+import com.example.myapp.core.domain.repository.HomeRepository
 import com.example.myapp.core.ui.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
@@ -32,10 +33,7 @@ import kotlin.test.assertTrue
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
 
-    private val getHomeItemsUseCase = mock<GetHomeItemsUseCase>()
-    private val addHomeItemUseCase = mock<AddHomeItemUseCase>()
-    private val removeHomeItemUseCase = mock<RemoveHomeItemUseCase>()
-    private val syncHomeItemsUseCase = mock<SyncHomeItemsUseCase>()
+    private val homeRepository = mock<HomeRepository>()
     private val navEventHandler = mock<NavEventHandler>()
 
     private val testDispatcher = StandardTestDispatcher()
@@ -51,18 +49,18 @@ class HomeViewModelTest {
     }
 
     private fun createViewModel() = HomeViewModel(
-        getHomeItemsUseCase,
-        addHomeItemUseCase,
-        removeHomeItemUseCase,
-        syncHomeItemsUseCase,
+        GetHomeItemsUseCase(homeRepository),
+        AddHomeItemUseCase(homeRepository),
+        RemoveHomeItemUseCase(homeRepository),
+        SyncHomeItemsUseCase(homeRepository),
         navEventHandler
     )
 
     @Test
     fun `init should load items and refresh`() = runTest {
         val items = listOf(HomeItem("1", "Title", "Desc"))
-        every { getHomeItemsUseCase() } returns flowOf(Result.success(items))
-        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
+        every { homeRepository.getHomeItems() } returns flowOf(Result.success(items))
+        everySuspend { homeRepository.syncHomeItems() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
@@ -72,16 +70,16 @@ class HomeViewModelTest {
         assertFalse(viewModel.uiState.value.isLoading)
         verify {
             @Suppress("UnusedFlow")
-            getHomeItemsUseCase()
+            homeRepository.getHomeItems()
         }
-        verifySuspend { syncHomeItemsUseCase() }
+        verifySuspend { homeRepository.syncHomeItems() }
     }
 
     @Test
     fun `loadItems should show error when it fails`() = runTest {
         val errorMessage = "Error loading items"
-        every { getHomeItemsUseCase() } returns flowOf(Result.failure(Exception(errorMessage)))
-        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
+        every { homeRepository.getHomeItems() } returns flowOf(Result.failure(Exception(errorMessage)))
+        everySuspend { homeRepository.syncHomeItems() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
@@ -93,9 +91,9 @@ class HomeViewModelTest {
 
     @Test
     fun `addItem should call addHomeItemUseCase`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
-        everySuspend { addHomeItemUseCase(any(), any()) } returns Unit
+        every { homeRepository.getHomeItems() } returns flowOf(Result.success(emptyList()))
+        everySuspend { homeRepository.syncHomeItems() } returns Result.success(Unit)
+        everySuspend { homeRepository.addHomeItem(any()) } returns Unit
         every { navEventHandler.onEvent(any()) } returns Unit
 
         val viewModel = createViewModel()
@@ -103,27 +101,27 @@ class HomeViewModelTest {
         viewModel.onEvent(HomeUiEvent.AddItem("New Item", "Description"))
         advanceUntilIdle()
 
-        verifySuspend { addHomeItemUseCase("New Item", "Description") }
+        verifySuspend { homeRepository.addHomeItem(any()) }
     }
 
     @Test
     fun `removeItem should call removeHomeItemUseCase`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
-        everySuspend { removeHomeItemUseCase(any()) } returns Unit
+        every { homeRepository.getHomeItems() } returns flowOf(Result.success(emptyList()))
+        everySuspend { homeRepository.syncHomeItems() } returns Result.success(Unit)
+        everySuspend { homeRepository.removeHomeItem(any()) } returns Unit
 
         val viewModel = createViewModel()
 
         viewModel.onEvent(HomeUiEvent.DeleteItem("1"))
         advanceUntilIdle()
 
-        verifySuspend { removeHomeItemUseCase("1") }
+        verifySuspend { homeRepository.removeHomeItem("1") }
     }
 
     @Test
     fun `refresh should update isRefreshing state`() = runTest {
-        every { getHomeItemsUseCase() } returns flowOf(Result.success(emptyList()))
-        everySuspend { syncHomeItemsUseCase() } returns Result.success(Unit)
+        every { homeRepository.getHomeItems() } returns flowOf(Result.success(emptyList()))
+        everySuspend { homeRepository.syncHomeItems() } returns Result.success(Unit)
 
         val viewModel = createViewModel()
 
@@ -136,6 +134,6 @@ class HomeViewModelTest {
         // but we can verify it finishes as false.
         advanceUntilIdle()
         assertFalse(viewModel.uiState.value.isRefreshing)
-        verifySuspend(VerifyMode.atLeast(2)) { syncHomeItemsUseCase() }
+        verifySuspend(VerifyMode.atLeast(2)) { homeRepository.syncHomeItems() }
     }
 }
