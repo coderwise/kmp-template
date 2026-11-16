@@ -80,8 +80,11 @@ cmd_add() {
         token="$(gh api -X POST "repos/$SLUG/actions/runners/registration-token" --jq .token)"
         (cd "$DIR" && ./config.sh --unattended --url "https://github.com/$SLUG" --token "$token" \
             --name "$(scutil --get LocalHostName)-$NAME" --labels mac --work _work --replace >/dev/null)
-        # The launchd service has no shell profile; give Gradle the Android SDK.
-        [[ -n "${ANDROID_HOME:-}" ]] && echo "ANDROID_HOME=$ANDROID_HOME" > "$DIR/.env"
+        # The launchd service has no shell profile; give Gradle the Android SDK. A separate Gradle
+        # home keeps the owner's ~/.gradle/gradle.properties (e.g. a small -Xmx) out of CI builds,
+        # so they behave as they do on GitHub.
+        mkdir -p "$ROOT/.gradle"
+        { [[ -n "${ANDROID_HOME:-}" ]] && echo "ANDROID_HOME=$ANDROID_HOME"; echo "GRADLE_USER_HOME=$ROOT/.gradle"; } > "$DIR/.env"
         (cd "$DIR" && ./svc.sh install >/dev/null && ./svc.sh start >/dev/null)
         echo "-> runner installed in $DIR"
     fi
