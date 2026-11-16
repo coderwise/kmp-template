@@ -1,9 +1,9 @@
 name: Deploy Web App to Firebase Hosting
 
 on:
-  push:
-    branches:
-      - main
+  # Manual only: mobile releases are cut from tags and pushes, and each used to ship the web
+  # build to production as a side effect. Deploy the web app deliberately, from the Actions
+  # tab (or `gh workflow run deploy-web.yml`).
   workflow_dispatch:
 
 jobs:
@@ -33,6 +33,10 @@ jobs:
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
+        env:
+          # A self-hosted runner has the owner's `firebase login` in ~/.config, which the CLI
+          # prefers over the service account. An empty config dir makes it use the service account.
+          XDG_CONFIG_HOME: ${{ runner.temp }}/xdg-config
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
