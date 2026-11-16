@@ -28,7 +28,7 @@ concurrency:
 jobs:
   deploy:
     name: Archive & upload
-    runs-on: macos-15
+    runs-on: ${{ vars.MAC_RUNNER || 'macos-15' }}
 
     env:
       ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
@@ -54,13 +54,33 @@ jobs:
         with:
           cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
+      # Switching Xcode needs sudo, which a self-hosted runner doesn't have; it uses the Mac's own Xcode.
       - name: Select Xcode
+        if: runner.environment == 'github-hosted'
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
 
       - name: Install XcodeGen
         run: brew install xcodegen
+
+      # Cloud-managed signing can leave a certificate and key in the default keychain, and Xcode
+      # will sign with any distribution identity it can see. A throwaway keychain, the only one
+      # in the search list, keeps both out of a self-hosted runner owner's login keychain. The
+      # original list and default are saved and restored by the cleanup step; on a hosted runner
+      # the VM is discarded anyway.
+      - name: Create a throwaway keychain
+        run: |
+          set -euo pipefail
+          security list-keychains -d user | tr -d '"' | sed 's/^ *//' > "$RUNNER_TEMP/keychains.orig"
+          security default-keychain -d user | tr -d '"' | sed 's/^ *//' > "$RUNNER_TEMP/keychain.default.orig"
+          KEYCHAIN_PATH="$RUNNER_TEMP/signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(uuidgen)"
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -d user -s "$KEYCHAIN_PATH"
 
       - name: Install App Store Connect API key
         env:
@@ -148,4 +168,15 @@ jobs:
 
       - name: Clean up
         if: always()
-        run: rm -rf ~/.appstoreconnect/private_keys
+        run: |
+          rm -rf ~/.appstoreconnect/private_keys
+          # Put the keychains back before deleting ours, or the machine is left with no default.
+          if [ -s "$RUNNER_TEMP/keychains.orig" ]; then
+            set --
+            while IFS= read -r k; do set -- "$@" "$k"; done < "$RUNNER_TEMP/keychains.orig"
+            security list-keychain -d user -s "$@" || true
+          fi
+          if [ -s "$RUNNER_TEMP/keychain.default.orig" ]; then
+            security default-keychain -d user -s "$(cat "$RUNNER_TEMP/keychain.default.orig")" || true
+          fi
+          security delete-keychain "$RUNNER_TEMP/signing.keychain-db" || true

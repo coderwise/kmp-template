@@ -11,7 +11,7 @@ concurrency:
 jobs:
   build:
     name: Build & Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
@@ -49,7 +49,7 @@ jobs:
 
   ios-test:
     name: iOS Tests
-    runs-on: macos-latest
+    runs-on: ${{ vars.MAC_RUNNER || 'macos-latest' }}
 
     steps:
       - name: Checkout
@@ -79,7 +79,7 @@ jobs:
 
   android:
     name: Android APK
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
@@ -108,7 +108,7 @@ jobs:
 
   desktop:
     name: Desktop JAR
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
@@ -130,7 +130,7 @@ jobs:
 
   web:
     name: Web JS Bundle
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
@@ -152,7 +152,7 @@ jobs:
 
   server:
     name: Server JAR
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.CI_RUNNER || 'ubuntu-latest' }}
 
     steps:
       - name: Checkout
