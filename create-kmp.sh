@@ -219,11 +219,27 @@ This directory is gitignored. Back it up somewhere safe: losing the upload keyst
 
 ### GitHub Actions secrets
 
+Use exactly these names in every project; the generated workflows read them.
+
 | Secret | Value / Source |
 |--------|----------------|
 | `KEYSTORE_FILE_BASE64` | contents of `android/keystore.base64` |
 | `SIGNING_STORE_PASSWORD` | `storePassword` in `android/keystore.properties` |
 | `SIGNING_KEY_ALIAS` | `keyAlias` in `android/keystore.properties` (`upload`) |
+| `PLAY_STORE_SERVICE_ACCOUNT_JSON` | shared `play-publisher` service account key (same for every app) |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | this project's Firebase Admin SDK service account key |
+| `FIREBASE_APP_ID` | Android app id from the Firebase console |
+| `GRADLE_ENCRYPTION_KEY` | any random string; encrypts the Gradle cache |
+
+## iOS (when you add iOS deploys)
+
+| Secret | Value / Source |
+|--------|----------------|
+| `APP_STORE_CONNECT_ISSUER_ID` / `APP_STORE_CONNECT_KEY_ID` / `APP_STORE_CONNECT_PRIVATE_KEY` | App Store Connect API key |
+| `IOS_P12_CERTIFICATE_BASE64` / `IOS_P12_PASSWORD` | Apple Distribution certificate |
+| `IOS_TEAM_ID` / `IOS_CODE_SIGN_IDENTITY` | Apple team |
+| `IOS_ADHOC_PROVISIONING_PROFILE_BASE64` / `IOS_ADHOC_PROFILE_NAME` | Ad Hoc profile for Firebase distribution |
+| `IOS_FIREBASE_APP_ID` | iOS app id from the Firebase console |
 EOM
         unset STORE_PASSWORD
     else
