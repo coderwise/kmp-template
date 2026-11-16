@@ -18,4 +18,4 @@ dependencies {
     implementation(libs.logback.classic)
 }
 
-application { mainClass.set("com.example.myapp.server.ApplicationKt") }
+application { mainClass.set("com.example.myapp.app.server.ApplicationKt") }

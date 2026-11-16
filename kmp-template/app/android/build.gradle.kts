@@ -15,14 +15,14 @@ val getGitVersionName = extra["getGitVersionName"] as () -> String
 @Suppress("UNCHECKED_CAST")
 val getGitCommitCount = extra["getGitCommitCount"] as () -> Int
 
-val keystorePropertiesFile: File = rootProject.file("secrets/keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("secrets/android/keystore.properties")
 val keystoreProperties = Properties()
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace = "com.example.myapp"
+    namespace = "com.example.myapp.app.android"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

@@ -1,4 +1,4 @@
-package com.example.myapp.desktop
+package com.example.myapp.app.desktop
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,10 +9,10 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import com.example.myapp.app.common.di.appModule
 import com.example.myapp.app.common.navigation.AppNavigation
-import com.example.myapp.desktop.integration.iconPainter
-import com.example.myapp.desktop.integration.setupAboutHandler
-import com.example.myapp.desktop.integration.setupDockIcon
-import com.example.myapp.desktop.ui.components.AboutDialogContent
+import com.example.myapp.app.desktop.integration.iconPainter
+import com.example.myapp.app.desktop.integration.setupAboutHandler
+import com.example.myapp.app.desktop.integration.setupDockIcon
+import com.example.myapp.app.desktop.ui.components.AboutDialogContent
 import com.example.myapp.libs.version.appVersion
 import com.coderwise.libs.database.di.DATA_DIR_QUALIFIER
 import com.coderwise.libs.settings.di.SETTINGS_DIR_QUALIFIER

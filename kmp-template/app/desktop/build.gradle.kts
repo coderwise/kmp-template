@@ -22,7 +22,7 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.example.myapp.desktop.MainKt"
+        mainClass = "com.example.myapp.app.desktop.MainKt"
 
         nativeDistributions {
             targetFormats(

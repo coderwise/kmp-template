@@ -1,4 +1,4 @@
-package com.example.myapp.server
+package com.example.myapp.app.server
 
 import com.example.myapp.core.api.resources.Home
 import com.example.myapp.core.api.resources.Weather

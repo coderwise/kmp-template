@@ -1,11 +1,11 @@
 #!/bin/sh
-# Creates an Android upload keystore, updates keystore.properties, and prints the base64
+# Creates an Android upload keystore, updates secrets/android/keystore.properties, and prints the base64
 # value needed for the KEYSTORE_FILE_BASE64 GitHub Actions secret.
 
 set -e
 
 KEYSTORE_PATH="app/android/upload.keystore"
-SECRETS_DIR="secrets"
+SECRETS_DIR="secrets/android"
 PROPERTIES_FILE="${SECRETS_DIR}/keystore.properties"
 KEY_ALIAS="upload"
 VALIDITY_DAYS=9125  # 25 years (Google Play minimum)

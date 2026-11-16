@@ -1,4 +1,4 @@
-package com.example.myapp.web
+package com.example.myapp.app.web
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport

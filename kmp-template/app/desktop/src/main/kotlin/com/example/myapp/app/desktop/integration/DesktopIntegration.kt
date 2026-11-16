@@ -1,4 +1,4 @@
-package com.example.myapp.desktop.integration
+package com.example.myapp.app.desktop.integration
 
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
