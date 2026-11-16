@@ -1,0 +1,10 @@
+// Committed fallback so a fresh clone opens and builds in Xcode without generated files.
+//
+// 0.0.0 is a sentinel, not a version: the pre-build script refuses a Release archive that
+// still carries it, or one whose version has gone stale against git.
+MARKETING_VERSION = 0.0.0
+CURRENT_PROJECT_VERSION = 1
+
+// Written by scripts/ios-version.sh (gitignored).
+// `#include?` so its absence is not an error.
+#include? "Version.xcconfig"

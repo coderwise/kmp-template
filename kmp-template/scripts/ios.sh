@@ -15,7 +15,12 @@ fi
 
 echo "Using simulator: $SIM_ID"
 
-# 2. Build the project
+# 2. Generate the version xcconfig, then the Xcode project. The version is a build setting,
+# so it must exist before xcodebuild starts.
+./scripts/ios-version.sh
+(cd app/ios && xcodegen generate)
+
+# 3. Build the project
 xcodebuild -project app/ios/MyApp.xcodeproj \
            -scheme MyApp \
            -configuration Debug \
@@ -24,7 +29,7 @@ xcodebuild -project app/ios/MyApp.xcodeproj \
            -derivedDataPath "$DERIVED_DATA_PATH" \
            build
 
-# 3. Install and Launch
+# 4. Install and Launch
 # Note: we need -scheme here because we are using -derivedDataPath
 APP_PATH=$(xcodebuild -project app/ios/MyApp.xcodeproj -scheme MyApp -showBuildSettings -configuration Debug -sdk iphonesimulator -destination "id=$SIM_ID" -derivedDataPath "$DERIVED_DATA_PATH" | grep " CODESIGNING_FOLDER_PATH" | head -1 | cut -d'=' -f2 | xargs)
 BUNDLE_ID=$(xcodebuild -project app/ios/MyApp.xcodeproj -scheme MyApp -showBuildSettings -configuration Debug -sdk iphonesimulator -destination "id=$SIM_ID" -derivedDataPath "$DERIVED_DATA_PATH" | grep " PRODUCT_BUNDLE_IDENTIFIER" | head -1 | cut -d'=' -f2 | xargs)

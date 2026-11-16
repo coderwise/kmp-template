@@ -33,6 +33,7 @@ ndk-stack
 
 # iOS / Xcode
 *.xcodeproj/
+app/ios/Version.xcconfig
 *.xcworkspace/
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/

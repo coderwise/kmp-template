@@ -13,6 +13,11 @@ This document provides instructions and context for AI agents working on this Ko
 - **Android**: `namespace` is `<package>.app.android` (it matches the class package, so `R` and `BuildConfig` live there); `applicationId` is the plain `<package>`. Manifest class names are relative to the namespace (`.MainActivity`), or fully qualified when a class lives in another package.
 - **Signing**: The upload keystore is `app/android/upload.keystore` (gitignored). Its password and alias are in `secrets/android/keystore.properties` (gitignored), read by `app/android/build.gradle.kts`. CI decodes `KEYSTORE_FILE_BASE64` into the keystore path. `scripts/create-keystore.sh` regenerates the keystore and `secrets/android/` files. Never commit anything under `secrets/`.
 
+## iOS Versioning
+- `scripts/ios-version.sh` derives `MARKETING_VERSION` (nearest `v*` tag, pre-release suffix dropped, 1-3 integers) and `CURRENT_PROJECT_VERSION` (commit count) and writes `app/ios/Version.xcconfig` (gitignored). `app/ios/Config.xcconfig` includes it.
+- Run it before `xcodegen generate` and any `xcodebuild`; `scripts/ios.sh` and CI workflows do. Do not stamp the version into Info.plist from a build script: Xcode 26+ rewrites it afterwards.
+- CI clones need `fetch-depth: 0` so the tag and commit count are correct. Any iOS upload step must fail the job when the upload fails (altool can exit 0 on error).
+
 ## Tech Stack
 - **Kotlin Multiplatform (KMP)**
 - **Compose Multiplatform** for UI.
