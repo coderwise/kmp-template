@@ -107,7 +107,8 @@ private fun AppNavigationContent(
     MyAppTheme(darkTheme) {
         PlatformColors(darkTheme)
 
-        val showNavigationSuite = uiState.isAuthenticated == true && navigationState.currentRootKey is HomeGroupDestination
+        val showNavigationSuite = uiState.isAuthenticated == true &&
+            navigationState.currentRootKey is HomeGroupDestination
 
         if (showNavigationSuite) {
             val layoutType = if (windowInfo.isLandscape) {

@@ -42,8 +42,8 @@ class LoginViewModelTest {
 
     // Real use cases over a mocked AuthRepository.
     private fun createViewModel() = LoginViewModel(
-        SignInUseCase(authRepository),
-        SignInAsDebugUserUseCase(authRepository),
+        SignInUseCase(authRepository, testDispatcher),
+        SignInAsDebugUserUseCase(authRepository, testDispatcher),
         navEventHandler,
     )
 

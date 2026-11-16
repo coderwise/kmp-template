@@ -56,7 +56,7 @@ class WeatherViewModelTest {
         GetWeatherUseCase(weatherRepository, testDispatcher),
         SearchLocationsUseCase(weatherRepository, testDispatcher),
         ReverseGeocodeUseCase(weatherRepository, testDispatcher),
-        GetSelectedLocationUseCase(locationPreferences),
+        GetSelectedLocationUseCase(locationPreferences, testDispatcher),
         SaveSelectedLocationUseCase(locationPreferences, testDispatcher),
         GetCurrentLocationUseCase(locationProvider, testDispatcher),
     )

@@ -5,10 +5,13 @@ import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 class AddHomeItemUseCase(
-    private val repository: HomeRepository
-) : SuspendUseCase<AddHomeItemUseCase.Params, Unit>() {
+    private val repository: HomeRepository,
+    dispatcher: CoroutineDispatcher = Dispatchers.Default
+) : SuspendUseCase<AddHomeItemUseCase.Params, Unit>(dispatcher) {
 
     data class Params(val title: String, val description: String)
 

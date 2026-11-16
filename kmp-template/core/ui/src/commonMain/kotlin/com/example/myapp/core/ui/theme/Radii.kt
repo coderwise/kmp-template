@@ -9,7 +9,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Immutable
-@Suppress("MatchingDeclarationName")
 data class Radii(
     val sm: Dp = 4.dp,
     val md: Dp = 8.dp,

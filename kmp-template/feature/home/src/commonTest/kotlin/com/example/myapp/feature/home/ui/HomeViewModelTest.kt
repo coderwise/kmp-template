@@ -49,10 +49,10 @@ class HomeViewModelTest {
     }
 
     private fun createViewModel() = HomeViewModel(
-        GetHomeItemsUseCase(homeRepository),
-        AddHomeItemUseCase(homeRepository),
-        RemoveHomeItemUseCase(homeRepository),
-        SyncHomeItemsUseCase(homeRepository),
+        GetHomeItemsUseCase(homeRepository, testDispatcher),
+        AddHomeItemUseCase(homeRepository, testDispatcher),
+        RemoveHomeItemUseCase(homeRepository, testDispatcher),
+        SyncHomeItemsUseCase(homeRepository, testDispatcher),
         navEventHandler
     )
 
