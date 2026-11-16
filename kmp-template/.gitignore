@@ -77,3 +77,6 @@ dist/
 /app/android/upload.keystore
 /secrets/
 /gradle/gradle-daemon-jvm.properties
+
+# Local Claude Code permissions hold absolute paths
+.claude/settings.local.json

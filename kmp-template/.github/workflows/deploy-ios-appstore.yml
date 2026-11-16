@@ -1,0 +1,151 @@
+name: Deploy iOS to App Store
+
+# Uploads a build to App Store Connect (TestFlight). Submitting it for review stays manual.
+#
+# Dispatch-only until the secrets below exist on this repo and one run has succeeded;
+# a tag-triggered run without them would fail on every release. Then add
+#   push:
+#     tags: ['v*']
+# to match deploy-android-playstore.yml. Dispatch it on a tag (--ref vX.Y.Z), not main:
+# the version comes from the nearest v* tag.
+#
+# Prerequisites that live outside this repo:
+#   - An App Store Connect app record for com.example.myapp. The upload fails without
+#     one and it cannot be created from CI.
+#   - Secrets APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID,
+#     APP_STORE_CONNECT_PRIVATE_KEY (the .p8 text) and IOS_TEAM_ID (see secrets/SECRETS.md).
+#   - The App Store Connect API key must have the **Admin** role. App Manager fails
+#     cloud-managed distribution signing ("Cloud signing permission error" / "No profiles
+#     for 'com.example.myapp' were found"). A key's role cannot be edited later.
+on:
+  workflow_dispatch:
+
+# macOS runners bill at 10x; never run two at once and never cancel one mid-upload.
+concurrency:
+  group: deploy-ios-appstore
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Archive & upload
+    runs-on: macos-15
+
+    env:
+      ASC_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      ASC_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      ARCHIVE_PATH: ${{ github.workspace }}/build/MyApp.xcarchive
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history: scripts/ios-version.sh reads the nearest v* tag and counts commits
+          # for the build number. A shallow clone yields 1.0.0/1 and collides on upload.
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+
+      - name: Select Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Install App Store Connect API key
+        env:
+          ASC_PRIVATE_KEY: ${{ secrets.APP_STORE_CONNECT_PRIVATE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$ASC_PRIVATE_KEY" > ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+          chmod 600 ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8
+
+      - name: Generate version and Xcode project
+        run: |
+          set -euo pipefail
+          ./scripts/ios-version.sh
+          cd app/ios && xcodegen generate
+
+      - name: Archive
+        run: |
+          set -euo pipefail
+          # Unsigned archive. An automatically signed archive would use a development
+          # identity this runner lacks, so -allowProvisioningUpdates would mint a new one
+          # every run until the account hits its certificate cap. The export step below
+          # applies the Apple Distribution certificate. An app with a granted entitlement
+          # needs an ad-hoc `codesign --entitlements` step here, or export drops it silently.
+          xcodebuild archive \
+            -project app/ios/MyApp.xcodeproj \
+            -scheme MyApp \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath "$ARCHIVE_PATH" \
+            -derivedDataPath app/ios/build \
+            CODE_SIGNING_ALLOWED=NO
+
+      # The only step that signs anything: App Store Connect issues a cloud-managed
+      # distribution certificate and profile on demand, so no .p12 is stored as a secret.
+      # Export and upload are one xcodebuild call (destination=upload): its
+      # -authenticationKey* flags are stable across Xcode versions, altool's are not.
+      - name: Export and upload to App Store Connect
+        env:
+          TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/ExportOptions.plist" <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>app-store-connect</string>
+              <key>destination</key>
+              <string>upload</string>
+              <key>teamID</key>
+              <string>${TEAM_ID}</string>
+              <key>signingStyle</key>
+              <string>automatic</string>
+              <key>uploadSymbols</key>
+              <true/>
+              <!-- Keep the build number from ios-version.sh (the commit count) -->
+              <key>manageAppVersionAndBuildNumber</key>
+              <false/>
+              <key>stripSwiftSymbols</key>
+              <false/>
+          </dict>
+          </plist>
+          PLIST
+
+          xcodebuild -exportArchive \
+            -archivePath "$ARCHIVE_PATH" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist" \
+            -allowProvisioningUpdates \
+            -authenticationKeyPath ~/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8 \
+            -authenticationKeyID "$ASC_KEY_ID" \
+            -authenticationKeyIssuerID "$ASC_ISSUER_ID"
+
+      # The archive carries the dSYMs — the only copy once the runner is gone.
+      - name: Upload archive as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyApp-xcarchive
+          path: ${{ env.ARCHIVE_PATH }}
+          retention-days: 14
+          if-no-files-found: warn
+
+      - name: Clean up
+        if: always()
+        run: rm -rf ~/.appstoreconnect/private_keys

@@ -99,6 +99,7 @@ for p in android ios desktop web server; do
         case "$p" in
             android) rm -f "$DEST"/.github/workflows/deploy-android-*.yml ;;
             web)     rm -f "$DEST/.github/workflows/deploy-web.yml" ;;
+            ios)     rm -f "$DEST/.github/workflows/deploy-ios-"*.yml ;;
         esac
     fi
 done
