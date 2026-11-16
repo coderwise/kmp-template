@@ -9,6 +9,7 @@ The project is divided into several top-level directories:
 - **`app/`**: Contains application modules.
     - **`:app:common`**: Shared application logic across all platforms. This module serves as the **composition root**, containing the main Koin `AppModule`, top-level navigation, and the shared Compose entry point.
     - **Platform Modules**: `:app:android`, `:app:desktop`, `:app:web`, `:app:server`, and `:app:ios` provide platform-specific initialization and entry points.
+    - **Packages**: every `app/*` module uses `<package>.app.<module>` for its classes and directories (e.g. `com.example.myapp.app.android`). The Android `namespace` equals that package; `applicationId` is the plain `<package>`.
 - **`core/`**: Shared core modules. These modules must contain only platform-agnostic logic; platform-specific implementations (`expect`/`actual`) are not allowed in `:core:*` modules.
     - `:core:domain`: Pure business logic. Contains domain models (entities), repository interfaces, and use cases.
     - `:core:data`: Implementation of data access logic. Contains repository implementations, local data sources (e.g., Prefs), and DI configuration for data.

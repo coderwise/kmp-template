@@ -43,6 +43,10 @@ Dependency rules are enforced by convention — see [docs/ARCHITECTURE.md](docs/
 | Server — run | `./gradlew :app:server:run` |
 | iOS | open `app/ios` in Xcode and run, or use the KMP/AndroidStudio run config |
 
+## Android signing
+
+The upload keystore lives at `app/android/upload.keystore` and its password and alias at `secrets/android/keystore.properties`; both are gitignored. The project generator creates a fresh keystore for each new project. To regenerate it, run `scripts/create-keystore.sh`; it also writes `secrets/android/keystore.base64` for the `KEYSTORE_FILE_BASE64` CI secret. Back up `secrets/` somewhere safe: losing the upload key locks you out of Play Store updates.
+
 ## Testing
 
 ```bash

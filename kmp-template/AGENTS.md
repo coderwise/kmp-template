@@ -3,10 +3,15 @@
 This document provides instructions and context for AI agents working on this Kotlin Multiplatform (KMP) project.
 
 ## Project Structure
-- `app/`: Platform-specific application modules (Android, Desktop, Web, Server).
-- `core/`: Shared core modules (Common UI). **Note**: `:core:*` modules must not contain platform-specific logic.
-- `libs/`: Shared library modules (Network, Version, Database).
-- `feature/`: Feature-specific modules (e.g., Home).
+- `app/`: Composition root (`common`) and platform entry points (Android, iOS, Desktop, Web, Server).
+- `core/`: Shared core modules (`domain`, `data`, `api`, `ui`). **Note**: `:core:*` modules must not contain platform-specific logic.
+- `libs/`: Project-specific foundational modules (`network`, `version`). Standalone, never depend on `core/`, `feature/` or `app/`. Non-project-specific services (`database`, `settings`, `location`, `permissions`, `utils`, `logger`) come from the shared `com.coderwise.libs:*` artifacts on Maven Central.
+- `feature/`: Feature-specific modules (e.g., Home, Auth, Settings, Weather).
+
+## Packages and Signing
+- **App module packages**: Every `app/*` module's classes live in `<package>.app.<module>` (e.g. `com.example.myapp.app.common`, `.app.android`, `.app.desktop`, `.app.web`, `.app.server`), with the directory path matching the package. Do not put them in the root package.
+- **Android**: `namespace` is `<package>.app.android` (it matches the class package, so `R` and `BuildConfig` live there); `applicationId` is the plain `<package>`. Manifest class names are relative to the namespace (`.MainActivity`), or fully qualified when a class lives in another package.
+- **Signing**: The upload keystore is `app/android/upload.keystore` (gitignored). Its password and alias are in `secrets/android/keystore.properties` (gitignored), read by `app/android/build.gradle.kts`. CI decodes `KEYSTORE_FILE_BASE64` into the keystore path. `scripts/create-keystore.sh` regenerates the keystore and `secrets/android/` files. Never commit anything under `secrets/`.
 
 ## Tech Stack
 - **Kotlin Multiplatform (KMP)**
@@ -19,7 +24,7 @@ This document provides instructions and context for AI agents working on this Ko
 ## Guidelines for Agents
 1. **DI Management**: When adding new dependencies, ensure they are registered in the corresponding Koin module and included in the `AppModule` if necessary.
 2. **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required.
-3. **Database**: SQLDelight schemas are located in `libs:database`. Run `./gradlew generateSqlDelightInterface` after schema changes.
+3. **Database**: SQLDelight schemas are located in `core/data` (`src/commonMain/sqldelight`), on top of the shared `com.coderwise.libs:database`. Run `./gradlew generateSqlDelightInterface` after schema changes.
 4. **Consistency**: Follow the existing architectural patterns (Domain-driven name with UseCases and Repositories). Use generic base abstract classes from `core:domain:arch` (e.g., `UseCase`, `SuspendUseCase`, `FlowUseCase`) when defining new UseCases to ensure a unified API across the project. These base classes handle `CoroutineDispatcher` automatically (defaulting to `Dispatchers.Default`). For UseCases with no parameters, use `ResultUseCase` variants.
 5. **UI-ViewModel Pattern**: Use a unidirectional data flow (UDF) pattern. ViewModels should expose a single `UiState` StateFlow and handle user interactions through a sealed interface `UiEvent` via an `onEvent` method. Use `_uiState.update { it.copy(...) }` for atomic state transitions. Screen content composables should be decoupled from ViewModels, receiving `UiState` and the `onEvent` handler as parameters. `UiState` and `UiEvent` should be defined in separate files from the ViewModel (e.g., `SettingsUiState.kt`, `SettingsUiEvent.kt`).
 6. **Compose Previews**:
@@ -32,7 +37,7 @@ This document provides instructions and context for AI agents working on this Ko
 
 7. **Resources & Localization**:
     - **Extraction**: Extract all user-facing strings to `src/commonMain/composeResources/values/strings.xml`.
-    - **Access**: Use `stringResource(Res.string.key)` from the generated `Res` class. The import usually follows the pattern `mapson.feature.[module].generated.resources.*`.
+    - **Access**: Use `stringResource(Res.string.key)` from the generated `Res` class. The import usually follows the pattern `myapp.feature.[module].generated.resources.*`.
     - **Generation**: If resources are not resolved after adding them, run `./gradlew generateComposeResClass` or perform a Gradle Sync.
     - **Naming**: Use `snake_case` for resource keys, prefixed with the feature name (e.g., `settings_title`, `settings_version`).
 
