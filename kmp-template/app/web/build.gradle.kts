@@ -6,7 +6,12 @@ plugins {
 
 kotlin {
     js {
-        browser()
+        browser {
+            commonWebpackConfig {
+                // The production bundle is large; generating its source map dominates the build.
+                sourceMaps = false
+            }
+        }
         binaries.executable()
     }
     sourceSets {
