@@ -4,6 +4,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # create-kmp.sh — KMP project generator
 # Usage: ./create-kmp.sh --name MyApp --package com.example.myapp [--output /path/to/dir]
+#          [--platforms android,ios,desktop,web,server] [--yes] [--no-git] [--no-keystore]
 # ---------------------------------------------------------------------------
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,6 +13,10 @@ TEMPLATE_DIR="$SCRIPT_DIR/kmp-template"
 APP_NAME=""
 PACKAGE_NAME=""
 OUTPUT_DIR="$(pwd)"
+PLATFORMS="android,ios,desktop,web,server"
+ASSUME_YES=0
+INIT_GIT=1
+GEN_KEYSTORE=1
 
 # ── Argument parsing ────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
@@ -19,8 +24,12 @@ while [[ $# -gt 0 ]]; do
         --name|-n)    APP_NAME="$2";     shift 2 ;;
         --package|-p) PACKAGE_NAME="$2"; shift 2 ;;
         --output|-o)  OUTPUT_DIR="$2";   shift 2 ;;
+        --platforms)  PLATFORMS="$2";    shift 2 ;;
+        --yes|-y)     ASSUME_YES=1;      shift ;;
+        --no-git)     INIT_GIT=0;        shift ;;
+        --no-keystore) GEN_KEYSTORE=0;   shift ;;
         -h|--help)
-            echo "Usage: $0 --name <AppName> --package <com.example.app> [--output <dir>]"
+            echo "Usage: $0 --name <AppName> --package <com.example.app> [--output <dir>] [--platforms android,ios,desktop,web,server] [--yes] [--no-git] [--no-keystore]"
             exit 0 ;;
         *) echo "Unknown argument: $1"; exit 1 ;;
     esac
@@ -30,18 +39,15 @@ done
 [[ -z "$APP_NAME" ]]     && { echo "Error: --name is required (e.g. --name MyApp)"; exit 1; }
 [[ -z "$PACKAGE_NAME" ]] && { echo "Error: --package is required (e.g. --package com.example.myapp)"; exit 1; }
 [[ ! -d "$TEMPLATE_DIR" ]] && { echo "Error: template not found at $TEMPLATE_DIR"; exit 1; }
+IFS=',' read -r -a PLATFORM_LIST <<< "$PLATFORMS"
+for p in "${PLATFORM_LIST[@]}"; do
+    case "$p" in android|ios|desktop|web|server) ;; *) echo "Error: unknown platform '$p' (android,ios,desktop,web,server)"; exit 1 ;; esac
+done
+has_platform() { [[ ",$PLATFORMS," == *",$1,"* ]]; }
 
 # ── Derived values ──────────────────────────────────────────────────────────
 APP_NAME_LOWER="$(echo "$APP_NAME" | tr '[:upper:]' '[:lower:]')"
 PACKAGE_PATH="$(echo "$PACKAGE_NAME" | tr '.' '/')"
-
-# APP_PACKAGE_NAME: strip trailing .app segment if present
-if [[ "$PACKAGE_NAME" =~ \.app$ ]]; then
-    APP_PACKAGE_NAME="${PACKAGE_NAME%.app}"
-else
-    APP_PACKAGE_NAME="$PACKAGE_NAME"
-fi
-APP_PACKAGE_PATH="$(echo "$APP_PACKAGE_NAME" | tr '.' '/')"
 
 # Template placeholder values
 TMPL_NAME="MyApp"
@@ -60,11 +66,13 @@ fi
 echo ""
 echo "  App name    : $APP_NAME"
 echo "  Package     : $PACKAGE_NAME"
-echo "  App package : $APP_PACKAGE_NAME (used in app/ modules)"
+echo "  Platforms   : $PLATFORMS"
 echo "  Output      : $DEST"
 echo ""
-read -r -p "Generate project? [y/N] " confirm
-[[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+if [[ "$ASSUME_YES" -ne 1 ]]; then
+    read -r -p "Generate project? [y/N] " confirm
+    [[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+fi
 
 # ── Copy template ───────────────────────────────────────────────────────────
 echo "-> Copying template..."
@@ -73,10 +81,27 @@ rsync -a \
     --exclude='build/' \
     --exclude='.gradle/' \
     --exclude='.idea/' \
+    --exclude='.kotlin/' \
+    --exclude='kotlin-js-store/' \
+    --exclude='secrets/' \
+    --exclude='app/android/upload.keystore' \
+    --exclude='.claude/settings.local.json' \
     --exclude='node_modules/' \
     --exclude='local.properties' \
     --exclude='.DS_Store' \
     "$TEMPLATE_DIR/" "$DEST/"
+
+# ── Remove unselected platforms ──────────────────────────────────────────────
+for p in android ios desktop web server; do
+    if ! has_platform "$p"; then
+        echo "-> Removing platform: $p"
+        rm -rf "$DEST/app/$p"
+        case "$p" in
+            android) rm -f "$DEST"/.github/workflows/deploy-android-*.yml ;;
+            web)     rm -f "$DEST/.github/workflows/deploy-web.yml" ;;
+        esac
+    fi
+done
 
 # ── Replace content in all text files ───────────────────────────────────────
 echo "-> Replacing placeholders in file contents..."
@@ -110,41 +135,13 @@ find "$DEST" -type f \( \
     -name "*.xcscheme" -o \
     -name "*.xcworkspacedata" -o \
     -name "*.sq" -o \
+    -name "*.sh" -o \
     -name ".gitignore" -o \
     -name "gradlew" -o \
     -name "gradlew.bat" \
 \) | while IFS= read -r file; do
     replace_in_file "$file"
 done
-
-# ── Handle APP_PACKAGE_NAME for app/ modules (if different from PACKAGE_NAME) ──
-if [[ "$APP_PACKAGE_NAME" != "$PACKAGE_NAME" ]]; then
-    echo "-> Applying APP_PACKAGE_NAME overrides for app/ modules..."
-    # In app/ module files, fix sub-packages that should use APP_PACKAGE_NAME
-    find "$DEST/app" -type f \( \
-        -name "*.kt" -o \
-        -name "*.kts" -o \
-        -name "*.toml" -o \
-        -name "*.properties" -o \
-        -name "*.xml" -o \
-        -name "*.swift" -o \
-        -name "*.yaml" -o \
-        -name "*.yml" -o \
-        -name "*.html" -o \
-        -name "*.md" -o \
-        -name "*.plist" \
-    \) | while IFS= read -r file; do
-        sed -i '' \
-            -e "s|${PACKAGE_NAME}\.app\.|${APP_PACKAGE_NAME}\.app\.|g" \
-            -e "s|${PACKAGE_NAME}\.android|${APP_PACKAGE_NAME}\.android|g" \
-            -e "s|${PACKAGE_NAME}\.desktop|${APP_PACKAGE_NAME}\.desktop|g" \
-            -e "s|${PACKAGE_NAME}\.server|${APP_PACKAGE_NAME}\.server|g" \
-            -e "s|${PACKAGE_PATH}/android|${APP_PACKAGE_PATH}/android|g" \
-            -e "s|${PACKAGE_PATH}/desktop|${APP_PACKAGE_PATH}/desktop|g" \
-            -e "s|${PACKAGE_PATH}/server|${APP_PACKAGE_PATH}/server|g" \
-            "$file"
-    done
-fi
 
 # ── Rename package directories ───────────────────────────────────────────────
 if [[ "$TMPL_PACKAGE_PATH" != "$PACKAGE_PATH" ]]; then
@@ -172,19 +169,6 @@ if [[ "$TMPL_PACKAGE_PATH" != "$PACKAGE_PATH" ]]; then
     find "$DEST" -type d -empty -delete 2>/dev/null || true
 fi
 
-# ── Handle APP_PACKAGE_PATH directory renames for app/ modules ───────────────
-if [[ "$APP_PACKAGE_PATH" != "$PACKAGE_PATH" ]]; then
-    for mod in android desktop server; do
-        OLD_SUBDIR="$DEST/app/$mod/src/main/kotlin/$PACKAGE_PATH/$mod"
-        NEW_SUBDIR="$DEST/app/$mod/src/main/kotlin/$APP_PACKAGE_PATH/$mod"
-        if [[ -d "$OLD_SUBDIR" && "$OLD_SUBDIR" != "$NEW_SUBDIR" ]]; then
-            mkdir -p "$(dirname "$NEW_SUBDIR")"
-            mv "$OLD_SUBDIR" "$NEW_SUBDIR"
-            find "$DEST/app/$mod" -type d -empty -delete 2>/dev/null || true
-        fi
-    done
-fi
-
 # ── Rename files and directories containing TMPL_NAME in their names ─────────
 if [[ "$TMPL_NAME" != "$APP_NAME" ]]; then
     echo "-> Renaming files and directories containing '$TMPL_NAME'..."
@@ -206,6 +190,47 @@ if [[ "$TMPL_NAME" != "$APP_NAME" ]]; then
     done
 fi
 
+# ── Generate Android upload keystore (unique per project, gitignored) ────────
+if has_platform android && [[ "$GEN_KEYSTORE" -eq 1 ]]; then
+    if command -v keytool >/dev/null 2>&1; then
+        echo "-> Generating Android upload keystore..."
+        SECRETS_ANDROID="$DEST/secrets/android"
+        KEYSTORE_FILE="$DEST/app/android/upload.keystore"
+        KEY_ALIAS="upload"
+        STORE_PASSWORD="$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/urandom | head -c 24 || true)"
+        mkdir -p "$SECRETS_ANDROID"
+        keytool -genkeypair -keystore "$KEYSTORE_FILE" -storepass "$STORE_PASSWORD" \
+            -alias "$KEY_ALIAS" -keypass "$STORE_PASSWORD" -keyalg RSA -keysize 4096 \
+            -validity 9125 -dname "CN=${APP_NAME}" >/dev/null 2>&1
+        printf 'storePassword=%s\nkeyAlias=%s\n' "$STORE_PASSWORD" "$KEY_ALIAS" > "$SECRETS_ANDROID/keystore.properties"
+        base64 < "$KEYSTORE_FILE" > "$SECRETS_ANDROID/keystore.base64"
+        cat > "$DEST/secrets/SECRETS.md" <<'EOM'
+# Secrets Reference
+
+This directory is gitignored. Back it up somewhere safe: losing the upload keystore locks you out of Play Store updates.
+
+## Android signing (`android/`)
+
+| File | Description |
+|------|-------------|
+| `../app/android/upload.keystore` | Upload keystore (gitignored) |
+| `android/keystore.properties` | Keystore password and key alias, read by `app/android/build.gradle.kts` |
+| `android/keystore.base64` | Base64 of the keystore for the `KEYSTORE_FILE_BASE64` secret |
+
+### GitHub Actions secrets
+
+| Secret | Value / Source |
+|--------|----------------|
+| `KEYSTORE_FILE_BASE64` | contents of `android/keystore.base64` |
+| `SIGNING_STORE_PASSWORD` | `storePassword` in `android/keystore.properties` |
+| `SIGNING_KEY_ALIAS` | `keyAlias` in `android/keystore.properties` (`upload`) |
+EOM
+        unset STORE_PASSWORD
+    else
+        echo "  Warning: keytool not found; skipped keystore generation (run scripts/create-keystore.sh later)."
+    fi
+fi
+
 # ── Make gradlew executable ──────────────────────────────────────────────────
 echo "-> Setting gradlew permissions..."
 chmod +x "$DEST/gradlew"
@@ -214,34 +239,34 @@ chmod +x "$DEST/gradlew"
 WRAPPER_JAR="$DEST/gradle/wrapper/gradle-wrapper.jar"
 if [[ ! -f "$WRAPPER_JAR" ]]; then
     echo "-> Downloading gradle-wrapper.jar..."
-    WRAPPER_URL="https://github.com/gradle/gradle/raw/v9.4.1/gradle/wrapper/gradle-wrapper.jar"
+    GRADLE_VERSION="$(sed -n 's|.*gradle-\([0-9.]*\)-bin.zip.*|\1|p' "$DEST/gradle/wrapper/gradle-wrapper.properties")"
+    WRAPPER_URL="https://github.com/gradle/gradle/raw/v${GRADLE_VERSION}/gradle/wrapper/gradle-wrapper.jar"
     curl -fsSL "$WRAPPER_URL" -o "$WRAPPER_JAR" 2>/dev/null || {
         echo "  Warning: could not download gradle-wrapper.jar."
-        echo "  Run './gradlew wrapper --gradle-version 9.4.1' in the project dir after installing Gradle manually."
+        echo "  Run './gradlew wrapper --gradle-version ${GRADLE_VERSION}' in the project dir after installing Gradle manually."
     }
 fi
 
 # ── Initialize git repository ────────────────────────────────────────────────
-echo "-> Initializing git repository..."
-git -C "$DEST" init -q
-git -C "$DEST" add .
-git -C "$DEST" commit -q -m "Initial KMP scaffold: $APP_NAME"
+[[ "$INIT_GIT" -eq 1 ]] && echo "-> Initializing git repository..."
+if [[ "$INIT_GIT" -eq 1 ]]; then
+    git -C "$DEST" init -q
+    git -C "$DEST" add .
+    git -C "$DEST" commit -q -m "Initial KMP scaffold: $APP_NAME"
+fi
 
 # ── Done ─────────────────────────────────────────────────────────────────────
 echo ""
 echo "Project created: $DEST"
 echo ""
 echo "Next steps:"
-echo "  1. Open in Android Studio: File -> Open -> $DEST"
-echo "  2. Run Android:  select 'app.android' run configuration"
-echo "  3. Run Desktop:  ./gradlew :app:desktop:run"
-echo "  4. Run Web:      ./gradlew :app:web:jsBrowserDevelopmentRun"
-echo "  5. Run Server:   ./gradlew :app:server:run"
-echo "  6. Run iOS:      cd $DEST/app/ios && xcodegen generate && open ${APP_NAME}.xcodeproj"
-echo "                   (requires: brew install xcodegen)"
-if [[ "$APP_PACKAGE_NAME" != "$PACKAGE_NAME" ]]; then
-    echo ""
-    echo "  Note: Your package ends in '.app' — APP_PACKAGE_NAME was set to '$APP_PACKAGE_NAME'."
-    echo "    Review app/ module namespaces and imports for any remaining adjustments."
+echo "  - Open in Android Studio: File -> Open -> $DEST"
+has_platform android && echo "  - Run Android:  select 'app.android' run configuration"
+has_platform desktop && echo "  - Run Desktop:  ./gradlew :app:desktop:run"
+has_platform web     && echo "  - Run Web:      ./gradlew :app:web:jsBrowserDevelopmentRun"
+has_platform server  && echo "  - Run Server:   ./gradlew :app:server:run"
+if has_platform ios; then
+    echo "  - Run iOS:      cd $DEST/app/ios && xcodegen generate && open ${APP_NAME}.xcodeproj"
+    echo "                  (requires: brew install xcodegen)"
 fi
 echo ""
