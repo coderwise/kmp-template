@@ -1,5 +1,5 @@
 ---
-name: kmp-project
+name: kmp-scaffold
 description: >
   Scaffolds a complete Kotlin Multiplatform (KMP) project with Compose Multiplatform,
   Clean Architecture, and a feature/core/libs/app module structure by running the
