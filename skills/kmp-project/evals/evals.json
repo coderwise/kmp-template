@@ -1,0 +1,46 @@
+{
+  "skill_name": "kmp-project",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a new KMP project called TaskManager with package com.acme.taskmanager. Output it to /tmp/kmp-out. All platforms.",
+      "expected_output": "The skill runs create-kmp.sh with --name TaskManager --package com.acme.taskmanager --output /tmp/kmp-out --yes --no-git and relays the next steps; no files are hand-written.",
+      "assertions": [
+        "create-kmp.sh was invoked with --yes and --no-git",
+        "/tmp/kmp-out/TaskManager contains app/{android,common,desktop,ios,server,web}, core/{api,data,domain,ui}, libs/network, feature/*",
+        "no occurrence of MyApp, myapp or com.example remains in the generated text files",
+        "sources live under com/acme/taskmanager"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "New KMP app: WeatherApp, package io.weather.app, output /tmp/kmp-out-2. Android and iOS only.",
+      "expected_output": "Script run with --platforms android,ios. app/desktop, app/web and app/server are absent; deploy-web workflow is removed; packages follow io.weather.app.app.<module> with no special casing.",
+      "assertions": [
+        "--platforms android,ios was passed",
+        "app/desktop, app/web and app/server do NOT exist",
+        ".github/workflows/deploy-web.yml does NOT exist",
+        "app/common classes are under io/weather/app/app/common with package io.weather.app.app.common"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Bootstrap NoteSync KMP project, package me.notes.sync, /tmp/kmp-out-3.",
+      "expected_output": "The skill asks nothing further, confirms, runs the script, and does not create a git commit.",
+      "assertions": [
+        "the project directory has no .git directory",
+        "gradle/wrapper/gradle-wrapper.jar exists or the response reports the download warning",
+        "the response points to README.md, AGENTS.md and docs/ARCHITECTURE.md"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Create KMP app Foo, package com.acme.foo, output /tmp/kmp-out-4. What secrets do I need to add to GitHub?",
+      "expected_output": "The answer's secret names match the generated secrets/SECRETS.md exactly; none are invented or taken from memory.",
+      "assertions": [
+        "the response lists secrets that all appear in /tmp/kmp-out-4/Foo/secrets/SECRETS.md",
+        "the response says the Android keystore was already generated"
+      ]
+    }
+  ]
+}

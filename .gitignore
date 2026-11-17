@@ -2,3 +2,6 @@
 
 # Local Claude Code permissions hold absolute paths
 **/.claude/settings.local.json
+
+# Built skill packages (see build-skill.sh)
+/dist/
