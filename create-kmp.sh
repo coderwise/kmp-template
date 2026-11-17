@@ -232,15 +232,19 @@ Use exactly these names in every project; the generated workflows read them.
 | `FIREBASE_APP_ID` | Android app id from the Firebase console |
 | `GRADLE_ENCRYPTION_KEY` | any random string; encrypts the Gradle cache |
 
-## iOS (when you add iOS deploys)
+## iOS (App Store deploy)
+
+The workflow archives unsigned and signs at export with a cloud-managed distribution
+certificate, authenticated by the API key below, so no certificate, `.p12` or provisioning
+profile is stored anywhere. Create the app record in App Store Connect first; the upload
+fails without it and CI cannot create it.
 
 | Secret | Value / Source |
 |--------|----------------|
-| `APP_STORE_CONNECT_ISSUER_ID` / `APP_STORE_CONNECT_KEY_ID` / `APP_STORE_CONNECT_PRIVATE_KEY` | App Store Connect API key |
-| `IOS_P12_CERTIFICATE_BASE64` / `IOS_P12_PASSWORD` | Apple Distribution certificate |
-| `IOS_TEAM_ID` / `IOS_CODE_SIGN_IDENTITY` | Apple team |
-| `IOS_ADHOC_PROVISIONING_PROFILE_BASE64` / `IOS_ADHOC_PROFILE_NAME` | Ad Hoc profile for Firebase distribution |
-| `IOS_FIREBASE_APP_ID` | iOS app id from the Firebase console |
+| `APP_STORE_CONNECT_ISSUER_ID` | Issuer ID, App Store Connect → Users and Access → Integrations |
+| `APP_STORE_CONNECT_KEY_ID` | Key ID of the API key |
+| `APP_STORE_CONNECT_PRIVATE_KEY` | Text of the downloaded `AuthKey_<KEYID>.p8` (not base64); the key needs the **Admin** role |
+| `IOS_TEAM_ID` | Apple team id, used for the export options |
 EOM
         unset STORE_PASSWORD
     else
