@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.di
 
-import com.example.myapp.core.api.OpenMeteoApi
+import com.example.myapp.feature.weather.data.remote.OpenMeteoApi
 import com.example.myapp.feature.weather.data.repository.WeatherRepositoryImpl
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCase

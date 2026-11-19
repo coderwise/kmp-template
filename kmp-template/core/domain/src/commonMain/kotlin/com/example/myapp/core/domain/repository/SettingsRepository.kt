@@ -5,5 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface SettingsRepository {
     fun observeSettings(): Flow<Settings>
-    suspend fun updateSettings(settings: Settings)
+    /**
+     * Replaces the settings with [transform] applied to the latest saved value, atomically, so
+     * concurrent updates to different fields do not overwrite each other.
+     */
+    suspend fun updateSettings(transform: (Settings) -> Settings)
 }

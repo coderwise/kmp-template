@@ -13,7 +13,7 @@ The project is divided into several top-level directories:
 - **`core/`**: Shared core modules. These modules must contain only platform-agnostic logic; platform-specific implementations (`expect`/`actual`) are not allowed in `:core:*` modules.
     - `:core:domain`: Pure business logic. Contains domain models (entities), repository interfaces, and use cases.
     - `:core:data`: Implementation of data access logic. Contains repository implementations, local data sources (e.g., Prefs), and DI configuration for data.
-    - `:core:api`: Networking logic and API definitions. Contains Ktor-based API clients, API response models, and endpoint resources.
+    - `:core:api`: The API contract shared by the app and `:app:server`: Ktor endpoint resources and request/response models. Clients for third-party APIs that only one feature uses (e.g. Open-Meteo) live in that feature's `data/remote` package instead.
     - `:core:ui`: Contains generic, reusable UI components (e.g., SearchBar, buttons, cards) and common UI utilities.
 - **`libs/`**: Library modules providing foundational services specific to this project.
     - `libs:network`: Ktor-based networking.

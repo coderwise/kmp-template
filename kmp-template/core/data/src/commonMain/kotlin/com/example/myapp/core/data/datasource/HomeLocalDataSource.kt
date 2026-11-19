@@ -2,10 +2,10 @@ package com.example.myapp.core.data.datasource
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import com.coderwise.libs.arch.AppDispatchers
 import com.example.myapp.core.database.AppDatabase
 import com.example.myapp.core.database.HomeItemEntity
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
@@ -24,7 +24,7 @@ interface HomeLocalDataSource {
 
 class HomeLocalDataSourceImpl(
     private val database: AppDatabase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val dispatcher: CoroutineDispatcher = AppDispatchers.io
 ) : HomeLocalDataSource {
 
     private val queries get() = database.homeItemQueries

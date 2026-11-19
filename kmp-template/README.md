@@ -12,7 +12,7 @@ A Kotlin Multiplatform + Compose Multiplatform starter targeting **Android, iOS,
 | | `:app:android` / `:app:ios` / `:app:desktop` / `:app:web` / `:app:server` | Per-platform entry points |
 | `core/` | `:core:domain` | Pure business logic — models, repository interfaces, use cases (no platform code) |
 | | `:core:data` | Repository implementations + data sources |
-| | `:core:api` | Ktor API clients and response models |
+| | `:core:api` | The API contract shared with `:app:server`: Ktor resources and request/response models |
 | | `:core:ui` | Reusable UI components, theme, shared UI state helpers |
 | `feature/` | `:feature:auth` `:feature:home` `:feature:settings` `:feature:weather` | Self-contained features (UI + domain + data) |
 | `libs/` | `:libs:network` `:libs:version` | Foundational platform services specific to this project |

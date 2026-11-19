@@ -25,7 +25,6 @@ kotlin {
         commonMain.dependencies {
             implementation(project(":core:domain"))
             implementation(project(":core:ui"))
-            implementation(project(":core:api"))
             implementation(project(":libs:network"))
             implementation(libs.coderwise.permissions)
             implementation(libs.coderwise.location)

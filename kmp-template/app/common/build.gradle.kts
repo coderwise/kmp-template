@@ -32,6 +32,8 @@ kotlin {
             implementation(project(":feature:home"))
             implementation(project(":feature:weather"))
             implementation(project(":feature:settings"))
+            implementation(project(":libs:network"))
+            implementation(libs.coderwise.database)
             implementation(libs.coderwise.settings)
             implementation(libs.coderwise.location)
             implementation(libs.coderwise.utils)

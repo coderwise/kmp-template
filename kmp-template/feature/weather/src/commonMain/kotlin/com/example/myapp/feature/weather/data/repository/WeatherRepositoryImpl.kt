@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.data.repository
 
-import com.example.myapp.core.api.OpenMeteoApi
+import com.example.myapp.feature.weather.data.remote.OpenMeteoApi
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository

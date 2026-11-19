@@ -11,7 +11,7 @@ class SettingsRepositoryImpl(
 
     override fun observeSettings(): Flow<Settings> = dataSource.data
 
-    override suspend fun updateSettings(settings: Settings) {
-        dataSource.updateData { settings }
+    override suspend fun updateSettings(transform: (Settings) -> Settings) {
+        dataSource.updateData { transform(it) }
     }
 }

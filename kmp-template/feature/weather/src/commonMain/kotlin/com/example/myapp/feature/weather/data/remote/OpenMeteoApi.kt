@@ -1,4 +1,4 @@
-package com.example.myapp.core.api
+package com.example.myapp.feature.weather.data.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
