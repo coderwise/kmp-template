@@ -1,7 +1,7 @@
 package com.example.myapp.feature.weather.ui
 
 import com.example.myapp.core.domain.model.Location
-import com.example.myapp.core.ui.state.LoadableState
+import com.coderwise.libs.uistate.LoadableState
 import com.example.myapp.feature.weather.domain.model.WeatherInfo
 
 data class WeatherUiState(

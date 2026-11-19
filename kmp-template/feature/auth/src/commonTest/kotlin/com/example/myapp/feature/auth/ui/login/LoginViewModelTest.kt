@@ -1,6 +1,6 @@
 package com.example.myapp.feature.auth.ui.login
 
-import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.coderwise.libs.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.repository.AuthRepository
 import com.example.myapp.feature.auth.domain.usecase.SignInAsDebugUserUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignInUseCase

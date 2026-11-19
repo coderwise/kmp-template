@@ -1,6 +1,6 @@
 package com.example.myapp.feature.home.domain.usecase
 
-import com.example.myapp.core.domain.arch.SuspendResultUseCase
+import com.coderwise.libs.arch.SuspendResultUseCase
 import com.example.myapp.core.domain.repository.HomeRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

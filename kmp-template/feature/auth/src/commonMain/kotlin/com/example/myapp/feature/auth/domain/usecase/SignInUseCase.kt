@@ -1,6 +1,6 @@
 package com.example.myapp.feature.auth.domain.usecase
 
-import com.example.myapp.core.domain.arch.SuspendUseCase
+import com.coderwise.libs.arch.SuspendUseCase
 import com.example.myapp.feature.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

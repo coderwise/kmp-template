@@ -2,7 +2,7 @@ package com.example.myapp.feature.auth.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.coderwise.libs.navigation.NavEventHandler
 import com.example.myapp.feature.auth.domain.usecase.SignInAsDebugUserUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignInUseCase
 import com.example.myapp.feature.auth.navigation.AuthNavEvent

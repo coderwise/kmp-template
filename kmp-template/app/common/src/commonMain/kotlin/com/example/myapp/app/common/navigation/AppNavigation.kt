@@ -26,9 +26,8 @@ import com.example.myapp.app.common.nav_home
 import com.example.myapp.app.common.nav_settings
 import com.example.myapp.app.common.nav_weather
 import com.example.myapp.core.domain.model.ThemeType
-import com.example.myapp.core.ui.navigation.NavigationState
-import com.example.myapp.core.ui.navigation.Navigator
-import com.example.myapp.core.ui.navigation.rememberAppNavigator
+import com.coderwise.libs.navigation.NavigationState
+import com.coderwise.libs.navigation.rememberAppNavigator
 import com.example.myapp.core.ui.theme.MyAppTheme
 import com.example.myapp.core.ui.util.windowInfo
 import com.example.myapp.feature.auth.navigation.AuthNavigation
@@ -57,7 +56,10 @@ fun AppNavigation() {
 
     val startRoot = if (isAuthenticated) HomeGroupDestination else AuthDestination
 
-    val navigator = rememberAppNavigator(startRoot = startRoot) { event ->
+    val navigator = rememberAppNavigator(
+        startRoot = startRoot,
+        savedStateConfiguration = navigationSavedStateConfiguration,
+    ) { event ->
         when (event) {
             is SettingsNavEvent.SignOut -> viewModel.signOut()
             is HomeNavEvent.ToEditItem -> {
@@ -70,7 +72,7 @@ fun AppNavigation() {
     // Auth state is the single source of truth for the root destination:
     // signing in/out flips isAuthenticated, which switches the root here.
     LaunchedEffect(isAuthenticated) {
-        val currentRoot = (navigator as NavigationState).currentRootKey
+        val currentRoot = navigator.currentRootKey
         val isCurrentAuthenticated = currentRoot != AuthDestination
         if (isAuthenticated != isCurrentAuthenticated) {
             val target = if (isAuthenticated) HomeGroupDestination else AuthDestination
@@ -80,7 +82,7 @@ fun AppNavigation() {
 
     AppNavigationContent(
         darkTheme = darkTheme,
-        navigator = navigator,
+        navigationState = navigator,
         uiState = uiState,
         viewModel = viewModel,
         onTabSelected = viewModel::setTab,
@@ -90,12 +92,11 @@ fun AppNavigation() {
 @Composable
 private fun AppNavigationContent(
     darkTheme: Boolean,
-    navigator: Navigator,
+    navigationState: NavigationState,
     uiState: AppUiState,
     viewModel: AppViewModel,
     onTabSelected: (Int) -> Unit,
 ) {
-    val navigationState = navigator as NavigationState
     val tabs = remember {
         listOf(
             AppTab(Res.string.nav_home, Icons.Default.Home),
@@ -165,8 +166,8 @@ private fun AppNavDisplay(
             slideInPopTransform()
         },
         entryProvider = entryProvider {
-            entry<AuthDestination> {
-                AuthNavigation()
+            entry<AuthDestination> { key ->
+                AuthNavigation(rootKey = key)
             }
             entry<HomeGroupDestination> {
                 HomeGroup(viewModel = viewModel)

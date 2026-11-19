@@ -1,6 +1,6 @@
 package com.example.myapp.feature.weather.domain.usecase
 
-import com.example.myapp.core.domain.arch.SuspendUseCase
+import com.coderwise.libs.arch.SuspendUseCase
 import com.example.myapp.core.domain.model.Location
 import com.example.myapp.feature.weather.domain.repository.WeatherRepository
 import kotlinx.coroutines.CoroutineDispatcher

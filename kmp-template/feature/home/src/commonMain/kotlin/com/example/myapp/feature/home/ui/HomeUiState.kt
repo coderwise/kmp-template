@@ -1,7 +1,7 @@
 package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.state.LoadableState
+import com.coderwise.libs.uistate.LoadableState
 
 data class HomeUiState(
     val items: List<HomeItem> = emptyList(),

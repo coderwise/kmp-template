@@ -1,6 +1,6 @@
 package com.example.myapp.feature.settings.domain.usecase
 
-import com.example.myapp.core.domain.arch.SuspendUseCase
+import com.coderwise.libs.arch.SuspendUseCase
 import com.example.myapp.core.domain.model.ThemeType
 import com.example.myapp.core.domain.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -16,6 +16,9 @@ coderwise-location = "0.3.2"
 coderwise-settings = "0.2.1"
 coderwise-permissions = "0.6.0"
 coderwise-logger = "0.3.0"
+coderwise-arch = "0.1.0"
+coderwise-uistate = "0.1.0"
+coderwise-navigation = "0.1.0"
 androidx-activity = "1.13.0"
 androidx-core-splashscreen = "1.2.0"
 compose-icons = "1.7.3"
@@ -42,6 +45,9 @@ coderwise-location = { module = "com.coderwise.libs:location", version.ref = "co
 coderwise-settings = { module = "com.coderwise.libs:settings", version.ref = "coderwise-settings" }
 coderwise-permissions = { module = "com.coderwise.libs:permissions", version.ref = "coderwise-permissions" }
 coderwise-logger = { module = "com.coderwise.libs:logger", version.ref = "coderwise-logger" }
+coderwise-arch = { module = "com.coderwise.libs:arch", version.ref = "coderwise-arch" }
+coderwise-uistate = { module = "com.coderwise.libs:uistate", version.ref = "coderwise-uistate" }
+coderwise-navigation = { module = "com.coderwise.libs:navigation", version.ref = "coderwise-navigation" }
 
 # AndroidX
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }

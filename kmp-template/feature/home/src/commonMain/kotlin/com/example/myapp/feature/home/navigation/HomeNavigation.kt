@@ -1,10 +1,11 @@
 package com.example.myapp.feature.home.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.scene.SinglePaneSceneStrategy
 import androidx.navigation3.ui.NavDisplay
-import com.example.myapp.core.ui.navigation.rememberChildNavigator
+import com.coderwise.libs.navigation.rememberChildNavigator
 import com.example.myapp.core.ui.util.BottomSheetSceneStrategy
 import com.example.myapp.feature.home.ui.HomeScreen
 import com.example.myapp.feature.home.ui.HomeUiEvent
@@ -12,10 +13,11 @@ import com.example.myapp.feature.home.ui.HomeViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemSheet
 import org.koin.compose.viewmodel.koinViewModel
 
+/** The Home tab's nested navigation, on the child back stack of [rootKey]. */
 @Composable
-fun HomeNavigation() {
+fun HomeNavigation(rootKey: NavKey) {
     val viewModel: HomeViewModel = koinViewModel()
-    val navigator = rememberChildNavigator(HomeNavDestination.Root) { event ->
+    val navigator = rememberChildNavigator(rootKey, HomeNavDestination.Root) { event ->
         when (event) {
             is HomeNavEvent.ToAddItem -> navigate(HomeNavDestination.AddItem())
         }

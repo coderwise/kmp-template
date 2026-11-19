@@ -1,5 +1,7 @@
 package com.example.myapp.feature.auth.navigation
 
-sealed interface AuthNavEvent {
+import com.coderwise.libs.navigation.NavEvent
+
+sealed interface AuthNavEvent : NavEvent {
     data object ToSignUp : AuthNavEvent
 }

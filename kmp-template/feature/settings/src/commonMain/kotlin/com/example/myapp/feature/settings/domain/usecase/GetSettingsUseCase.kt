@@ -1,6 +1,6 @@
 package com.example.myapp.feature.settings.domain.usecase
 
-import com.example.myapp.core.domain.arch.FlowResultUseCase
+import com.coderwise.libs.arch.FlowResultUseCase
 import com.example.myapp.core.domain.model.Settings
 import com.example.myapp.core.domain.repository.SettingsRepository
 import kotlinx.coroutines.CoroutineDispatcher

@@ -3,8 +3,8 @@ package com.example.myapp.feature.weather.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.Location
-import com.example.myapp.core.ui.state.error
-import com.example.myapp.core.ui.state.loading
+import com.coderwise.libs.uistate.error
+import com.coderwise.libs.uistate.loading
 import com.example.myapp.feature.weather.domain.usecase.GetCurrentLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.GetSelectedLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.GetWeatherUseCase

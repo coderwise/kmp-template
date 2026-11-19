@@ -2,9 +2,9 @@ package com.example.myapp.feature.home.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapp.core.ui.navigation.GlobalNavEvent
-import com.example.myapp.core.ui.navigation.NavEventHandler
-import com.example.myapp.core.ui.state.error
+import com.coderwise.libs.navigation.GlobalNavEvent
+import com.coderwise.libs.navigation.NavEventHandler
+import com.coderwise.libs.uistate.error
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase

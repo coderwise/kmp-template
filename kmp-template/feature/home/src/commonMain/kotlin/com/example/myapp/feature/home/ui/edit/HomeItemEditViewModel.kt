@@ -3,8 +3,8 @@ package com.example.myapp.feature.home.ui.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.model.HomeItem
-import com.example.myapp.core.ui.navigation.GlobalNavEvent
-import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.coderwise.libs.navigation.GlobalNavEvent
+import com.coderwise.libs.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

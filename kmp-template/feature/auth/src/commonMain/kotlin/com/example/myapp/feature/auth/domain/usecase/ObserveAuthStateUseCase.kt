@@ -1,6 +1,6 @@
 package com.example.myapp.feature.auth.domain.usecase
 
-import com.example.myapp.core.domain.arch.FlowResultUseCase
+import com.coderwise.libs.arch.FlowResultUseCase
 import com.example.myapp.feature.auth.domain.model.AuthState
 import com.example.myapp.feature.auth.domain.repository.AuthRepository
 import kotlinx.coroutines.CoroutineDispatcher

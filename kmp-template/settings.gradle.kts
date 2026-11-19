@@ -20,6 +20,19 @@ dependencyResolutionManagement {
     }
 }
 
+// Build the unreleased com.coderwise.libs modules from a local libs.mobile checkout instead of
+// Maven Central: ./gradlew -PlocalLibs=../../libs.mobile <task>. Only the modules listed are
+// substituted; every other com.coderwise.libs dependency still resolves from Maven Central.
+providers.gradleProperty("localLibs").orNull?.let { path ->
+    includeBuild(path) {
+        dependencySubstitution {
+            listOf("arch", "uistate", "navigation").forEach { name ->
+                substitute(module("com.coderwise.libs:$name")).using(project(":$name"))
+            }
+        }
+    }
+}
+
 // Automatically include core modules
 file("core").listFiles()?.filter { it.isDirectory && File(it, "build.gradle.kts").exists() }?.forEach {
     include(":core:${it.name}")

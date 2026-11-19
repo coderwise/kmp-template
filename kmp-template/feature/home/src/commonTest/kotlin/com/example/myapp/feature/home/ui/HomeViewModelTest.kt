@@ -2,7 +2,7 @@ package com.example.myapp.feature.home.ui
 
 import com.example.myapp.core.domain.model.HomeItem
 import com.example.myapp.core.domain.repository.HomeRepository
-import com.example.myapp.core.ui.navigation.NavEventHandler
+import com.coderwise.libs.navigation.NavEventHandler
 import com.example.myapp.feature.home.domain.usecase.AddHomeItemUseCase
 import com.example.myapp.feature.home.domain.usecase.GetHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.RemoveHomeItemUseCase

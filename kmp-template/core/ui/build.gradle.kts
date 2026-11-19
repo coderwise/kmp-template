@@ -18,6 +18,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            api(libs.coderwise.navigation)
+            api(libs.coderwise.uistate)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)

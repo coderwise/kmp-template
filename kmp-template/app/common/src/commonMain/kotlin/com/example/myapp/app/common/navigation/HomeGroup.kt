@@ -29,7 +29,7 @@ private fun HomeGroupContent(
         modifier = Modifier.fillMaxSize()
     ) {
         when (selectedTab) {
-            0 -> HomeNavigation()
+            0 -> HomeNavigation(rootKey = HomeGroupDestination)
             1 -> WeatherScreen()
             2 -> SettingsScreen()
         }

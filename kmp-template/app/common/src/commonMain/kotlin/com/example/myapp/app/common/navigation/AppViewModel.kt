@@ -3,7 +3,7 @@ package com.example.myapp.app.common.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapp.core.domain.repository.SettingsRepository
-import com.example.myapp.core.ui.state.StateConfig
+import com.coderwise.libs.uistate.StateConfig
 import com.example.myapp.feature.auth.domain.model.AuthState
 import com.example.myapp.feature.auth.domain.usecase.ObserveAuthStateUseCase
 import com.example.myapp.feature.auth.domain.usecase.SignOutUseCase
