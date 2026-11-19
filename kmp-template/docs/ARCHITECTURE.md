@@ -62,6 +62,7 @@ We use a **Unidirectional Data Flow (UDF)** pattern combined with the **Command 
 
 ## Best Practices
 - **Platform Specifics**: Prefer `commonMain` for shared logic. Use `expect`/`actual` only when platform-specific APIs are required. **Platform-specific logic is prohibited in `:core:*` modules.**
+- **Kotlin over Java**: Prefer Kotlin and kotlinx APIs to Java ones wherever one exists, in platform source sets (`androidMain`, `desktopMain`, `jvmMain`) too: `kotlinx.io.files.Path` and `Buffer` instead of `java.io.File` and byte streams, `kotlin.math` instead of `Math`, `kotlin.time`/`kotlinx-datetime` instead of `java.time`/`java.util.Date`, coroutines instead of `Thread` and executors, and Kotlin collections instead of `java.util` types. Code written this way can move to `commonMain` later. Use a Java API only where Kotlin has no equivalent (Android SDK classes, AWT desktop integration, `System.getProperty`).
 - **DI Management**: New dependencies must be registered in the corresponding Koin module.
 - **Resources**: Use `myapp.<module_name>.generated.resources.Res` and `stringResource`. Resources are located in `src/commonMain/composeResources/values/`.
 - **Spacing and Theming**: Use the predefined spacing tokens from `MaterialTheme.spacing` (defined in `:core:ui`) for margins, padding, and gaps between elements. Avoid hardcoding `.dp` values for layout spacing to maintain consistency.
