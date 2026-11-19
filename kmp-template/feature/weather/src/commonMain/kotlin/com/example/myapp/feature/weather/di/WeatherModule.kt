@@ -10,7 +10,6 @@ import com.example.myapp.feature.weather.domain.usecase.ReverseGeocodeUseCase
 import com.example.myapp.feature.weather.domain.usecase.SaveSelectedLocationUseCase
 import com.example.myapp.feature.weather.domain.usecase.SearchLocationsUseCase
 import com.example.myapp.feature.weather.ui.WeatherViewModel
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -20,7 +19,7 @@ val weatherModule = module {
     factory { GetWeatherUseCase(get()) }
     factory { SearchLocationsUseCase(get()) }
     factory { ReverseGeocodeUseCase(get()) }
-    factoryOf(::GetSelectedLocationUseCase)
+    factory { GetSelectedLocationUseCase(get()) }
     factory { SaveSelectedLocationUseCase(get()) }
     factory { GetCurrentLocationUseCase(get()) }
     viewModelOf(::WeatherViewModel)

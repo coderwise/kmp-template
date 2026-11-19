@@ -21,9 +21,14 @@ dependencyResolutionManagement {
 }
 
 // Build the unreleased com.coderwise.libs modules from a local libs.mobile checkout instead of
-// Maven Central: ./gradlew -PlocalLibs=../../libs.mobile <task>. Only the modules listed are
+// Maven Central. Set `localLibs=../../libs.mobile` in local.properties (read by Android Studio
+// sync too), or pass -PlocalLibs=<path> on the command line. Only the modules listed are
 // substituted; every other com.coderwise.libs dependency still resolves from Maven Central.
-providers.gradleProperty("localLibs").orNull?.let { path ->
+val localLibs: String? = providers.gradleProperty("localLibs").orNull
+    ?: file("local.properties").takeIf { it.exists() }?.let { local ->
+        java.util.Properties().apply { local.inputStream().use { load(it) } }.getProperty("localLibs")
+    }
+localLibs?.let { path ->
     includeBuild(path) {
         dependencySubstitution {
             listOf("arch", "uistate", "navigation").forEach { name ->

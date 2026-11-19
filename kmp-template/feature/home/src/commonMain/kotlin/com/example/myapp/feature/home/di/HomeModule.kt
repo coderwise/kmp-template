@@ -7,16 +7,15 @@ import com.example.myapp.feature.home.domain.usecase.SyncHomeItemsUseCase
 import com.example.myapp.feature.home.domain.usecase.UpdateHomeItemUseCase
 import com.example.myapp.feature.home.ui.HomeViewModel
 import com.example.myapp.feature.home.ui.edit.HomeItemEditViewModel
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val homeModule = module {
-    factoryOf(::GetHomeItemsUseCase)
-    factoryOf(::AddHomeItemUseCase)
-    factoryOf(::RemoveHomeItemUseCase)
-    factoryOf(::UpdateHomeItemUseCase)
-    factoryOf(::SyncHomeItemsUseCase)
+    factory { GetHomeItemsUseCase(get()) }
+    factory { AddHomeItemUseCase(get()) }
+    factory { RemoveHomeItemUseCase(get()) }
+    factory { UpdateHomeItemUseCase(get()) }
+    factory { SyncHomeItemsUseCase(get()) }
     viewModel {
         HomeViewModel(
             getHomeItemsUseCase = get(),
