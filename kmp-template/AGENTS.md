@@ -5,7 +5,7 @@ This document provides instructions and context for AI agents working on this Ko
 ## Project Structure
 - `app/`: Composition root (`common`) and platform entry points (Android, iOS, Desktop, Web, Server).
 - `core/`: Shared core modules (`domain`, `data`, `api`, `ui`). **Note**: `:core:*` modules must not contain platform-specific logic.
-- `libs/`: Project-specific foundational modules (`network`, `version`). Standalone, never depend on `core/`, `feature/` or `app/`. Non-project-specific services (`database`, `settings`, `location`, `permissions`, `utils`, `logger`) and the app architecture (`arch`, `uistate`, `navigation`) come from the shared `com.coderwise.libs:*` artifacts on Maven Central. To build the unreleased ones from a local `libs.mobile` checkout, set `localLibs=<path>` in `local.properties` or pass `-PlocalLibs=<path>` (see `settings.gradle.kts`).
+- `libs/`: Project-specific foundational modules (`network`, `version`). Standalone, never depend on `core/`, `feature/` or `app/`. Non-project-specific services (`database`, `settings`, `location`, `permissions`, `utils`, `logger`) and the app architecture (`arch`, `uistate`, `navigation`) come from the shared `com.coderwise.libs:*` artifacts on Maven Central. Until `arch`, `uistate` and `navigation` are on Maven Central they resolve from Maven local only: publish them from `libs.mobile` with `./gradlew -PlibVersion=<version> :<module>:publishToMavenLocal` (see `settings.gradle.kts`).
 - `feature/`: Feature-specific modules (e.g., Home, Auth, Settings, Weather).
 
 ## Packages and Signing

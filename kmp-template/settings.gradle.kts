@@ -17,23 +17,12 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral() // Coderwise shared libraries (e.g. com.coderwise.libs:utils) live here
-    }
-}
-
-// Build the unreleased com.coderwise.libs modules from a local libs.mobile checkout instead of
-// Maven Central. Set `localLibs=../../libs.mobile` in local.properties (read by Android Studio
-// sync too), or pass -PlocalLibs=<path> on the command line. Only the modules listed are
-// substituted; every other com.coderwise.libs dependency still resolves from Maven Central.
-val localLibs: String? = providers.gradleProperty("localLibs").orNull
-    ?: file("local.properties").takeIf { it.exists() }?.let { local ->
-        java.util.Properties().apply { local.inputStream().use { load(it) } }.getProperty("localLibs")
-    }
-localLibs?.let { path ->
-    includeBuild(path) {
-        dependencySubstitution {
-            listOf("arch", "uistate", "navigation").forEach { name ->
-                substitute(module("com.coderwise.libs:$name")).using(project(":$name"))
-            }
+        // Unreleased com.coderwise.libs modules, published from libs.mobile with
+        // `./gradlew -PlibVersion=<version> :<module>:publishToMavenLocal`. Only these modules
+        // come from Maven local; drop this once they are on Maven Central.
+        exclusiveContent {
+            forRepository { mavenLocal() }
+            filter { includeModuleByRegex("com\\.coderwise\\.libs", "(arch|uistate|navigation)(-.+)?") }
         }
     }
 }
